@@ -1,0 +1,1737 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Product — ByPlan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Page band */
+  .page-band h1 { font-size: clamp(40px, 5vw, 72px); letter-spacing: -0.035em; line-height: 1; margin-top: 6px; }
+  .page-band .lead { margin-top: 24px; max-width: 60ch; }
+  .page-band .grid-bg { background-size: 56px 56px; }
+
+  /* Module navigation chips */
+  .mod-nav {
+    position: sticky; top: var(--nav-h); z-index: 20;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--line);
+  }
+  .mod-nav-inner {
+    display: flex; gap: 6px; overflow-x: auto;
+    padding: 14px var(--gutter);
+    scrollbar-width: none;
+    max-width: var(--container-w); margin: 0 auto;
+  }
+  .mod-nav-inner::-webkit-scrollbar { display: none; }
+  .mod-nav .chip {
+    flex-shrink: 0;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 999px;
+    background: var(--paper-3); border: 1px solid var(--line);
+    font-size: 13px; color: var(--ink-3); white-space: nowrap;
+  }
+  .mod-nav .chip .n {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--mute-2); letter-spacing: 0.04em;
+  }
+  .mod-nav .chip:hover { background: var(--paper); border-color: var(--ink-4); color: var(--ink); }
+
+  /* Module sections */
+  .mod {
+    padding: clamp(80px, 9vw, 128px) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .mod.alt { background: var(--paper-2); }
+  .mod-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .mod.flip .mod-grid { grid-template-columns: 1.15fr 1fr; }
+  .mod.flip .mod-copy { order: 2; }
+  .mod.flip .mod-visual { order: 1; }
+  @media (max-width: 1000px) {
+    .mod-grid { grid-template-columns: 1fr; gap: 48px; }
+    .mod.flip .mod-copy { order: 1; }
+    .mod.flip .mod-visual { order: 2; }
+  }
+  .mod-copy { max-width: 480px; }
+  .mod-copy .num {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+    color: var(--orange); text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mod-copy .num::before {
+    content: ""; width: 28px; height: 1px; background: var(--orange);
+  }
+  .mod-copy h2 { margin-top: 18px; font-size: clamp(28px, 3vw, 40px); letter-spacing: -0.025em; line-height: 1.05; }
+  .mod-copy p { margin-top: 16px; font-size: 16px; line-height: 1.55; color: var(--mute); max-width: 48ch; }
+  .mod-copy ul { list-style: none; padding: 0; margin: 24px 0 0; display: flex; flex-direction: column; gap: 12px; }
+  .mod-copy ul li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 15px; color: var(--ink-2); line-height: 1.5;
+  }
+  .mod-copy ul li svg {
+    flex-shrink: 0; margin-top: 4px; color: var(--orange);
+  }
+  .mod-copy ul li strong { font-weight: 500; color: var(--ink); }
+
+  /* Visual frame */
+  .mod-visual {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    padding: 24px;
+    box-shadow: var(--shadow-3);
+    overflow: hidden;
+  }
+  .mod.alt .mod-visual { background: var(--paper); }
+  .mod-visual .meta {
+    position: absolute; top: 16px; left: 18px; right: 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono); font-size: 10px; color: var(--mute-2);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    z-index: 2;
+  }
+
+  /* Lead capture form widget */
+  .mv-leads { padding-top: 44px; display: flex; flex-direction: column; height: 100%; }
+  .mv-leads .row-lead {
+    display: grid; grid-template-columns: auto 1fr auto auto;
+    gap: 12px; align-items: center;
+    padding: 12px 14px; border-radius: 12px;
+    background: var(--paper-2); border: 1px solid var(--line);
+    margin-bottom: 8px;
+  }
+  .mv-leads .row-lead.hot { background: var(--ink); color: white; border-color: var(--ink); }
+  .mv-leads .row-lead.hot .meta-txt { color: rgba(255,255,255,.6); }
+  .mv-leads .row-lead .nm { font-size: 14px; font-weight: 500; letter-spacing: -0.012em; }
+  .mv-leads .row-lead .meta-txt { font-size: 12px; color: var(--mute); margin-top: 2px; }
+  .mv-leads .score {
+    font-family: var(--font-mono); font-size: 10px;
+    padding: 4px 8px; border-radius: 6px;
+    background: var(--paper-3); color: var(--ink-3);
+  }
+  .mv-leads .score.hot { background: var(--orange); color: white; }
+  .mv-leads .score.warm { background: var(--orange-soft); color: var(--orange-ink); }
+
+  /* Pipeline kanban */
+  .mv-kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; height: 100%; padding-top: 32px; }
+  .mv-col {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .mv-col h6 {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 0; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--mute); font-family: var(--font-mono);
+  }
+  .mv-col h6 .n { color: var(--ink); }
+  .mv-col h6 .dt { width: 8px; height: 8px; border-radius: 50%; }
+  .mv-col.hot h6 .dt { background: var(--orange); }
+  .mv-col.warm h6 .dt { background: #7fd0bd; }
+  .mv-col.new h6 .dt { background: var(--mute-3); }
+  .mv-col.won h6 .dt { background: var(--green); }
+  .mv-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px;
+  }
+  .mv-card .t { font-size: 11px; font-weight: 500; letter-spacing: -0.012em; }
+  .mv-card .v { font-family: var(--font-mono); font-size: 10px; color: var(--mute); margin-top: 2px; }
+  .mv-card .bar { margin-top: 6px; height: 3px; border-radius: 2px; background: var(--paper-4); overflow: hidden; }
+  .mv-card .bar .fl { height: 100%; background: var(--orange); border-radius: 2px; }
+  .mv-card.hot { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange-soft); }
+
+  /* AI chat widget */
+  .mv-ai {
+    height: 100%; padding-top: 32px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .mv-msg {
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .mv-msg .av-ai {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative; flex-shrink: 0;
+  }
+  .mv-msg .av-ai::before {
+    content: "";
+    width: 14px; height: 14px; border-radius: 50%;
+    background: conic-gradient(from 0deg, #14a085, #0c6a58, #7fd0bd, #14a085);
+  }
+  .mv-msg .bubble {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 10px 14px;
+    font-size: 13px; line-height: 1.5;
+    flex: 1; color: var(--ink-2);
+  }
+  .mv-msg.client .av-ai { background: var(--orange); }
+  .mv-msg.client .av-ai::before { content: "JM"; width: auto; height: auto; background: none; color: white; font-size: 11px; font-weight: 600; }
+  .mv-msg.client .bubble { background: var(--paper); }
+  .mv-ai .actions {
+    display: flex; gap: 8px; margin-left: 42px; flex-wrap: wrap;
+  }
+  .mv-ai .actions .a {
+    padding: 6px 10px; border-radius: 8px;
+    border: 1px solid var(--line); font-size: 11.5px;
+    background: var(--paper); color: var(--ink-3);
+    display: inline-flex; gap: 6px; align-items: center;
+  }
+  .mv-ai .actions .a.primary { background: var(--orange); color: white; border-color: transparent; }
+  .mv-ai .input {
+    margin-top: auto;
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 12px; background: var(--paper);
+    display: flex; align-items: center; gap: 10px;
+    color: var(--mute-2); font-size: 13px;
+  }
+  .mv-ai .input .send {
+    margin-left: auto; width: 24px; height: 24px;
+    background: var(--ink); color: white; border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* Gantt / project tracking */
+  .mv-gantt { padding-top: 36px; }
+  .mv-gantt .row {
+    display: grid; grid-template-columns: 100px 1fr;
+    align-items: center; gap: 14px;
+    padding: 6px 0; font-size: 12px;
+  }
+  .mv-gantt .lbl {
+    font-family: var(--font-mono); font-size: 10px; color: var(--mute);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .mv-gantt .track {
+    position: relative; height: 22px;
+    background: var(--paper-2); border-radius: 6px;
+    overflow: hidden;
+  }
+  .mv-gantt .seg {
+    position: absolute; top: 4px; bottom: 4px;
+    border-radius: 4px;
+    display: flex; align-items: center; padding: 0 8px;
+    font-size: 10px; color: white; font-weight: 500;
+  }
+  .mv-gantt .seg.ink { background: var(--ink); }
+  .mv-gantt .seg.orange { background: var(--orange); }
+  .mv-gantt .seg.outline { background: transparent; border: 1.5px dashed var(--mute-3); color: var(--mute); }
+  .mv-gantt .now-line {
+    position: absolute; top: -8px; bottom: -8px; width: 1.5px;
+    background: var(--orange); pointer-events: none;
+  }
+  .mv-gantt .now-line::before {
+    content: "TODAY"; position: absolute; top: -16px; left: -22px; color: var(--orange);
+    font-family: var(--font-mono); font-size: 9px;
+  }
+
+  /* Portal preview */
+  .mv-portal { padding-top: 36px; display: flex; flex-direction: column; gap: 12px; }
+  .mv-portal .hero-strip {
+    background: linear-gradient(135deg, #2a2a30, #0a0a0c);
+    color: white; border-radius: 12px;
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .mv-portal .hero-strip .pl-house {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(255,255,255,.08);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .mv-portal .hero-strip .t { font-size: 14px; font-weight: 500; }
+  .mv-portal .hero-strip .s { font-size: 11px; color: rgba(255,255,255,.6); font-family: var(--font-mono); }
+  .mv-portal .hero-strip .pct {
+    margin-left: auto;
+    font-family: var(--font-mono); font-size: 22px; font-weight: 500; letter-spacing: -0.02em;
+  }
+  .mv-portal .tiles {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .mv-portal .tile {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 12px;
+  }
+  .mv-portal .tile .il { font-size: 10px; color: var(--mute); font-family: var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  .mv-portal .tile .iv { font-size: 16px; font-weight: 500; margin-top: 4px; letter-spacing: -0.015em; }
+  .mv-portal .tile.accent .iv { color: var(--orange); }
+  .mv-portal .timeline {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px;
+  }
+  .mv-portal .timeline .step {
+    display: flex; gap: 10px; padding: 4px 0;
+    font-size: 12px; align-items: center;
+  }
+  .mv-portal .timeline .step .dt {
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 2px solid var(--line); background: var(--paper);
+  }
+  .mv-portal .timeline .step.done .dt { background: var(--orange); border-color: var(--orange); }
+  .mv-portal .timeline .step.now .dt { background: var(--paper); border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-soft); }
+  .mv-portal .timeline .step .lab { color: var(--ink-2); }
+  .mv-portal .timeline .step.done .lab { color: var(--ink); }
+  .mv-portal .timeline .step .dt-txt { margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: var(--mute); }
+
+  /* Quote / invoice doc */
+  .mv-doc {
+    height: 100%;
+    padding-top: 32px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mv-doc .sheet {
+    background: white; border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    width: 80%; max-width: 360px;
+    box-shadow: var(--shadow-3);
+    position: relative;
+  }
+  .mv-doc .sheet::after {
+    content: ""; position: absolute; bottom: -12px; right: 20px;
+    width: 60%; height: 14px; background: var(--paper-3); border-radius: 8px;
+    z-index: -1;
+  }
+  .mv-doc h3 { font-size: 14px; margin-bottom: 14px; letter-spacing: -0.02em; }
+  .mv-doc .doc-meta { font-family: var(--font-mono); font-size: 10px; color: var(--mute); display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .mv-doc .li { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; border-bottom: 1px dashed var(--line); }
+  .mv-doc .li .n { color: var(--mute); }
+  .mv-doc .li .v { font-family: var(--font-mono); }
+  .mv-doc .total { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--ink); }
+  .mv-doc .total .l { font-size: 13px; }
+  .mv-doc .total .v { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
+  .mv-doc .sig {
+    margin-top: 14px; display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; background: var(--orange-soft); border-radius: 8px;
+    color: var(--orange-ink); font-size: 11px;
+  }
+
+  /* Service ticket */
+  .mv-svc { padding-top: 32px; display: flex; flex-direction: column; gap: 10px; }
+  .mv-svc .ticket {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+  }
+  .mv-svc .ticket .tno { font-family: var(--font-mono); font-size: 10px; color: var(--mute-2); }
+  .mv-svc .ticket .t { font-size: 13px; font-weight: 500; letter-spacing: -0.012em; }
+  .mv-svc .ticket .s { font-size: 11px; color: var(--mute); margin-top: 2px; }
+  .mv-svc .ticket .pr {
+    padding: 4px 8px; border-radius: 6px; font-size: 10px; font-family: var(--font-mono);
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .mv-svc .ticket .pr.high { background: #fbe8e8; color: var(--red); }
+  .mv-svc .ticket .pr.med { background: #fff1d6; color: #b76e00; }
+  .mv-svc .ticket .pr.low { background: var(--paper-3); color: var(--mute); }
+  .mv-svc .ticket.warranty { background: var(--paper); border-left: 3px solid var(--orange); }
+
+  /* Team */
+  .mv-team { padding-top: 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 100%; align-content: start; }
+  .mv-member {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    text-align: center;
+  }
+  .mv-member .av { width: 40px; height: 40px; font-size: 14px; }
+  .mv-member .nm { font-size: 12px; font-weight: 500; letter-spacing: -0.012em; }
+  .mv-member .rl { font-size: 10px; color: var(--mute); font-family: var(--font-mono); }
+  .mv-member .stat { font-family: var(--font-mono); font-size: 10px; color: var(--green); margin-top: 4px; }
+  .mv-member.lead { background: var(--ink); color: white; border-color: var(--ink); }
+  .mv-member.lead .rl { color: rgba(255,255,255,.6); }
+
+  /* Analytics widget */
+  .mv-analytics { padding-top: 32px; display: flex; flex-direction: column; gap: 12px; height: 100%; }
+  .mv-analytics .row-stat { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mv-analytics .kpi {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px;
+  }
+  .mv-analytics .kpi .l { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; color: var(--mute); letter-spacing: 0.06em; }
+  .mv-analytics .kpi .v { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; margin-top: 4px; }
+  .mv-analytics .chart {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px;
+    flex: 1;
+  }
+
+  /* Call center */
+  .mv-call { padding-top: 32px; display: flex; flex-direction: column; gap: 10px; height: 100%; }
+  .mv-call .live-call {
+    background: var(--ink); color: white;
+    border-radius: 12px; padding: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .mv-call .live-call .pulse {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .mv-call .live-call .pulse::before {
+    content: ""; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid var(--orange); animation: pulse-ring 1.6s ease-out infinite;
+  }
+  @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+  .mv-call .live-call .who { font-size: 13px; font-weight: 500; }
+  .mv-call .live-call .meta { font-size: 11px; color: rgba(255,255,255,.6); font-family: var(--font-mono); }
+  .mv-call .live-call .timer { margin-left: auto; font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+  .mv-call .transcript {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 14px;
+    font-size: 12px; line-height: 1.6;
+    flex: 1;
+  }
+  .mv-call .transcript .speaker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: var(--orange-ink); }
+  .mv-call .transcript .l { color: var(--ink-2); margin-bottom: 8px; }
+
+  /* Pricing band */
+  .pricing { padding: clamp(80px, 9vw, 128px) 0; background: var(--ink); color: white; position: relative; overflow: hidden; }
+  .pricing .glow-orange { width: 600px; height: 600px; left: -200px; top: -160px; opacity: 0.6; }
+  .pricing .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+  }
+  .price-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 56px;
+    position: relative; z-index: 2;
+  }
+  @media (max-width: 880px) { .price-grid { grid-template-columns: 1fr; } }
+  .price-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--r-4);
+    padding: 32px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .price-card.featured {
+    background: var(--orange);
+    border-color: var(--orange);
+    position: relative;
+  }
+  .price-card.featured::before {
+    content: "MOST POPULAR";
+    position: absolute; top: 16px; right: 16px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    background: rgba(0,0,0,0.18); color: white;
+    padding: 4px 8px; border-radius: 999px;
+  }
+  .price-card h3 { color: white; font-size: 20px; letter-spacing: -0.015em; }
+  .price-card .price { display: flex; align-items: baseline; gap: 6px; margin: 18px 0 4px; }
+  .price-card .price .v { font-size: 56px; font-weight: 500; letter-spacing: -0.035em; line-height: 1; }
+  .price-card .price .u { font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,.6); }
+  .price-card.featured .price .u { color: rgba(255,255,255,.85); }
+  .price-card .sub { font-size: 13px; color: rgba(255,255,255,.7); margin-bottom: 24px; }
+  .price-card.featured .sub { color: rgba(255,255,255,.9); }
+  .price-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; }
+  .price-card ul li { display: flex; gap: 10px; align-items: flex-start; color: rgba(255,255,255,.85); }
+  .price-card ul li svg { flex-shrink: 0; margin-top: 4px; color: var(--orange-2); }
+  .price-card.featured ul li svg { color: white; }
+  .price-card .btn { width: 100%; margin-top: 28px; }
+  .price-card.featured .btn-primary { background: white; color: var(--ink); }
+  .price-card .btn-ghost { color: white; border-color: rgba(255,255,255,.2); }
+  .price-card .btn-ghost:hover { background: rgba(255,255,255,.06); }
+
+  /* Compare CTA section */
+  .compare-band {
+    padding: clamp(72px, 8vw, 112px) 0;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE BAND -->
+<div class="page-band" data-screen-label="01 Intro">
+  <div class="grid-bg"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="crumbs">Product / Overview</div>
+    <h1 class="reveal">One platform.<br><span class="accent">Every module. Every feature.</span></h1>
+    <p class="lead reveal" style="--reveal-delay: 80ms;">Sixteen purpose-built modules. Native integrations between every one. Overview, full module catalog, features and capabilities — unified on one page.</p>
+  </div>
+</div>
+
+<!-- ALL MODULES (interactive nav) -->
+<section style="padding: 64px 0 32px;" data-screen-label="02 Modules">
+  <div class="container">
+    <div class="section-head reveal" style="margin-bottom: 8px; max-width: none; display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+      <div style="display:flex; flex-direction: column; gap: 14px;">
+        <span class="eyebrow"><span class="dot"></span>ALL 16 MODULES</span>
+        <h2 class="h-2" style="max-width: 18ch;">Click any module to jump to its details.</h2>
+      </div>
+      <p class="body" style="max-width: 38ch;">Every module is included on every plan. Each one is built to work natively with the others — same data, same rules, same workspace.</p>
+    </div>
+
+    <div class="modules-grid">
+
+      <!-- 01 · CUSTOM DASHBOARD -->
+      <a class="mod-card reveal" href="dashboard.html">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="pi01-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3f3ec"/></linearGradient>
+              <linearGradient id="pi01-base" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient>
+            </defs>
+            <path d="M14,22 L86,22 L82,28 L18,28 Z" fill="#0c6a58"/>
+            <path d="M86,22 L86,72 L82,78 L82,28 Z" fill="#0c6a58"/>
+            <rect x="10" y="18" width="76" height="58" rx="8" fill="url(#pi01-bg)" stroke="#14a085" stroke-width="2.5"/>
+            <rect x="10" y="18" width="76" height="11" rx="8" fill="url(#pi01-base)"/>
+            <rect x="10" y="24" width="76" height="5" fill="url(#pi01-base)"/>
+            <circle cx="17" cy="23.5" r="1.8" fill="#ffffff" opacity="0.9"/>
+            <circle cx="23" cy="23.5" r="1.8" fill="#ffffff" opacity="0.6"/>
+            <circle cx="29" cy="23.5" r="1.8" fill="#ffffff" opacity="0.6"/>
+            <circle cx="32" cy="52" r="14" fill="none" stroke="#dce8e3" stroke-width="6"/>
+            <path d="M32,38 A14,14 0 0 1 44.6,60 L32,52 Z" fill="#14a085"/>
+            <path d="M44.6,60 A14,14 0 0 1 21.7,56 L32,52 Z" fill="#2eba9b"/>
+            <circle cx="32" cy="52" r="5.5" fill="white"/>
+            <rect x="55" y="58" width="6" height="10" rx="1" fill="#7fd0bd"/>
+            <rect x="63" y="50" width="6" height="18" rx="1" fill="#2eba9b"/>
+            <rect x="71" y="42" width="6" height="26" rx="1" fill="#14a085"/>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">01</span>
+          <h3>Custom Dashboard</h3>
+          <p>A personalized dashboard giving you a clear overview of your business.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 02 · LEADS MANAGEMENT -->
+      <a class="mod-card reveal" href="#leads">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi02-f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <circle cx="32" cy="14" r="6" fill="#7fd0bd"/>
+            <path d="M22,32 C22,26 26,22 32,22 C38,22 42,26 42,32 L42,35 L22,35 Z" fill="#7fd0bd"/>
+            <circle cx="62" cy="16" r="6.5" fill="#2eba9b"/>
+            <path d="M52,36 C52,29 56,25 62,25 C68,25 72,29 72,36 L72,40 L52,40 Z" fill="#2eba9b"/>
+            <circle cx="46" cy="20" r="8" fill="#14a085"/>
+            <path d="M34,42 C34,34 39,29 46,29 C53,29 58,34 58,42 L58,46 L34,46 Z" fill="#14a085"/>
+            <path d="M16,46 L66,46 L52,68 L52,82 L30,82 L30,68 Z" fill="url(#pi02-f)" stroke="#0c6a58" stroke-width="1.5"/>
+            <path d="M16,46 L66,46 L60,52 L22,52 Z" fill="#0c6a58" opacity="0.5"/>
+            <g transform="translate(76,72)">
+              <circle r="9" fill="#2eba9b" stroke="#0c6a58" stroke-width="1.2"/>
+              <circle r="3.2" fill="white"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">02</span>
+          <h3>Leads Management</h3>
+          <p>Capture, track and manage leads from all sources in one place.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 03 · CUSTOMER MANAGEMENT -->
+      <a class="mod-card reveal" href="#leads">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi03-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <rect x="20" y="14" width="64" height="72" rx="6" fill="#0c6a58"/>
+            <rect x="16" y="12" width="64" height="72" rx="6" fill="url(#pi03-b)"/>
+            <rect x="16" y="12" width="6" height="72" fill="#0c6a58" opacity="0.4"/>
+            <rect x="28" y="22" width="44" height="56" rx="4" fill="white"/>
+            <circle cx="50" cy="40" r="9" fill="#14a085"/>
+            <path d="M34,68 C34,58 41,52 50,52 C59,52 66,58 66,68 L66,72 L34,72 Z" fill="#14a085"/>
+            <g fill="#0c6a58">
+              <rect x="13" y="22" width="10" height="4" rx="2"/>
+              <rect x="13" y="38" width="10" height="4" rx="2"/>
+              <rect x="13" y="54" width="10" height="4" rx="2"/>
+              <rect x="13" y="70" width="10" height="4" rx="2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">03</span>
+          <h3>Customer Management</h3>
+          <p>Manage customer profiles, history, documents and all interactions.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 04 · QUOTE GENERATION -->
+      <a class="mod-card reveal" href="#quotes">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi04-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <path d="M22,14 L62,14 L78,30 L78,84 L22,84 Z" fill="#0c6a58" opacity="0.2"/>
+            <path d="M18,10 L58,10 L74,26 L74,80 L18,80 Z" fill="white" stroke="#14a085" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M58,10 L74,26 L58,26 Z" fill="#e3f3ec" stroke="#14a085" stroke-width="2"/>
+            <rect x="24" y="20" width="30" height="9" rx="2" fill="#14a085"/>
+            <text x="39" y="27" font-family="Geist, sans-serif" font-size="7" font-weight="700" fill="white" text-anchor="middle">QUOTE</text>
+            <rect x="24" y="36" width="40" height="3" rx="1" fill="#dce8e3"/>
+            <rect x="24" y="43" width="32" height="3" rx="1" fill="#dce8e3"/>
+            <rect x="24" y="50" width="36" height="3" rx="1" fill="#dce8e3"/>
+            <rect x="24" y="57" width="28" height="3" rx="1" fill="#dce8e3"/>
+            <circle cx="70" cy="74" r="14" fill="url(#pi04-c)" stroke="#0c6a58" stroke-width="1.5"/>
+            <text x="70" y="80" font-family="Geist, sans-serif" font-size="18" font-weight="700" fill="white" text-anchor="middle">$</text>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">04</span>
+          <h3>Quote Generation</h3>
+          <p>Create professional quotes quickly with accurate pricing and labels.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 05 · INVOICE GENERATION -->
+      <a class="mod-card reveal" href="#quotes">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi05-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <path d="M22,14 L62,14 L78,30 L78,84 L22,84 Z" fill="#0c6a58" opacity="0.2"/>
+            <path d="M18,10 L58,10 L74,26 L74,80 L18,80 Z" fill="white" stroke="#14a085" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M58,10 L74,26 L58,26 Z" fill="#e3f3ec" stroke="#14a085" stroke-width="2"/>
+            <text x="42" y="26" font-family="Geist, sans-serif" font-size="9" font-weight="800" fill="#0c6a58" text-anchor="middle">INVOICE</text>
+            <line x1="22" y1="30" x2="64" y2="30" stroke="#14a085" stroke-width="1.5"/>
+            <rect x="22" y="36" width="48" height="4" rx="1" fill="#e3f3ec"/>
+            <rect x="22" y="36" width="32" height="4" rx="1" fill="#14a085"/>
+            <rect x="22" y="44" width="48" height="4" rx="1" fill="#e3f3ec"/>
+            <rect x="22" y="44" width="24" height="4" rx="1" fill="#2eba9b"/>
+            <rect x="22" y="52" width="48" height="4" rx="1" fill="#e3f3ec"/>
+            <rect x="22" y="52" width="38" height="4" rx="1" fill="#7fd0bd"/>
+            <rect x="22" y="62" width="48" height="6" rx="2" fill="#0c6a58"/>
+            <circle cx="70" cy="74" r="14" fill="url(#pi05-c)" stroke="#0c6a58" stroke-width="1.5"/>
+            <text x="70" y="80" font-family="Geist, sans-serif" font-size="18" font-weight="700" fill="white" text-anchor="middle">$</text>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">05</span>
+          <h3>Invoice Generation</h3>
+          <p>Generate invoices, track payments and manage billing with ease.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 06 · SALES AGREEMENT -->
+      <a class="mod-card reveal" href="agreements.html">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi06-p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <path d="M18,18 L52,18 L66,32 L66,84 L18,84 Z" fill="#0c6a58" opacity="0.18"/>
+            <path d="M14,14 L48,14 L62,28 L62,80 L14,80 Z" fill="white" stroke="#14a085" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M48,14 L62,28 L48,28 Z" fill="#e3f3ec" stroke="#14a085" stroke-width="2"/>
+            <rect x="20" y="34" width="34" height="2.5" rx="1" fill="#dce8e3"/>
+            <rect x="20" y="40" width="28" height="2.5" rx="1" fill="#dce8e3"/>
+            <rect x="20" y="46" width="32" height="2.5" rx="1" fill="#dce8e3"/>
+            <path d="M22,62 C26,55 30,68 34,60 C37,54 41,65 46,58 C49,54 53,62 56,58" fill="none" stroke="#14a085" stroke-width="2.4" stroke-linecap="round"/>
+            <g transform="translate(58, 36) rotate(35)">
+              <rect x="-3" y="0" width="6" height="32" rx="2" fill="url(#pi06-p)"/>
+              <rect x="-3" y="0" width="6" height="6" rx="2" fill="#0c6a58"/>
+              <path d="M-3,32 L3,32 L0,38 Z" fill="#0c6a58"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">06</span>
+          <h3>Sales Agreement &amp; Signature</h3>
+          <p>Create agreements and collect digital signatures securely.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 07 · MANAGE REQUESTS -->
+      <a class="mod-card reveal" href="#leads">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi07-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <path d="M14,22 L86,22 L82,28 L18,28 Z" fill="#0c6a58"/>
+            <path d="M86,22 L86,76 L82,82 L82,28 Z" fill="#0c6a58"/>
+            <rect x="10" y="18" width="76" height="62" rx="8" fill="white" stroke="#14a085" stroke-width="2.5"/>
+            <rect x="10" y="18" width="76" height="11" rx="8" fill="url(#pi07-g)"/>
+            <rect x="10" y="24" width="76" height="5" fill="url(#pi07-g)"/>
+            <rect x="18" y="38" width="44" height="6" rx="2" fill="#14a085"/>
+            <rect x="18" y="48" width="58" height="6" rx="2" fill="#e3f3ec"/>
+            <rect x="18" y="58" width="50" height="6" rx="2" fill="#7fd0bd"/>
+            <rect x="18" y="68" width="36" height="6" rx="2" fill="#2eba9b"/>
+            <g transform="translate(64, 56) rotate(-15)">
+              <path d="M0,0 L0,18 L4,14 L7,21 L10,19 L7,12 L13,12 Z" fill="white" stroke="#0c6a58" stroke-width="1.5" stroke-linejoin="round"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">07</span>
+          <h3>Manage Requests from Website</h3>
+          <p>Manage online requests, quote requests and form submissions in one place.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 08 · CLAIM CENTER -->
+      <a class="mod-card reveal" href="#service">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi08-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <path d="M20,52 C20,30 36,16 50,16 C64,16 80,30 80,52" fill="none" stroke="url(#pi08-b)" stroke-width="9" stroke-linecap="round"/>
+            <rect x="14" y="50" width="22" height="32" rx="10" fill="url(#pi08-b)" stroke="#0c6a58" stroke-width="1.5"/>
+            <rect x="18" y="54" width="14" height="22" rx="6" fill="#0c6a58" opacity="0.45"/>
+            <rect x="64" y="50" width="22" height="32" rx="10" fill="url(#pi08-b)" stroke="#0c6a58" stroke-width="1.5"/>
+            <g transform="translate(75,66)">
+              <circle r="9" fill="white"/>
+              <circle r="3.5" fill="#14a085"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">08</span>
+          <h3>Claim Center</h3>
+          <p>Manage claims, track status and resolve customer issues efficiently.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 09 · PAYMENT CENTER -->
+      <a class="mod-card reveal" href="#quotes">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="pi09-w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient>
+              <linearGradient id="pi09-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fd0bd"/><stop offset="1" stop-color="#0c6a58"/></linearGradient>
+            </defs>
+            <rect x="14" y="28" width="68" height="52" rx="8" fill="url(#pi09-w)" stroke="#0c6a58" stroke-width="1.5"/>
+            <path d="M14,32 L82,32 L82,40 L14,40 Z" fill="#0c6a58" opacity="0.3"/>
+            <rect x="50" y="50" width="32" height="12" rx="6" fill="#0c6a58"/>
+            <circle cx="60" cy="56" r="9" fill="url(#pi09-c)" stroke="white" stroke-width="2"/>
+            <text x="60" y="60.5" font-family="Geist, sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle">$</text>
+            <rect x="40" y="22" width="20" height="14" rx="3" fill="#2eba9b" stroke="#0c6a58" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">09</span>
+          <h3>Payment Center</h3>
+          <p>Accept payments, track transactions and manage financials securely.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 10 · EMAIL MARKETING -->
+      <a class="mod-card reveal" href="marketing.html">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="pi10-e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient>
+              <linearGradient id="pi10-m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient>
+            </defs>
+            <rect x="14" y="38" width="72" height="48" rx="4" fill="url(#pi10-e)" stroke="#0c6a58" stroke-width="1.5"/>
+            <path d="M14,42 L50,68 L86,42 L86,46 L50,72 L14,46 Z" fill="#0c6a58"/>
+            <path d="M14,86 L50,58 L86,86 Z" fill="url(#pi10-e)"/>
+            <g transform="translate(36, 22) rotate(-15)">
+              <path d="M0,12 L26,4 L26,28 L0,20 Z" fill="url(#pi10-m)" stroke="#0c6a58" stroke-width="1.5" stroke-linejoin="round"/>
+              <rect x="-6" y="11" width="6" height="10" rx="1" fill="#0c6a58"/>
+              <path d="M30,8 C33,12 33,20 30,24" fill="none" stroke="#14a085" stroke-width="1.6" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">10</span>
+          <h3>Email Marketing Center</h3>
+          <p>Create campaigns, automate emails and track customer engagement.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 11 · SOCIAL MEDIA & ADS -->
+      <a class="mod-card reveal" href="marketing.html">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi11-p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <rect x="20" y="14" width="44" height="74" rx="8" fill="url(#pi11-p)" stroke="#0c6a58" stroke-width="1.5"/>
+            <rect x="24" y="22" width="36" height="58" rx="3" fill="white"/>
+            <g transform="translate(36,42)">
+              <path d="M0,0 C-3,-5 -8,-2 -8,2 C-8,7 0,12 0,12 C0,12 8,7 8,2 C8,-2 3,-5 0,0 Z" fill="#14a085"/>
+            </g>
+            <g transform="translate(72, 22)">
+              <circle r="11" fill="#14a085" stroke="#0c6a58" stroke-width="1.2"/>
+              <path d="M0,2 C0,-2 1,-6 3,-7 C5,-8 5,-5 4,-2 L7,-2 C8,-2 8,-1 8,0 L8,4 C7,5 6,5 5,5 L0,5 Z" fill="white"/>
+            </g>
+            <g transform="translate(78, 50)">
+              <circle r="11" fill="white" stroke="#0c6a58" stroke-width="1.5"/>
+              <path d="M0,-2 C-2.5,-6 -7,-3.5 -7,0 C-7,4 0,7 0,7 C0,7 7,4 7,0 C7,-3.5 2.5,-6 0,-2 Z" fill="#14a085"/>
+            </g>
+            <g transform="translate(72, 78)">
+              <circle r="11" fill="#14a085" stroke="#0c6a58" stroke-width="1.2"/>
+              <path d="M-3,-5 L5,0 L-3,5 Z" fill="white"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">11</span>
+          <h3>Social Media &amp; Ads Center</h3>
+          <p>Manage social accounts, run ads and track performance from one dashboard.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 12 · DIGITAL CALL CENTER -->
+      <a class="mod-card reveal" href="#call">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi12-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <path d="M20,46 C20,28 34,14 50,14 C66,14 80,28 80,46" fill="none" stroke="url(#pi12-b)" stroke-width="9" stroke-linecap="round"/>
+            <rect x="14" y="44" width="22" height="32" rx="10" fill="url(#pi12-b)" stroke="#0c6a58" stroke-width="1.5"/>
+            <rect x="64" y="44" width="22" height="32" rx="10" fill="url(#pi12-b)" stroke="#0c6a58" stroke-width="1.5"/>
+            <path d="M75,76 Q86,80 78,86" fill="none" stroke="url(#pi12-b)" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="78" cy="86" r="3" fill="#14a085" stroke="#0c6a58" stroke-width="1"/>
+            <g transform="translate(54,68)">
+              <path d="M-8,-10 L18,-10 C20,-10 22,-8 22,-6 L22,4 C22,6 20,8 18,8 L8,8 L4,14 L4,8 L-8,8 C-10,8 -12,6 -12,4 L-12,-6 C-12,-8 -10,-10 -8,-10 Z" fill="white" stroke="#0c6a58" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="-3" cy="-1" r="1.6" fill="#14a085"/>
+              <circle cx="5" cy="-1" r="1.6" fill="#14a085"/>
+              <circle cx="13" cy="-1" r="1.6" fill="#14a085"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">12</span>
+          <h3>Digital Call Center</h3>
+          <p>Make and receive calls, record conversations and improve customer service.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 13 · TRACKING CENTER -->
+      <a class="mod-card reveal" href="#projects">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi13-m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <rect x="42" y="76" width="16" height="4" fill="#0c6a58"/>
+            <rect x="32" y="80" width="36" height="4" rx="2" fill="url(#pi13-m)"/>
+            <rect x="10" y="16" width="80" height="58" rx="6" fill="url(#pi13-m)" stroke="#0c6a58" stroke-width="1.5"/>
+            <rect x="14" y="20" width="72" height="48" rx="3" fill="white"/>
+            <path d="M20,56 Q30,40 42,46 T64,42 T82,30" fill="none" stroke="#14a085" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"/>
+            <g transform="translate(22, 38)">
+              <path d="M0,0 C-4,0 -7,3 -7,7 C-7,12 0,18 0,18 C0,18 7,12 7,7 C7,3 4,0 0,0 Z" fill="#14a085" stroke="#0c6a58" stroke-width="1.3"/>
+              <circle cx="0" cy="7" r="2.5" fill="white"/>
+            </g>
+            <g transform="translate(48, 50)">
+              <rect x="-12" y="-7" width="14" height="10" rx="1" fill="#14a085" stroke="#0c6a58" stroke-width="1"/>
+              <path d="M2,-3 L8,-3 L11,1 L11,3 L2,3 Z" fill="#2eba9b" stroke="#0c6a58" stroke-width="1"/>
+              <circle cx="-7" cy="5" r="2.5" fill="#0c6a58"/>
+              <circle cx="6" cy="5" r="2.5" fill="#0c6a58"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">13</span>
+          <h3>Tracking Center</h3>
+          <p>Notify customers from each step and track projects in real-time.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 14 · TEAM & USERS -->
+      <a class="mod-card reveal" href="#team">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="28" cy="32" r="8" fill="#7fd0bd"/>
+            <path d="M14,58 C14,49 20,42 28,42 C36,42 42,49 42,58 L42,62 L14,62 Z" fill="#7fd0bd"/>
+            <circle cx="68" cy="34" r="9" fill="#2eba9b"/>
+            <path d="M52,60 C52,50 59,42 68,42 C77,42 84,50 84,60 L84,64 L52,64 Z" fill="#2eba9b"/>
+            <circle cx="48" cy="28" r="11" fill="#14a085" stroke="#0c6a58" stroke-width="1.5"/>
+            <path d="M30,60 C30,48 38,40 48,40 C58,40 66,48 66,60 L66,66 L30,66 Z" fill="#14a085" stroke="#0c6a58" stroke-width="1.5" stroke-linejoin="round"/>
+            <g transform="translate(70, 76)">
+              <circle r="11" fill="#0c6a58"/>
+              <circle r="4" fill="white"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">14</span>
+          <h3>Team &amp; Users Management</h3>
+          <p>Add team members and manage roles and permissions easily.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 15 · ACCOUNTING -->
+      <a class="mod-card reveal" href="#analytics">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi15-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <path d="M12,12 L48,12 L62,26 L62,68 L12,68 Z" fill="white" stroke="#14a085" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M48,12 L62,26 L48,26 Z" fill="#e3f3ec" stroke="#14a085" stroke-width="2"/>
+            <rect x="18" y="32" width="28" height="3" rx="1" fill="#dce8e3"/>
+            <rect x="18" y="38" width="20" height="3" rx="1" fill="#dce8e3"/>
+            <rect x="18" y="44" width="24" height="3" rx="1" fill="#14a085"/>
+            <rect x="40" y="48" width="48" height="44" rx="6" fill="url(#pi15-c)" stroke="#0c6a58" stroke-width="1.5"/>
+            <rect x="44" y="52" width="40" height="11" rx="2" fill="white"/>
+            <text x="80" y="60.5" font-family="Geist Mono, monospace" font-size="8" font-weight="600" fill="#0c6a58" text-anchor="end">$ 48,200</text>
+            <g fill="white">
+              <rect x="44" y="67" width="8" height="6" rx="1.2"/>
+              <rect x="54" y="67" width="8" height="6" rx="1.2"/>
+              <rect x="64" y="67" width="8" height="6" rx="1.2"/>
+              <rect x="74" y="67" width="10" height="6" rx="1.2" fill="#7fd0bd"/>
+              <rect x="44" y="75" width="8" height="6" rx="1.2"/>
+              <rect x="54" y="75" width="8" height="6" rx="1.2"/>
+              <rect x="64" y="75" width="8" height="6" rx="1.2"/>
+              <rect x="74" y="75" width="10" height="6" rx="1.2" fill="#7fd0bd"/>
+              <rect x="44" y="83" width="8" height="6" rx="1.2"/>
+              <rect x="54" y="83" width="8" height="6" rx="1.2"/>
+              <rect x="64" y="83" width="8" height="6" rx="1.2"/>
+              <rect x="74" y="83" width="10" height="6" rx="1.2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">15</span>
+          <h3>Accounting Center</h3>
+          <p>Full accounting management with reports, expenses and more.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+      <!-- 16 · CUSTOMER PORTAL -->
+      <a class="mod-card reveal" href="#portal">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="pi16-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2eba9b"/><stop offset="1" stop-color="#0c6a58"/></linearGradient></defs>
+            <path d="M14,22 L86,22 L82,28 L18,28 Z" fill="#0c6a58"/>
+            <path d="M86,22 L86,76 L82,82 L82,28 Z" fill="#0c6a58"/>
+            <rect x="10" y="18" width="76" height="62" rx="8" fill="white" stroke="#14a085" stroke-width="2.5"/>
+            <rect x="10" y="18" width="76" height="11" rx="8" fill="url(#pi16-g)"/>
+            <rect x="10" y="24" width="76" height="5" fill="url(#pi16-g)"/>
+            <circle cx="42" cy="48" r="9" fill="#14a085"/>
+            <path d="M26,72 C26,62 34,56 42,56 C50,56 58,62 58,72 L58,76 L26,76 Z" fill="#14a085"/>
+            <g transform="translate(68, 60)">
+              <path d="M-7,-5 C-7,-12 -3,-15 0,-15 C3,-15 7,-12 7,-5" fill="none" stroke="#0c6a58" stroke-width="2.5" stroke-linecap="round"/>
+              <rect x="-10" y="-5" width="20" height="16" rx="3" fill="url(#pi16-g)" stroke="#0c6a58" stroke-width="1.5"/>
+              <circle cx="0" cy="2" r="2.2" fill="white"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mod-text">
+          <span class="mod-number">16</span>
+          <h3>Customer Portal</h3>
+          <p>Customers can access, pay, view and sign their projects anytime.</p>
+        </div>
+        <span class="arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- Module quick-jump (sticky chip nav for compact scrolling) -->
+<div class="mod-nav">
+  <div class="mod-nav-inner">
+    <a class="chip" href="#leads"><span class="n">01</span>Leads</a>
+    <a class="chip" href="#pipeline"><span class="n">02</span>Pipeline</a>
+    <a class="chip" href="#ai"><span class="n">03</span>AI Assistant</a>
+    <a class="chip" href="#projects"><span class="n">04</span>Projects</a>
+    <a class="chip" href="#portal"><span class="n">05</span>Customer Portal</a>
+    <a class="chip" href="#quotes"><span class="n">06</span>Quotes & Invoices</a>
+    <a class="chip" href="#service"><span class="n">07</span>Service & Warranty</a>
+    <a class="chip" href="#team"><span class="n">08</span>Team</a>
+    <a class="chip" href="#analytics"><span class="n">09</span>Analytics</a>
+    <a class="chip" href="#call"><span class="n">10</span>Call Center</a>
+    <a class="chip" href="marketing.html"><span class="n">11</span>Marketing</a>
+    <a class="chip" href="agreements.html"><span class="n">12</span>Agreements</a>
+  </div>
+</div>
+
+<!-- 01 · LEAD MANAGEMENT -->
+<section class="mod" id="leads" data-screen-label="01 Leads">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-copy reveal">
+        <div class="num">Module 01</div>
+        <h2>Capture every lead.<br>Lose none.</h2>
+        <p>Every form fill, missed call, ad click, and referral lands in one inbox — auto-scored, auto-assigned, and ready to work in seconds.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Multi-channel capture</strong> — web forms, phone, ads, referrals, walk-ins.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>AI lead scoring</strong> based on budget, timeline, and source.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Smart routing</strong> to the right rep, in the right territory, instantly.</span></li>
+        </ul>
+      </div>
+
+      <div class="mod-visual reveal">
+        <div class="meta"><span>LEADS · TODAY</span><span>12 NEW</span></div>
+        <div class="mv-leads">
+          <div class="row-lead hot">
+            <span class="avatar" style="background:#14a085">JM</span>
+            <div>
+              <div class="nm">Jonah Mercer</div>
+              <div class="meta-txt">Outdoor kitchen · referred by Sara R.</div>
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 11px;">$48k</span>
+            <span class="score hot">94</span>
+          </div>
+          <div class="row-lead">
+            <span class="avatar b2">DC</span>
+            <div>
+              <div class="nm">Devin Choi</div>
+              <div class="meta-txt">Pergola + screens · web form</div>
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--mute);">$67k</span>
+            <span class="score warm">81</span>
+          </div>
+          <div class="row-lead">
+            <span class="avatar b3">SR</span>
+            <div>
+              <div class="nm">Sara Reyes</div>
+              <div class="meta-txt">Patio cover · Google ad</div>
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--mute);">$22k</span>
+            <span class="score warm">67</span>
+          </div>
+          <div class="row-lead">
+            <span class="avatar b4">PT</span>
+            <div>
+              <div class="nm">Priya Tan</div>
+              <div class="meta-txt">Landscape redesign · referral</div>
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--mute);">$31k</span>
+            <span class="score">54</span>
+          </div>
+          <div class="row-lead">
+            <span class="avatar b5">MK</span>
+            <div>
+              <div class="nm">Marcus Khan</div>
+              <div class="meta-txt">Cabinet refresh · phone</div>
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--mute);">$14k</span>
+            <span class="score">42</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 · SALES PIPELINE -->
+<section class="mod alt flip" id="pipeline" data-screen-label="02 Pipeline">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-visual reveal">
+        <div class="meta"><span>PIPELINE · Q2</span><span>$1.42M FORECAST</span></div>
+        <div class="mv-kanban">
+          <div class="mv-col new">
+            <h6><span><span class="dt"></span> New</span><span class="n">12</span></h6>
+            <div class="mv-card"><div class="t">Henderson pergola</div><div class="v">$48k · 14d</div><div class="bar"><div class="fl" style="width:20%"></div></div></div>
+            <div class="mv-card"><div class="t">Choi outdoor kitchen</div><div class="v">$67k · 8d</div><div class="bar"><div class="fl" style="width:25%"></div></div></div>
+            <div class="mv-card"><div class="t">Reyes patio cover</div><div class="v">$22k · 6d</div><div class="bar"><div class="fl" style="width:15%"></div></div></div>
+          </div>
+          <div class="mv-col warm">
+            <h6><span><span class="dt"></span> Quoted</span><span class="n">8</span></h6>
+            <div class="mv-card"><div class="t">Marcus cabinets</div><div class="v">$31k · 21d</div><div class="bar"><div class="fl" style="width:50%"></div></div></div>
+            <div class="mv-card hot"><div class="t">Tan landscaping</div><div class="v">$54k · 12d</div><div class="bar"><div class="fl" style="width:65%"></div></div></div>
+          </div>
+          <div class="mv-col hot">
+            <h6><span><span class="dt"></span> Won</span><span class="n">6</span></h6>
+            <div class="mv-card"><div class="t">Northfield deck</div><div class="v">$112k</div><div class="bar"><div class="fl" style="width:100%"></div></div></div>
+            <div class="mv-card"><div class="t">Volpe pergola</div><div class="v">$84k</div><div class="bar"><div class="fl" style="width:100%"></div></div></div>
+            <div class="mv-card"><div class="t">Brennan kitchen</div><div class="v">$96k</div><div class="bar"><div class="fl" style="width:100%"></div></div></div>
+          </div>
+          <div class="mv-col won">
+            <h6><span><span class="dt"></span> Build</span><span class="n">4</span></h6>
+            <div class="mv-card"><div class="t">Mercer outdoor</div><div class="v">$48k · phase 3</div><div class="bar"><div class="fl" style="width:60%"></div></div></div>
+            <div class="mv-card"><div class="t">Lopez flooring</div><div class="v">$28k · phase 2</div><div class="bar"><div class="fl" style="width:35%"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-copy reveal">
+        <div class="num">Module 02</div>
+        <h2>A pipeline that moves itself forward.</h2>
+        <p>Kanban or list. Drag deals between stages, or let ByPlan move them automatically as quotes get signed and deposits land.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Custom stages</strong> per industry — pergola, landscape, cabinet, your call.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Win probability</strong> calculated from your historical data, not a guess.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Forecast revenue</strong> by month, rep, region, or product line.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 · AI ASSISTANT -->
+<section class="mod" id="ai" data-screen-label="03 AI">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-copy reveal">
+        <div class="num">Module 03</div>
+        <h2>An AI that actually knows your business.</h2>
+        <p>ByPlan AI is trained on every quote you've sent, every project you've built, and every conversation you've had. It speaks like your best rep.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Auto-reply</strong> to leads in your voice, 24/7, with the right context.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Draft quotes</strong> from a photo, a phone call, or a one-line description.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Summarize calls</strong> and create the follow-up tasks automatically.</span></li>
+        </ul>
+        <a class="btn btn-ghost btn-sm" style="margin-top: 28px;" href="ai.html">See ByPlan AI in action →</a>
+      </div>
+
+      <div class="mod-visual reveal" style="background: var(--ink); color: white; border-color: var(--ink);">
+        <div class="meta" style="color: rgba(255,255,255,.5);"><span>BYPLAN AI · 2:14 PM</span><span>● LIVE</span></div>
+        <div class="mv-ai">
+          <div class="mv-msg client">
+            <div class="av-ai"></div>
+            <div class="bubble" style="background: rgba(255,255,255,.06); color: rgba(255,255,255,.9); border-color: rgba(255,255,255,.1);">
+              Hey, do you guys do pergolas with integrated heating? Looking at something around 14×16, budget under $50k.
+            </div>
+          </div>
+          <div class="mv-msg">
+            <div class="av-ai"></div>
+            <div class="bubble" style="background: var(--paper); color: var(--ink-2); border-color: transparent;">
+              Yes — heated cedar pergolas at that size run $42–48k including infrared heaters and dimmable lighting. Want me to put together a draft estimate based on your specs?
+            </div>
+          </div>
+          <div class="actions">
+            <span class="a primary">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>
+              Generate quote
+            </span>
+            <span class="a" style="background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.85);">+ Book site visit</span>
+            <span class="a" style="background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.85);">Hand to rep</span>
+          </div>
+          <div class="input" style="background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.5);">
+            Reply with context…
+            <span class="send"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 · PROJECT TRACKING -->
+<section class="mod alt flip" id="projects" data-screen-label="04 Projects">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-visual reveal">
+        <div class="meta"><span>HENDERSON PERGOLA · PHASE 3 / 5</span><span>ON TRACK</span></div>
+        <div class="mv-gantt">
+          <div class="row">
+            <div class="lbl">Design</div>
+            <div class="track">
+              <div class="seg ink" style="left:0; width:18%;">Done</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lbl">Permits</div>
+            <div class="track">
+              <div class="seg ink" style="left:14%; width:14%;">Filed</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lbl">Materials</div>
+            <div class="track">
+              <div class="seg ink" style="left:24%; width:18%;">Ordered</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lbl">Framing</div>
+            <div class="track">
+              <div class="seg orange" style="left:38%; width:24%;">In progress</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lbl">Electrical</div>
+            <div class="track">
+              <div class="seg outline" style="left:58%; width:14%;">Apr 28</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lbl">Finish</div>
+            <div class="track">
+              <div class="seg outline" style="left:70%; width:18%;">May 14</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="lbl">Walkthrough</div>
+            <div class="track">
+              <div class="seg outline" style="left:86%; width:8%;">May 22</div>
+              <div class="now-line" style="left: 50%;"></div>
+            </div>
+          </div>
+          <div style="display:flex; gap: 6px; margin-top: 14px;">
+            <span class="avatar">RV</span>
+            <span class="avatar b2">JG</span>
+            <span class="avatar b4">MP</span>
+            <span class="avatar b3">DS</span>
+            <span style="margin-left:8px; font-family: var(--font-mono); font-size: 10.5px; color: var(--mute); align-self: center;">CREW · 4 ASSIGNED</span>
+          </div>
+        </div>
+      </div>
+      <div class="mod-copy reveal">
+        <div class="num">Module 04</div>
+        <h2>Every phase, every crew, every dependency.</h2>
+        <p>Plan a project once. ByPlan tracks every phase, materials order, and crew assignment — and tells you the second something slips.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Phase templates</strong> for every industry — adapt in 30 seconds.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Crew + materials</strong> linked to milestones, so nothing arrives early or late.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Real-time progress</strong> from the field, with photos and notes.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 · CUSTOMER PORTAL -->
+<section class="mod" id="portal" data-screen-label="05 Portal">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-copy reveal">
+        <div class="num">Module 05</div>
+        <h2>Give your clients a portal they'll actually log into.</h2>
+        <p>Branded, beautiful, and built for the people you're building for. Quotes, designs, invoices, service requests — all in one private space.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>White-labeled</strong> to your brand colors, logo, and domain.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>3D designs &amp; renders</strong> — upload and clients can leave inline feedback.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Pay deposits + invoices</strong> in one click, ACH or card.</span></li>
+        </ul>
+      </div>
+
+      <div class="mod-visual reveal">
+        <div class="meta"><span>CLIENT PORTAL · HENDERSON FAMILY</span><span>WHITE-LABELED</span></div>
+        <div class="mv-portal">
+          <div class="hero-strip">
+            <div class="pl-house">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8m18 13V8M3 8h18M5 8v-3h3M19 8v-3h-3M9 8v13M15 8v13M3 12h18M3 16h18"/></svg>
+            </div>
+            <div>
+              <div class="t">Henderson Pergola</div>
+              <div class="s">PROJECT · #PRG-2641</div>
+            </div>
+            <div class="pct">62%</div>
+          </div>
+          <div class="tiles">
+            <div class="tile">
+              <div class="il">Quote</div>
+              <div class="iv">$48,200</div>
+            </div>
+            <div class="tile accent">
+              <div class="il">Deposit</div>
+              <div class="iv">Paid</div>
+            </div>
+            <div class="tile">
+              <div class="il">Next visit</div>
+              <div class="iv">May 22</div>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="step done"><span class="dt"></span><span class="lab">Design approved</span><span class="dt-txt">APR 04</span></div>
+            <div class="step done"><span class="dt"></span><span class="lab">Permits filed</span><span class="dt-txt">APR 11</span></div>
+            <div class="step done"><span class="dt"></span><span class="lab">Materials delivered</span><span class="dt-txt">APR 26</span></div>
+            <div class="step now"><span class="dt"></span><span class="lab">Framing in progress</span><span class="dt-txt">NOW</span></div>
+            <div class="step"><span class="dt"></span><span class="lab">Electrical &amp; lighting</span><span class="dt-txt">MAY 14</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 · QUOTES & INVOICES -->
+<section class="mod alt flip" id="quotes" data-screen-label="06 Quotes">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-visual reveal">
+        <div class="meta"><span>QUOTE · #QT-1142</span><span>SENT · 12 MIN AGO</span></div>
+        <div class="mv-doc">
+          <div class="sheet">
+            <div style="display:flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; color: var(--mute); text-transform: uppercase;">CEDARWORKS LLC</div>
+                <h3>Pergola Estimate</h3>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-family: var(--font-mono); font-size: 9px; color: var(--mute);">#QT-1142</div>
+                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--ink); margin-top: 2px;">May 19, 2026</div>
+              </div>
+            </div>
+            <div class="doc-meta">
+              <span>FOR · HENDERSON FAMILY</span>
+              <span>14×16 CEDAR</span>
+            </div>
+            <div class="li"><span class="n">Structural framing</span><span class="v">$18,400</span></div>
+            <div class="li"><span class="n">Cedar planking</span><span class="v">$12,200</span></div>
+            <div class="li"><span class="n">Infrared heaters (2)</span><span class="v">$6,800</span></div>
+            <div class="li"><span class="n">Dimmable lighting</span><span class="v">$4,200</span></div>
+            <div class="li"><span class="n">Install + finish</span><span class="v">$6,600</span></div>
+            <div class="total">
+              <span class="l">Total</span>
+              <span class="v">$48,200</span>
+            </div>
+            <div class="sig">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Signed by R. Henderson · 12 min ago
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mod-copy reveal">
+        <div class="num">Module 06</div>
+        <h2>Quote in minutes.<br>Get paid in days.</h2>
+        <p>Branded PDFs, e-signature, deposit collection — done in one flow. ByPlan chases the rest.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Material price lists</strong> tied to your suppliers, updated automatically.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>E-signature + deposit</strong> — clients sign and pay in one click.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Auto-reminders</strong> for unpaid invoices — no more chasing checks.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 · SERVICE & WARRANTY -->
+<section class="mod" id="service" data-screen-label="07 Service">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-copy reveal">
+        <div class="num">Module 07</div>
+        <h2>Warranty &amp; service, finally taken seriously.</h2>
+        <p>Tickets, dispatch, SLA tracking, and parts — purpose-built for the long tail of every project you finish.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Warranty register</strong> — automatic, tied to every project you close.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Mobile dispatch</strong> — assign, route, and update status from the truck.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>SLA tracking</strong> — never miss a response window, ever.</span></li>
+        </ul>
+      </div>
+
+      <div class="mod-visual reveal">
+        <div class="meta"><span>SERVICE QUEUE</span><span>4 ACTIVE</span></div>
+        <div class="mv-svc">
+          <div class="ticket warranty">
+            <div>
+              <div class="tno">#SVC-204</div>
+              <span class="avatar" style="margin-top:4px;">RH</span>
+            </div>
+            <div>
+              <div class="t">Henderson · pergola lighting flicker</div>
+              <div class="s">Warranty · 6 months in · 2hr SLA</div>
+            </div>
+            <span class="pr high">High</span>
+          </div>
+          <div class="ticket">
+            <div>
+              <div class="tno">#SVC-203</div>
+              <span class="avatar b2" style="margin-top:4px;">MK</span>
+            </div>
+            <div>
+              <div class="t">Khan · cabinet door alignment</div>
+              <div class="s">Routine · scheduled May 24</div>
+            </div>
+            <span class="pr med">Med</span>
+          </div>
+          <div class="ticket">
+            <div>
+              <div class="tno">#SVC-201</div>
+              <span class="avatar b4" style="margin-top:4px;">DS</span>
+            </div>
+            <div>
+              <div class="t">Singh · annual deck refinish</div>
+              <div class="s">Recurring · booked Jun 04</div>
+            </div>
+            <span class="pr low">Low</span>
+          </div>
+          <div class="ticket">
+            <div>
+              <div class="tno">#SVC-199</div>
+              <span class="avatar b3" style="margin-top:4px;">PT</span>
+            </div>
+            <div>
+              <div class="t">Tan · landscape irrigation check</div>
+              <div class="s">Routine · scheduled May 27</div>
+            </div>
+            <span class="pr low">Low</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 · TEAM MANAGEMENT -->
+<section class="mod alt flip" id="team" data-screen-label="08 Team">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-visual reveal">
+        <div class="meta"><span>TEAM · CEDARWORKS LLC</span><span>9 ACTIVE</span></div>
+        <div class="mv-team">
+          <div class="mv-member lead">
+            <span class="avatar" style="background: var(--orange);">RV</span>
+            <div class="nm">Rosa Vega</div>
+            <div class="rl">OWNER · CEO</div>
+            <div class="stat" style="color:var(--orange-2);">8 deals · $412k</div>
+          </div>
+          <div class="mv-member">
+            <span class="avatar b2">JG</span>
+            <div class="nm">Jamal Greene</div>
+            <div class="rl">SALES LEAD</div>
+            <div class="stat">12 deals · $284k</div>
+          </div>
+          <div class="mv-member">
+            <span class="avatar b4">MP</span>
+            <div class="nm">Maya Park</div>
+            <div class="rl">PROJECT MGR</div>
+            <div class="stat">5 projects · 98% on-time</div>
+          </div>
+          <div class="mv-member">
+            <span class="avatar b3">DS</span>
+            <div class="nm">Diego Silva</div>
+            <div class="rl">CREW LEAD</div>
+            <div class="stat">142 hrs / mo</div>
+          </div>
+          <div class="mv-member">
+            <span class="avatar b5">AC</span>
+            <div class="nm">Amelia Cho</div>
+            <div class="rl">DESIGNER</div>
+            <div class="stat">9 designs · 4.9★</div>
+          </div>
+          <div class="mv-member">
+            <span class="avatar b6">+4</span>
+            <div class="nm">4 more</div>
+            <div class="rl">CREW + ADMIN</div>
+            <div class="stat" style="color: var(--mute);">View all →</div>
+          </div>
+        </div>
+      </div>
+      <div class="mod-copy reveal">
+        <div class="num">Module 08</div>
+        <h2>Your whole team.<br>One source of truth.</h2>
+        <p>Roles, permissions, schedules, performance — manage your office and your field crew in one place.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Roles + permissions</strong> — show field crew only what they need.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Time + scheduling</strong> — clock in, jobsite GPS, payroll exports.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Performance dashboards</strong> by rep, crew, and project.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 · ANALYTICS -->
+<section class="mod" id="analytics" data-screen-label="09 Analytics">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-copy reveal">
+        <div class="num">Module 09</div>
+        <h2>Numbers that finally make sense.</h2>
+        <p>One unified data layer means every report — revenue, win rate, source attribution, crew productivity — comes from the same source.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Source attribution</strong> — every dollar tracked back to the ad, referral, or rep.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Profitability per project</strong> — margins after labor, materials, and overhead.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Custom dashboards</strong> for owners, sales leads, and PMs.</span></li>
+        </ul>
+        <a class="btn btn-ghost btn-sm" style="margin-top: 28px;" href="dashboard.html">Open the full dashboard →</a>
+      </div>
+
+      <div class="mod-visual reveal">
+        <div class="meta"><span>ANALYTICS · Q2 2026</span><span>LIVE</span></div>
+        <div class="mv-analytics">
+          <div class="row-stat">
+            <div class="kpi"><div class="l">REVENUE</div><div class="v">$842K</div><div style="font-family: var(--font-mono); font-size:10px; color:var(--green); margin-top:2px;">↑ 23%</div></div>
+            <div class="kpi"><div class="l">MARGIN</div><div class="v">31.4%</div><div style="font-family: var(--font-mono); font-size:10px; color:var(--green); margin-top:2px;">↑ 2.1pp</div></div>
+          </div>
+          <div class="chart">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-size:11px; font-weight:500;">Revenue by source</span>
+              <span style="font-family: var(--font-mono); font-size:10px; color:var(--mute);">$842K</span>
+            </div>
+            <svg viewBox="0 0 320 140" width="100%" height="140">
+              <g font-family="Geist Mono" font-size="9" fill="#6c6c72">
+                <text x="0" y="12">REFERRAL</text>
+                <rect x="60" y="3" width="220" height="12" rx="2" fill="#ecebe5"/>
+                <rect x="60" y="3" width="160" height="12" rx="2" fill="#14a085"/>
+                <text x="286" y="12" fill="#0a0a0c">$382k</text>
+
+                <text x="0" y="40">PAID ADS</text>
+                <rect x="60" y="31" width="220" height="12" rx="2" fill="#ecebe5"/>
+                <rect x="60" y="31" width="108" height="12" rx="2" fill="#0a0a0c"/>
+                <text x="286" y="40" fill="#0a0a0c">$214k</text>
+
+                <text x="0" y="68">WEBSITE</text>
+                <rect x="60" y="59" width="220" height="12" rx="2" fill="#ecebe5"/>
+                <rect x="60" y="59" width="78" height="12" rx="2" fill="#0a0a0c"/>
+                <text x="286" y="68" fill="#0a0a0c">$148k</text>
+
+                <text x="0" y="96">REPEAT</text>
+                <rect x="60" y="87" width="220" height="12" rx="2" fill="#ecebe5"/>
+                <rect x="60" y="87" width="46" height="12" rx="2" fill="#14a085"/>
+                <text x="286" y="96" fill="#0a0a0c">$98k</text>
+
+                <text x="0" y="124">OTHER</text>
+                <rect x="60" y="115" width="220" height="12" rx="2" fill="#ecebe5"/>
+                <rect x="60" y="115" width="22" height="12" rx="2" fill="#0a0a0c"/>
+                <text x="286" y="124" fill="#0a0a0c">$32k</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · CALL CENTER -->
+<section class="mod alt flip" id="call" data-screen-label="10 Call">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-visual reveal">
+        <div class="meta"><span>LIVE CALL · INBOUND</span><span>RECORDING</span></div>
+        <div class="mv-call">
+          <div class="live-call">
+            <span class="pulse">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.37 2.07.72 3.06a2 2 0 0 1-.45 2.11L8.09 10.18a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.35 2.01.59 3.06.72A2 2 0 0 1 22 16.92z" fill="none"/></svg>
+            </span>
+            <div>
+              <div class="who">Jonah Mercer</div>
+              <div class="meta">+1 (415) 555 · 0142 · OUTDOOR KITCHEN</div>
+            </div>
+            <span class="timer">02:47</span>
+          </div>
+          <div class="transcript">
+            <div class="speaker">JONAH · 0:14</div>
+            <div class="l">"Sara Reyes told me you guys built her patio, I'm looking to add an outdoor kitchen this summer…"</div>
+            <div class="speaker" style="color: var(--ink-3);">REP · 0:38</div>
+            <div class="l">"Awesome. What size are we looking at, and do you have an idea on appliances?"</div>
+            <div style="display:flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line);">
+              <span style="width: 14px; height:14px; border-radius:50%; background:conic-gradient(from 0deg,#14a085,#0c6a58,#7fd0bd,#14a085);"></span>
+              <span style="font-family: var(--font-mono); font-size: 10px; color: var(--orange);">AI</span>
+              <span style="font-size: 11.5px; color: var(--ink-2);">Drafting follow-up · estimate range · referral note added →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mod-copy reveal">
+        <div class="num">Module 10</div>
+        <h2>Every call. Captured, transcribed, acted on.</h2>
+        <p>Inbound and outbound calling, native to ByPlan. AI transcribes, summarizes, and updates the lead — before you hang up.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Auto-pop</strong> the lead record on every inbound call.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Live transcription</strong> + post-call summary, attached to the contact.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Missed-call recovery</strong> — AI texts back in under 60 seconds.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · MARKETING -->
+<section class="mod" id="marketing" data-screen-label="11 Marketing">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-copy reveal">
+        <div class="num">Module 11</div>
+        <h2>Marketing &amp; Ads, in one screen.</h2>
+        <p>Run Google, Meta, LSA, Angi and TikTok from inside ByPlan. AI reallocates budget daily based on what actually closes — not what gets clicks.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Closed-loop attribution</strong> — every signed contract traced to its ad.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>AI budget coach</strong> reallocates spend across channels every day.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Creative library + AI drafts</strong> from your best-performing jobs.</span></li>
+        </ul>
+        <a class="btn btn-ghost btn-sm" style="margin-top: 28px;" href="marketing.html">Open the marketing dashboard →</a>
+      </div>
+
+      <div class="mod-visual reveal">
+        <div class="meta"><span>MARKETING · MTD</span><span>ROAS 11.7×</span></div>
+        <div style="padding-top: 32px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+            <div style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--mute); text-transform: uppercase; letter-spacing: 0.06em;">SPEND</div>
+              <div style="font-size: 18px; font-weight: 500; margin-top: 4px;">$24.1k</div>
+            </div>
+            <div style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--mute); text-transform: uppercase; letter-spacing: 0.06em;">LEADS</div>
+              <div style="font-size: 18px; font-weight: 500; margin-top: 4px;">428</div>
+            </div>
+            <div style="background: var(--ink); color: white; border-radius: 10px; padding: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: 0.06em;">CPL</div>
+              <div style="font-size: 18px; font-weight: 500; margin-top: 4px; color: var(--orange-2);">$56.50</div>
+            </div>
+          </div>
+
+          <div style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <span style="font-size: 11.5px; font-weight: 500;">Channels · live</span>
+              <span style="font-family: var(--font-mono); font-size: 10px; color: var(--green);">↑ 22% LEADS</span>
+            </div>
+            <svg viewBox="0 0 320 70" width="100%" height="70">
+              <g font-family="Geist Mono" font-size="9" fill="#6c6c72">
+                <text x="0" y="12">GOOGLE</text>
+                <rect x="60" y="4" width="240" height="10" rx="3" fill="#ecebe5"/>
+                <rect x="60" y="4" width="148" height="10" rx="3" fill="#4285f4"/>
+                <text x="0" y="28">META</text>
+                <rect x="60" y="20" width="240" height="10" rx="3" fill="#ecebe5"/>
+                <rect x="60" y="20" width="82" height="10" rx="3" fill="#1877f2"/>
+                <text x="0" y="44">LSA</text>
+                <rect x="60" y="36" width="240" height="10" rx="3" fill="#ecebe5"/>
+                <rect x="60" y="36" width="72" height="10" rx="3" fill="#14a085"/>
+                <text x="0" y="60">ANGI</text>
+                <rect x="60" y="52" width="240" height="10" rx="3" fill="#ecebe5"/>
+                <rect x="60" y="52" width="46" height="10" rx="3" fill="#1f8a5b"/>
+              </g>
+            </svg>
+          </div>
+
+          <div style="background: var(--ink); color: white; border-radius: 10px; padding: 14px; display: flex; align-items: center; gap: 12px; position: relative; overflow: hidden;">
+            <span style="width: 12px; height: 12px; border-radius: 50%; background: conic-gradient(from 0deg, #14a085, #0c6a58, #7fd0bd, #14a085); flex-shrink: 0;"></span>
+            <div style="font-size: 12px;">
+              <strong style="color: white; font-weight: 500;">AI · budget coach</strong>
+              <div style="color: rgba(255,255,255,.7); margin-top: 2px;">Move $400/day from Meta to Marin Google. CPL will drop 12%.</div>
+            </div>
+            <span style="margin-left: auto; font-family: var(--font-mono); font-size: 9px; padding: 4px 8px; background: var(--orange); color: white; border-radius: 4px; letter-spacing: 0.04em; flex-shrink: 0;">APPLY</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · AGREEMENTS -->
+<section class="mod alt flip" id="agreements" data-screen-label="12 Agreements">
+  <div class="container">
+    <div class="mod-grid">
+      <div class="mod-visual reveal">
+        <div class="meta"><span>SALES AGREEMENT · #SA-1142</span><span>SIGNED &amp; PAID</span></div>
+        <div style="padding-top: 32px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="background: white; border: 1px solid var(--line); border-radius: 12px; padding: 18px; box-shadow: var(--shadow-2); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--orange), #0c6a58);"></div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-top: 8px;">
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em; color: var(--mute); text-transform: uppercase;">CEDARWORKS LLC</div>
+                <div style="font-size: 15px; font-weight: 500; letter-spacing: -0.018em; margin-top: 4px;">Sales Agreement</div>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 9.5px; color: var(--mute); text-align: right;">#SA-1142<br>05/19/26</div>
+            </div>
+            <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); display: flex; justify-content: space-between; font-size: 12px;">
+              <span style="color: var(--mute);">Pergola · 14×16 cedar</span>
+              <span style="font-family: var(--font-mono); font-weight: 500; font-size: 14px;">$48,200</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;">
+              <div style="border: 1.5px solid var(--orange); border-radius: 8px; padding: 10px; background: var(--orange-soft); position: relative;">
+                <span style="position: absolute; top: -8px; right: 8px; background: var(--orange); color: white; font-family: var(--font-mono); font-size: 8px; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.06em;">✓ SIGNED</span>
+                <div style="font-family: var(--font-mono); font-size: 8.5px; color: var(--orange-ink); letter-spacing: 0.04em; text-transform: uppercase;">CLIENT</div>
+                <div style="font-family: 'Caveat', cursive; font-size: 20px; color: var(--orange-ink); margin-top: 4px; line-height: 1;">Robert Henderson</div>
+                <div style="font-family: var(--font-mono); font-size: 8.5px; color: var(--orange-ink); margin-top: 4px;">05/19 · 2:14 PM</div>
+              </div>
+              <div style="border: 1.5px dashed var(--line-2); border-radius: 8px; padding: 10px;">
+                <div style="font-family: var(--font-mono); font-size: 8.5px; color: var(--mute); letter-spacing: 0.04em; text-transform: uppercase;">CONTRACTOR</div>
+                <div style="font-family: 'Caveat', cursive; font-size: 20px; color: var(--mute-3); margin-top: 4px; line-height: 1;">Rosa Vega</div>
+                <div style="font-family: var(--font-mono); font-size: 8.5px; color: var(--mute); margin-top: 4px;">AWAITING</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--green-soft); color: var(--green); display: inline-flex; align-items: center; justify-content: center;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div style="font-size: 12px;">
+              <strong style="font-weight: 500;">$14,460 deposit received</strong>
+              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--mute); margin-top: 1px;">VIA STRIPE · ACH · 2 MIN AGO</div>
+            </div>
+            <span style="margin-left: auto; font-family: var(--font-mono); font-size: 10px; background: var(--green); color: white; padding: 4px 8px; border-radius: 4px;">CLEARED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-copy reveal">
+        <div class="num">Module 12</div>
+        <h2>Sales agreements signed in 90 seconds.</h2>
+        <p>Generate, send, sign, and collect deposits on a phone. ESIGN compliant, audit-logged, tamper-evident. Build a real moat with contracts that don't sit unsigned.</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>AI auto-fills</strong> the agreement from your quote in 6 seconds.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>SMS + email delivery</strong>, mobile-first, no client login required.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Sign + pay deposit</strong> in one flow — Stripe-secured, ACH or card.</span></li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Court-ready audit trail</strong> on every signature. ESIGN, UETA, eIDAS.</span></li>
+        </ul>
+        <a class="btn btn-ghost btn-sm" style="margin-top: 28px;" href="agreements.html">See agreement flow in detail →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing" data-screen-label="11 Pricing">
+  <div class="grid-bg"></div>
+  <div class="glow glow-orange"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="section-head reveal" style="color: white;">
+      <span class="eyebrow" style="color: var(--orange-2);"><span class="dot"></span>PRICING</span>
+      <h2 class="h-1" style="color: white;">Built for teams of every size.</h2>
+      <p class="lead" style="color: rgba(255,255,255,.7);">Flat per-seat pricing. All ten modules included on every plan. No "AI add-ons", no "integration fees". Annual billing saves 20%.</p>
+    </div>
+
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <h3>Starter</h3>
+        <div class="price"><span class="v">$59</span><span class="u">/seat/mo</span></div>
+        <div class="sub">For owner-operators &amp; small crews</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Up to 5 seats</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>All 10 modules included</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>500 AI actions/mo</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Email support</li>
+        </ul>
+        <a class="btn btn-ghost" href="demo.html">Start free trial</a>
+      </div>
+
+      <div class="price-card featured reveal">
+        <h3>Growth</h3>
+        <div class="price"><span class="v">$99</span><span class="u">/seat/mo</span></div>
+        <div class="sub">For growing businesses, 5–30 seats</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Unlimited seats</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Unlimited AI actions</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>White-label customer portal</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Call center · 2,000 mins</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Dedicated onboarding</li>
+        </ul>
+        <a class="btn btn-primary" href="demo.html">Book a demo</a>
+      </div>
+
+      <div class="price-card reveal">
+        <h3>Scale</h3>
+        <div class="price"><span class="v">Talk</span><span class="u">to us</span></div>
+        <div class="sub">For multi-location &amp; franchise teams</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Multi-workspace HQ</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Custom AI fine-tuning</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>SSO + audit logs + SOC 2</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Dedicated CSM</li>
+        </ul>
+        <a class="btn btn-ghost" href="demo.html">Contact sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Compare CTA -->
+<section class="compare-band">
+  <div class="container">
+    <div class="reveal">
+      <h2 class="h-2">Want to see it all running on your business?</h2>
+      <p class="lead" style="margin: 18px auto 0;">A 30-minute live tour. We'll show you the modules that matter for your trade, with your data — not a generic demo.</p>
+      <div style="margin-top: 32px;">
+        <a class="btn btn-accent btn-lg" href="demo.html">
+          Book Your Demo
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="shared.js"></script>
+</body>
+</html>

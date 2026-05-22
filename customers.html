@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Customers — ByPlan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .page-band h1 { font-size: clamp(40px, 5vw, 72px); letter-spacing: -0.035em; line-height: 1; margin-top: 6px; }
+  .page-band .lead { margin-top: 24px; max-width: 56ch; }
+
+  /* Stats strip below hero */
+  .num-strip {
+    padding: 64px 0 56px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .num-strip .grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  }
+  @media (max-width: 880px) { .num-strip .grid { grid-template-columns: 1fr 1fr; gap: 32px 16px; } }
+  .num-strip .it {
+    display: flex; flex-direction: column;
+  }
+  .num-strip .it .v {
+    font-size: clamp(36px, 4vw, 52px); font-weight: 500;
+    letter-spacing: -0.035em; line-height: 1;
+  }
+  .num-strip .it .l {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--mute); letter-spacing: 0.06em; text-transform: uppercase;
+    margin-top: 10px;
+  }
+  .num-strip .it .v .accent { color: var(--orange); }
+
+  /* Featured testimonial */
+  .feat-test {
+    padding: clamp(80px, 9vw, 128px) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .feat-test .frame {
+    display: grid; grid-template-columns: 1fr 1.1fr;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    overflow: hidden;
+    box-shadow: var(--shadow-3);
+  }
+  @media (max-width: 1000px) { .feat-test .frame { grid-template-columns: 1fr; } }
+
+  .feat-test .quote-side {
+    padding: clamp(36px, 5vw, 64px);
+    display: flex; flex-direction: column; justify-content: space-between;
+    gap: 32px;
+  }
+  .feat-test .quote-side .mark {
+    font-family: 'Geist'; font-size: 72px; line-height: 1;
+    color: var(--orange); font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+  .feat-test .quote-side blockquote {
+    margin: 0; font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.32; letter-spacing: -0.02em;
+    font-weight: 400; color: var(--ink);
+    text-wrap: balance;
+  }
+  .feat-test .quote-side blockquote em {
+    font-style: normal; color: var(--orange);
+  }
+  .feat-test .author {
+    display: flex; align-items: center; gap: 14px;
+    padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .feat-test .author .av {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6a00, #ff3d00);
+    color: white; font-weight: 600; font-size: 18px;
+    display: inline-flex; align-items: center; justify-content: center;
+    letter-spacing: -0.01em;
+  }
+  .feat-test .author .nm { font-size: 16px; font-weight: 500; letter-spacing: -0.015em; }
+  .feat-test .author .rl {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--mute); letter-spacing: 0.04em;
+    text-transform: uppercase; margin-top: 2px;
+  }
+
+  /* Stats side of feat */
+  .feat-test .stats-side {
+    background: var(--ink); color: white;
+    padding: clamp(36px, 5vw, 64px);
+    display: flex; flex-direction: column; justify-content: space-between;
+    gap: 40px;
+    position: relative; overflow: hidden;
+  }
+  .feat-test .stats-side::before {
+    content: ""; position: absolute; width: 300px; height: 300px;
+    top: -150px; right: -100px;
+    background: radial-gradient(circle, rgba(255,106,0,0.32), transparent 60%);
+    filter: blur(40px);
+  }
+  .feat-test .stats-side .tag {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white; font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.08em;
+    padding: 6px 12px; border-radius: 999px;
+    text-transform: uppercase;
+    align-self: flex-start;
+    position: relative; z-index: 1;
+  }
+  .feat-test .stats-side .stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px 32px;
+    position: relative; z-index: 1;
+  }
+  .feat-test .stats-side .st {
+    display: flex; flex-direction: column;
+  }
+  .feat-test .stats-side .st .v {
+    font-size: 44px; font-weight: 500; letter-spacing: -0.03em;
+    line-height: 1; color: white;
+  }
+  .feat-test .stats-side .st .v .accent { color: var(--orange-2); }
+  .feat-test .stats-side .st .l {
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .feat-test .stats-side .meta {
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    position: relative; z-index: 1;
+  }
+  .feat-test .stats-side .meta .b { color: white; }
+
+  /* Testimonial grid */
+  .test-grid {
+    padding: clamp(80px, 9vw, 120px) 0;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .test-grid-inner {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-top: 64px;
+  }
+  @media (max-width: 1000px) { .test-grid-inner { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px)  { .test-grid-inner { grid-template-columns: 1fr; } }
+
+  .test-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-3);
+    padding: 28px;
+    display: flex; flex-direction: column;
+    gap: 24px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .test-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-3);
+    border-color: var(--ink-4);
+  }
+  .test-card.ink {
+    background: var(--ink); color: white; border-color: var(--ink);
+  }
+  .test-card .stars {
+    display: flex; gap: 3px; color: var(--orange);
+  }
+  .test-card .stars svg { fill: currentColor; }
+  .test-card blockquote {
+    margin: 0;
+    font-size: 16px; line-height: 1.5;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    flex: 1;
+    text-wrap: pretty;
+  }
+  .test-card.ink blockquote { color: rgba(255,255,255,0.9); }
+  .test-card blockquote .hl {
+    color: var(--orange-ink); background: var(--orange-soft);
+    padding: 0 4px; border-radius: 4px;
+  }
+  .test-card.ink blockquote .hl {
+    background: rgba(255,106,0,0.18); color: var(--orange-2);
+  }
+  .test-card .author {
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 22px; border-top: 1px solid var(--line);
+  }
+  .test-card.ink .author { border-color: rgba(255,255,255,0.1); }
+  .test-card .author .av {
+    width: 40px; height: 40px; border-radius: 50%;
+    color: white; font-weight: 600; font-size: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .test-card .author .nm { font-size: 14px; font-weight: 500; letter-spacing: -0.012em; }
+  .test-card .author .rl {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--mute); letter-spacing: 0.04em;
+    text-transform: uppercase; margin-top: 2px;
+  }
+  .test-card.ink .author .rl { color: rgba(255,255,255,0.55); }
+
+  /* Case studies / logos band */
+  .cases-band {
+    padding: clamp(80px, 9vw, 120px) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .case-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-top: 56px;
+  }
+  @media (max-width: 1000px) { .case-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px)  { .case-grid { grid-template-columns: 1fr; } }
+  .case-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    padding: 28px;
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+  .case-card:hover { background: var(--ink); color: white; border-color: var(--ink); transform: translateY(-3px); }
+  .case-card:hover .industry { color: rgba(255,255,255,0.55); }
+  .case-card:hover .arrow { background: var(--orange); color: white; }
+  .case-card .industry {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--mute);
+  }
+  .case-card h4 {
+    margin: 14px 0 0;
+    font-size: 24px; font-weight: 500;
+    letter-spacing: -0.025em; line-height: 1.1;
+  }
+  .case-card .impact {
+    margin-top: 40px;
+    display: flex; gap: 28px;
+  }
+  .case-card .impact .v {
+    font-size: 28px; font-weight: 500; letter-spacing: -0.025em; line-height: 1;
+  }
+  .case-card .impact .v .accent { color: var(--orange); }
+  .case-card:hover .impact .v .accent { color: var(--orange-2); }
+  .case-card .impact .l {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--mute); letter-spacing: 0.06em; text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .case-card:hover .impact .l { color: rgba(255,255,255,0.55); }
+  .case-card .arrow {
+    margin-top: 32px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--paper-3); color: var(--ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  /* Wall of love */
+  .wall-band {
+    padding: clamp(80px, 9vw, 120px) 0;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .wall-band .marquee {
+    display: flex; gap: 14px;
+    margin-top: 56px;
+    animation: marquee 60s linear infinite;
+    width: max-content;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .wall-band .mini {
+    width: 320px; flex-shrink: 0;
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: var(--r-3);
+    padding: 22px;
+  }
+  .wall-band .mini blockquote {
+    margin: 0;
+    font-size: 14px; line-height: 1.5; color: var(--ink-2);
+  }
+  .wall-band .mini .au {
+    margin-top: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .wall-band .mini .av {
+    width: 30px; height: 30px; border-radius: 50%;
+    color: white; font-weight: 600; font-size: 11px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .wall-band .mini .nm { font-size: 13px; font-weight: 500; }
+  .wall-band .mini .rl { font-family: var(--font-mono); font-size: 9.5px; color: var(--mute); margin-top: 1px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  /* CTA */
+  .cust-cta {
+    background: var(--ink); color: white;
+    padding: 96px 0;
+    position: relative; overflow: hidden; text-align: center;
+  }
+  .cust-cta .glow-orange { width: 700px; height: 700px; left: 50%; top: -300px; transform: translateX(-50%); opacity: 0.6; }
+  .cust-cta h2 { color: white; font-size: clamp(36px, 4.8vw, 60px); letter-spacing: -0.03em; }
+  .cust-cta p { color: rgba(255,255,255,.7); margin: 18px auto 0; max-width: 52ch; }
+  .cust-cta .actions { margin-top: 32px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .cust-cta .actions .btn-ghost { color: white; border-color: rgba(255,255,255,.2); }
+  .cust-cta .actions .btn-ghost:hover { background: rgba(255,255,255,.06); }
+</style>
+</head>
+<body>
+
+<!-- PAGE BAND -->
+<div class="page-band" data-screen-label="00 Intro">
+  <div class="grid-bg"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="crumbs">Customers / Stories</div>
+    <h1 class="reveal">Built by builders.<br><span class="accent">Loved by them too.</span></h1>
+    <p class="lead reveal" style="--reveal-delay: 80ms;">From three-person pergola shops to multi-state construction franchises — 1,200+ teams run their entire business on ByPlan. Here's what that looks like.</p>
+  </div>
+</div>
+
+<!-- STATS STRIP -->
+<section class="num-strip" data-screen-label="01 Stats">
+  <div class="container">
+    <div class="grid">
+      <div class="it reveal">
+        <div class="v">1,200<span class="accent">+</span></div>
+        <div class="l">Construction &amp; outdoor teams</div>
+      </div>
+      <div class="it reveal">
+        <div class="v">35<span class="accent">%</span></div>
+        <div class="l">Faster project closings</div>
+      </div>
+      <div class="it reveal">
+        <div class="v">4.9<span class="accent">★</span></div>
+        <div class="l">G2 + Capterra · 480 reviews</div>
+      </div>
+      <div class="it reveal">
+        <div class="v">$2.4<span class="accent">B</span></div>
+        <div class="l">Pipeline managed monthly</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED TESTIMONIAL -->
+<section class="feat-test" data-screen-label="02 Featured">
+  <div class="container">
+    <div class="frame reveal">
+      <div class="quote-side">
+        <div>
+          <span class="mark">"</span>
+          <blockquote>
+            We replaced <em>five tools</em> with ByPlan. Two months later our pipeline value is up 34%, and I'm closing my laptop at 6pm instead of midnight.
+          </blockquote>
+        </div>
+        <div class="author">
+          <span class="av">RV</span>
+          <div>
+            <div class="nm">Rosa Vega</div>
+            <div class="rl">Owner · CedarWorks · Marin, CA</div>
+          </div>
+        </div>
+      </div>
+      <div class="stats-side">
+        <span class="tag">CEDARWORKS · PERGOLA &amp; OUTDOOR LIVING</span>
+        <div class="stat-grid">
+          <div class="st">
+            <div class="v"><span class="accent">+34</span>%</div>
+            <div class="l">pipeline value Q-on-Q</div>
+          </div>
+          <div class="st">
+            <div class="v"><span class="accent">11</span>d</div>
+            <div class="l">avg quote-to-sign</div>
+          </div>
+          <div class="st">
+            <div class="v"><span class="accent">5→1</span></div>
+            <div class="l">tools consolidated</div>
+          </div>
+          <div class="st">
+            <div class="v"><span class="accent">8</span>hrs</div>
+            <div class="l">saved per week, per rep</div>
+          </div>
+        </div>
+        <div class="meta">
+          <span>EST. 2014 · 12 EMPLOYEES</span>
+          <span class="b">Read full story →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL GRID -->
+<section class="test-grid" data-screen-label="03 Voices">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>FROM THE FIELD</span>
+      <h2 class="h-1">Owners, PMs, and crew leads<br>tell it like it is.</h2>
+    </div>
+
+    <div class="test-grid-inner">
+      <div class="test-card reveal">
+        <div class="stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        </div>
+        <blockquote>
+          The AI replies to leads in the middle of the night. By the time I get to my desk, half the new inquiries already have a draft estimate waiting for me to send. <span class="hl">Game-changer for a 4-person shop.</span>
+        </blockquote>
+        <div class="author">
+          <span class="av" style="background: linear-gradient(135deg, #2a6fdb, #1d4fa3);">MK</span>
+          <div>
+            <div class="nm">Marcus Kowalski</div>
+            <div class="rl">Owner · Pergoline · Austin, TX</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card ink reveal">
+        <div class="stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        </div>
+        <blockquote>
+          I run <span class="hl">142 maintenance contracts</span> across two crews. Before ByPlan, it took me Sunday afternoons to plan the week. Now it plans itself. My weekends are mine again.
+        </blockquote>
+        <div class="author">
+          <span class="av" style="background: linear-gradient(135deg, #ff6a00, #ff3d00);">GH</span>
+          <div>
+            <div class="nm">Gabriela Hoffmann</div>
+            <div class="rl">Owner · Greenhaven Co · Portland, OR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card reveal">
+        <div class="stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        </div>
+        <blockquote>
+          We were the family business with spreadsheets in a Dropbox folder. ByPlan turned us into a real company. <span class="hl">Revenue is up 41% YoY</span> and we haven't added headcount.
+        </blockquote>
+        <div class="author">
+          <span class="av" style="background: linear-gradient(135deg, #6b5dd3, #4a3fa3);">DC</span>
+          <div>
+            <div class="nm">Daniel Chen</div>
+            <div class="rl">CEO · Modera Kitchens · Brooklyn, NY</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card reveal">
+        <div class="stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        </div>
+        <blockquote>
+          The customer portal alone is worth the subscription. Our clients see <span class="hl">live project progress</span>, pay deposits in one click, and they actually leave us better reviews because of it.
+        </blockquote>
+        <div class="author">
+          <span class="av" style="background: linear-gradient(135deg, #1f8a5b, #0f5a3a);">EB</span>
+          <div>
+            <div class="nm">Esther Brennan</div>
+            <div class="rl">PM · Northfield Builders · Boulder, CO</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card reveal">
+        <div class="stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        </div>
+        <blockquote>
+          We onboarded in 6 days. <span class="hl">Six.</span> I expected a six-month project. The ByPlan team migrated our spreadsheets, set up the quote templates, trained the AI on our voice. We were live before our next quarter started.
+        </blockquote>
+        <div class="author">
+          <span class="av" style="background: linear-gradient(135deg, #d54848, #a32a2a);">JR</span>
+          <div>
+            <div class="nm">James Ruiz</div>
+            <div class="rl">COO · Stoneworks · Phoenix, AZ</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card reveal">
+        <div class="stars">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        </div>
+        <blockquote>
+          I've used Salesforce, HubSpot, Monday — none of them understood that a sub's insurance expires, or that a permit takes 6 weeks. <span class="hl">ByPlan was clearly built by people who've actually run construction projects.</span>
+        </blockquote>
+        <div class="author">
+          <span class="av" style="background: linear-gradient(135deg, #2a2a30, #0a0a0c);">PA</span>
+          <div>
+            <div class="nm">Patrick Andersen</div>
+            <div class="rl">Owner · Andersen Construction · Minneapolis, MN</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="cases-band" data-screen-label="04 Cases">
+  <div class="container">
+    <div class="section-head reveal" style="display:flex; flex-direction: row; justify-content: space-between; align-items: flex-end; max-width: none; gap: 32px; flex-wrap: wrap;">
+      <div style="display:flex; flex-direction: column; gap: 16px;">
+        <span class="eyebrow"><span class="dot"></span>CASE STUDIES</span>
+        <h2 class="h-1" style="max-width: 18ch;">The numbers behind the testimonials.</h2>
+      </div>
+      <p class="lead" style="max-width: 36ch;">Three teams. Three industries. Three very different stories about what changes when your tools finally cooperate.</p>
+    </div>
+
+    <div class="case-grid">
+      <a class="case-card reveal" href="#">
+        <div class="industry">CEDARWORKS · PERGOLA</div>
+        <h4>From 5 tools to one — in 7 days.</h4>
+        <div class="impact">
+          <div>
+            <div class="v"><span class="accent">+34</span>%</div>
+            <div class="l">Pipeline value</div>
+          </div>
+          <div>
+            <div class="v"><span class="accent">8</span>hr</div>
+            <div class="l">Saved / week</div>
+          </div>
+        </div>
+        <div class="arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a class="case-card reveal" href="#">
+        <div class="industry">GREENHAVEN · LANDSCAPING</div>
+        <h4>142 maintenance contracts, planned by AI.</h4>
+        <div class="impact">
+          <div>
+            <div class="v"><span class="accent">94</span>%</div>
+            <div class="l">Retention</div>
+          </div>
+          <div>
+            <div class="v"><span class="accent">$18</span>k</div>
+            <div class="l">New MRR</div>
+          </div>
+        </div>
+        <div class="arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a class="case-card reveal" href="#">
+        <div class="industry">MODERA · KITCHEN &amp; CABINET</div>
+        <h4>41% revenue growth, zero new hires.</h4>
+        <div class="impact">
+          <div>
+            <div class="v"><span class="accent">+41</span>%</div>
+            <div class="l">Revenue YoY</div>
+          </div>
+          <div>
+            <div class="v"><span class="accent">5.1</span>×</div>
+            <div class="l">Revisions handled</div>
+          </div>
+        </div>
+        <div class="arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- WALL OF LOVE -->
+<section class="wall-band" data-screen-label="05 Wall">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>WALL OF LOVE</span>
+      <h2 class="h-1">The little wins, every day.</h2>
+    </div>
+  </div>
+
+  <div class="marquee">
+    <!-- First set -->
+    <div class="mini">
+      <blockquote>"AI drafted three quotes while I was on a site visit. All three signed by Friday."</blockquote>
+      <div class="au"><span class="av" style="background:#ff6a00;">SA</span><div><div class="nm">Sasha Alvi</div><div class="rl">PM · DECKWORKS</div></div></div>
+    </div>
+    <div class="mini">
+      <blockquote>"My field crew finally has the same info as the office. That alone was worth switching."</blockquote>
+      <div class="au"><span class="av" style="background:#2a6fdb;">TF</span><div><div class="nm">Tom Fields</div><div class="rl">CREW LEAD · NORTHFIELD</div></div></div>
+    </div>
+    <div class="mini">
+      <blockquote>"The portal looks like something a tech startup would ship. Our clients keep asking who built it."</blockquote>
+      <div class="au"><span class="av" style="background:#6b5dd3;">NL</span><div><div class="nm">Nina Laporte</div><div class="rl">OWNER · LAPORTE LANDSCAPE</div></div></div>
+    </div>
+    <div class="mini">
+      <blockquote>"Onboarding migrated 4 years of project history. I didn't have to retype a single thing."</blockquote>
+      <div class="au"><span class="av" style="background:#1f8a5b;">BL</span><div><div class="nm">Ben Levy</div><div class="rl">OWNER · LEVY OUTDOOR</div></div></div>
+    </div>
+    <div class="mini">
+      <blockquote>"Our missed-call recovery rate went from ~10% to over 60%. AI texts back in under a minute."</blockquote>
+      <div class="au"><span class="av" style="background:#d54848;">CR</span><div><div class="nm">Carla Rios</div><div class="rl">SALES · STONEWORKS</div></div></div>
+    </div>
+
+    <!-- Duplicated for loop -->
+    <div class="mini">
+      <blockquote>"AI drafted three quotes while I was on a site visit. All three signed by Friday."</blockquote>
+      <div class="au"><span class="av" style="background:#ff6a00;">SA</span><div><div class="nm">Sasha Alvi</div><div class="rl">PM · DECKWORKS</div></div></div>
+    </div>
+    <div class="mini">
+      <blockquote>"My field crew finally has the same info as the office. That alone was worth switching."</blockquote>
+      <div class="au"><span class="av" style="background:#2a6fdb;">TF</span><div><div class="nm">Tom Fields</div><div class="rl">CREW LEAD · NORTHFIELD</div></div></div>
+    </div>
+    <div class="mini">
+      <blockquote>"The portal looks like something a tech startup would ship. Our clients keep asking who built it."</blockquote>
+      <div class="au"><span class="av" style="background:#6b5dd3;">NL</span><div><div class="nm">Nina Laporte</div><div class="rl">OWNER · LAPORTE LANDSCAPE</div></div></div>
+    </div>
+    <div class="mini">
+      <blockquote>"Onboarding migrated 4 years of project history. I didn't have to retype a single thing."</blockquote>
+      <div class="au"><span class="av" style="background:#1f8a5b;">BL</span><div><div class="nm">Ben Levy</div><div class="rl">OWNER · LEVY OUTDOOR</div></div></div>
+    </div>
+    <div class="mini">
+      <blockquote>"Our missed-call recovery rate went from ~10% to over 60%. AI texts back in under a minute."</blockquote>
+      <div class="au"><span class="av" style="background:#d54848;">CR</span><div><div class="nm">Carla Rios</div><div class="rl">SALES · STONEWORKS</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cust-cta" data-screen-label="99 CTA">
+  <div class="glow glow-orange"></div>
+  <div class="dot-bg" style="opacity: 0.4;"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="reveal" style="max-width: 720px; margin: 0 auto;">
+      <h2>Your story could go<br>at the top of this page.</h2>
+      <p>Talk to our team about what your business actually needs. We'll show you how five teams in your industry are running ByPlan today.</p>
+      <div class="actions">
+        <a class="btn btn-accent btn-lg" href="demo.html">Book a Demo</a>
+        <a class="btn btn-ghost btn-lg" href="product.html">Explore the platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="shared.js"></script>
+</body>
+</html>

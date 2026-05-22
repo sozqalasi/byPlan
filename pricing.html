@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pricing — byplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { background: #fafaf7; }
+
+  /* ===== HERO ===== */
+  .price-hero {
+    padding: 96px 0 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .price-hero .grid-bg {
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 30%, transparent 80%);
+  }
+  .price-hero .crumbs {
+    font-family: var(--font-mono); font-size: 11.5px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mute); margin-bottom: 14px;
+    position: relative; z-index: 2;
+  }
+  .price-hero h1 {
+    font-size: clamp(40px, 5.4vw, 72px);
+    line-height: 1.02; letter-spacing: -0.035em;
+    font-weight: 500;
+    position: relative; z-index: 2;
+  }
+  .price-hero h1 .accent { color: var(--orange); }
+  .price-hero .lead {
+    max-width: 54ch;
+    margin: 22px auto 0;
+    color: var(--mute);
+    font-size: 17px;
+    line-height: 1.5;
+    position: relative; z-index: 2;
+  }
+
+  /* ===== TOGGLE ===== */
+  .billing-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px;
+    margin-top: 36px;
+    position: relative;
+    z-index: 2;
+    box-shadow: var(--shadow-1);
+  }
+  .billing-toggle .opt {
+    padding: 8px 22px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--mute);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: transparent;
+  }
+  .billing-toggle .opt.active {
+    background: var(--ink);
+    color: white;
+  }
+  .billing-toggle .opt .save {
+    background: var(--orange);
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .billing-toggle .opt.active .save { background: white; color: var(--ink); }
+
+  /* ===== PLAN CARDS ===== */
+  .plans-section { padding: 24px 0 80px; }
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 980px) { .plans-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; } }
+
+  .plan-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  }
+  .plan-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 48px -16px rgba(20, 160, 133, 0.12);
+    border-color: #d6e8e1;
+  }
+  .plan-card.featured {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+    transform: scale(1.02);
+  }
+  .plan-card.featured:hover { transform: scale(1.02) translateY(-3px); }
+  .plan-card.featured::before {
+    content: "MOST POPULAR";
+    position: absolute;
+    top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--orange);
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.1em;
+    padding: 5px 14px;
+    border-radius: 999px;
+  }
+
+  .plan-card .plan-name {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mute);
+    font-family: var(--font-mono);
+  }
+  .plan-card.featured .plan-name { color: var(--orange-2); }
+
+  .plan-card .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .plan-card .price-amount {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    color: var(--sage-deep);
+  }
+  .plan-card.featured .price-amount { color: white; }
+  .plan-card .price-currency {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--mute);
+    margin-right: 2px;
+  }
+  .plan-card .price-unit {
+    font-size: 14px;
+    color: var(--mute);
+    margin-left: 4px;
+  }
+  .plan-card.featured .price-unit { color: rgba(255, 255, 255, 0.7); }
+  .plan-card .price-billing {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--mute-2);
+    margin-top: 6px;
+  }
+  .plan-card.featured .price-billing { color: rgba(255, 255, 255, 0.55); }
+  .plan-card .price-amount.custom { font-size: 38px; }
+
+  .plan-card .desc {
+    font-size: 14.5px;
+    color: var(--mute);
+    line-height: 1.5;
+  }
+  .plan-card.featured .desc { color: rgba(255, 255, 255, 0.7); }
+
+  .plan-card .btn {
+    width: 100%;
+    height: 48px;
+  }
+  .plan-card.featured .btn-primary {
+    background: var(--orange);
+    color: white;
+  }
+  .plan-card.featured .btn-primary:hover { background: #1bb398; }
+  .plan-card.featured .btn-ghost {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .plan-card.featured .btn-ghost:hover { background: rgba(255, 255, 255, 0.06); }
+
+  .plan-card ul {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column;
+    gap: 12px;
+  }
+  .plan-card ul li {
+    display: flex; gap: 10px;
+    font-size: 14px; line-height: 1.4;
+    align-items: flex-start;
+    color: var(--ink-2);
+  }
+  .plan-card.featured ul li { color: rgba(255, 255, 255, 0.85); }
+  .plan-card ul li svg {
+    flex-shrink: 0; margin-top: 3px;
+    color: var(--orange);
+  }
+  .plan-card.featured ul li svg { color: var(--orange-2); }
+  .plan-card ul li strong { font-weight: 500; color: var(--ink); }
+  .plan-card.featured ul li strong { color: white; }
+  .plan-card .feat-head {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--mute);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: -4px;
+  }
+  .plan-card.featured .feat-head { color: rgba(255, 255, 255, 0.55); }
+
+  /* ===== BUILD-YOUR-OWN APP PICKER ===== */
+  .picker-section {
+    padding: 80px 0;
+    background: white;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .picker-head {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .picker-head h2 {
+    font-size: clamp(28px, 3.4vw, 44px);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    font-weight: 500;
+  }
+  .picker-head p {
+    margin: 16px auto 0;
+    color: var(--mute);
+    font-size: 16px;
+    max-width: 56ch;
+  }
+
+  .picker-shell {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 1000px) { .picker-shell { grid-template-columns: 1fr; } }
+
+  /* Apps grid */
+  .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 600px) { .apps-grid { grid-template-columns: 1fr; } }
+  .app-row {
+    display: grid;
+    grid-template-columns: 38px 1fr auto 28px;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    background: white;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+  .app-row:hover { border-color: #d6e8e1; }
+  .app-row.selected {
+    border-color: var(--orange);
+    background: var(--orange-soft);
+  }
+  .app-row .ic {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--paper-3);
+    color: var(--sage-deep);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .app-row.selected .ic { background: var(--orange); color: white; }
+  .app-row .nm {
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+  }
+  .app-row .nm-sub {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--mute-2);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+  .app-row .pr {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .app-row .check {
+    width: 24px; height: 24px;
+    border-radius: 7px;
+    border: 1.5px solid var(--line-2);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .app-row.selected .check {
+    background: var(--orange);
+    border-color: var(--orange);
+  }
+  .app-row.selected .check svg { opacity: 1; }
+  .app-row .check svg { opacity: 0; transition: opacity 0.15s; }
+
+  /* Summary card */
+  .summary-card {
+    background: var(--ink);
+    color: white;
+    border-radius: 18px;
+    padding: 28px;
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+    height: fit-content;
+    display: flex; flex-direction: column; gap: 18px;
+    box-shadow: 0 24px 60px -16px rgba(15, 15, 20, 0.16);
+  }
+  @media (max-width: 1000px) { .summary-card { position: static; } }
+
+  .summary-card .lbl {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .summary-card .all-apps {
+    background: var(--orange);
+    border-radius: 12px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .summary-card .all-apps:hover { opacity: 0.92; }
+  .summary-card .all-apps .all-t {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+  }
+  .summary-card .all-apps .all-s {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 2px;
+  }
+  .summary-card .all-apps .all-cta {
+    background: white;
+    color: var(--orange-ink);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+
+  .summary-card .sel-list {
+    flex: 1;
+    max-height: 220px;
+    overflow-y: auto;
+    display: flex; flex-direction: column;
+    gap: 6px;
+    padding-right: 4px;
+  }
+  .summary-card .sel-list::-webkit-scrollbar { width: 4px; }
+  .summary-card .sel-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+  .summary-card .sel-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    font-size: 12.5px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .summary-card .sel-row:last-child { border-bottom: none; }
+  .summary-card .sel-row .x {
+    width: 18px; height: 18px;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .summary-card .sel-row .x:hover { color: white; }
+  .summary-card .sel-row .pr {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .summary-card .sel-empty {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.55);
+    font-style: italic;
+    padding: 20px 0;
+    text-align: center;
+  }
+
+  .summary-card .total-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .summary-card .total-row .lbl-total { font-size: 14px; }
+  .summary-card .total-row .amount {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    color: var(--orange-2);
+  }
+  .summary-card .total-row .amount .unit {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: var(--font-mono);
+    margin-left: 4px;
+    letter-spacing: 0;
+  }
+
+  /* ===== COMPARISON TABLE ===== */
+  .compare-section {
+    padding: 96px 0;
+  }
+  .compare-section h2 {
+    font-size: clamp(28px, 3.4vw, 44px);
+    letter-spacing: -0.025em;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .compare-section .sub {
+    text-align: center;
+    color: var(--mute);
+    max-width: 56ch;
+    margin: 0 auto 48px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .compare-table {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-1);
+  }
+  .compare-table table { width: 100%; border-collapse: collapse; }
+  .compare-table th, .compare-table td {
+    text-align: left;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .compare-table th {
+    background: var(--paper-2);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+  }
+  .compare-table th.featured-col {
+    background: var(--ink);
+    color: white;
+    position: relative;
+  }
+  .compare-table th.featured-col::after {
+    content: "POPULAR";
+    position: absolute;
+    top: 50%; right: 12px;
+    transform: translateY(-50%);
+    font-size: 9px;
+    background: var(--orange);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+  }
+  .compare-table td.featured-col {
+    background: rgba(20, 160, 133, 0.04);
+  }
+  .compare-table td:not(:first-child), .compare-table th:not(:first-child) {
+    text-align: center;
+    width: 16%;
+  }
+  .compare-table tr.section-row td {
+    background: var(--paper-3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mute);
+    padding: 12px 22px;
+  }
+  .compare-table td .check-y { color: var(--orange); }
+  .compare-table td .check-n { color: var(--mute-3); }
+  .compare-table td .tag-lite {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--mute);
+    padding: 3px 8px;
+    background: var(--paper-3);
+    border-radius: 4px;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table .feat-row {
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+  @media (max-width: 760px) {
+    .compare-table { overflow-x: auto; }
+    .compare-table table { min-width: 720px; }
+  }
+
+  /* ===== FAQ ===== */
+  .faq-section {
+    padding: 96px 0;
+    background: white;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 56px;
+  }
+  @media (max-width: 880px) { .faq-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .faq-head h2 { font-size: clamp(24px, 2.6vw, 34px); letter-spacing: -0.025em; }
+  .faq-head p { font-size: 14px; color: var(--mute); margin-top: 14px; }
+
+  .faq-list { display: flex; flex-direction: column; gap: 0; }
+  .faq-item { border-bottom: 1px solid var(--line); }
+  .faq-item summary {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 22px 0;
+    font-size: 16px; font-weight: 500; letter-spacing: -0.012em;
+    cursor: pointer; list-style: none;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary .plus {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--paper-3);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s, background 0.2s, color 0.2s;
+  }
+  .faq-item[open] summary .plus {
+    transform: rotate(45deg);
+    background: var(--orange);
+    color: white;
+  }
+  .faq-item .ans {
+    font-size: 14.5px; color: var(--mute);
+    line-height: 1.55;
+    padding: 0 0 22px 0;
+    max-width: 64ch;
+  }
+
+  /* ===== CTA ===== */
+  .pricing-cta {
+    background: var(--ink);
+    color: white;
+    padding: 96px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .pricing-cta .glow-orange { width: 600px; height: 600px; left: 50%; top: -260px; transform: translateX(-50%); opacity: 0.6; }
+  .pricing-cta h2 {
+    color: white;
+    font-size: clamp(36px, 4.8vw, 56px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    position: relative; z-index: 2;
+  }
+  .pricing-cta p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 18px auto 0;
+    max-width: 56ch;
+    font-size: 17px;
+    position: relative; z-index: 2;
+  }
+  .pricing-cta .actions {
+    margin-top: 36px;
+    display: flex; gap: 12px;
+    justify-content: center; flex-wrap: wrap;
+    position: relative; z-index: 2;
+  }
+  .pricing-cta .actions .btn-ghost {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .pricing-cta .actions .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="price-hero" data-screen-label="01 Hero">
+  <div class="grid-bg"></div>
+  <div class="container">
+    <div class="crumbs reveal">PRICING</div>
+    <h1 class="reveal" style="--reveal-delay: 60ms;">Simple, transparent<br><span class="accent">per-user</span> pricing.</h1>
+    <p class="lead reveal" style="--reveal-delay: 140ms;">Pick the apps you need, or get every one of our 16 modules for a single flat per-user price. No setup fees. No "AI add-ons". Cancel anytime.</p>
+
+    <div class="billing-toggle reveal" style="--reveal-delay: 200ms;" role="tablist" aria-label="Billing cycle">
+      <button class="opt active" data-billing="yearly">
+        Yearly
+        <span class="save">SAVE 20%</span>
+      </button>
+      <button class="opt" data-billing="monthly">Monthly</button>
+    </div>
+  </div>
+</section>
+
+<!-- PLAN CARDS -->
+<section class="plans-section" data-screen-label="02 Plans">
+  <div class="container">
+    <div class="plans-grid">
+
+      <!-- Starter -->
+      <div class="plan-card reveal">
+        <div>
+          <div class="plan-name">Starter</div>
+          <div class="price-row" style="margin-top: 14px;">
+            <span class="price-currency">$</span>
+            <span class="price-amount" data-price-monthly="29" data-price-yearly="19">19</span>
+            <span class="price-unit">/user/mo</span>
+          </div>
+          <div class="price-billing"><span data-billing-text>BILLED YEARLY</span> · MIN 1 USER</div>
+        </div>
+        <div class="desc">For owner-operators and small crews getting started with their first CRM.</div>
+        <a class="btn btn-ghost" href="demo.html">Start free trial</a>
+        <div class="feat-head">Includes</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Up to <strong>5 users</strong></span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>6 core modules</strong> — Dashboard, Leads, Customers, Quotes, Invoices, Portal</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>500 AI actions</strong> per month</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Email support</span></li>
+        </ul>
+      </div>
+
+      <!-- Growth (featured) -->
+      <div class="plan-card featured reveal">
+        <div>
+          <div class="plan-name">Growth</div>
+          <div class="price-row" style="margin-top: 14px;">
+            <span class="price-currency" style="color: rgba(255,255,255,0.6);">$</span>
+            <span class="price-amount" data-price-monthly="49" data-price-yearly="39">39</span>
+            <span class="price-unit">/user/mo</span>
+          </div>
+          <div class="price-billing"><span data-billing-text>BILLED YEARLY</span> · UNLIMITED USERS</div>
+        </div>
+        <div class="desc">All 16 apps. Unlimited AI. Built for businesses ready to scale fast.</div>
+        <a class="btn btn-primary" href="demo.html">Start free trial</a>
+        <div class="feat-head">Everything in Starter, plus</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>All 16 modules</strong> — every app included</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Unlimited AI actions</strong> + workspace fine-tuning</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>White-label customer portal</strong> on your domain</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Digital call center · <strong>2,000 minutes</strong>/mo</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Dedicated onboarding</strong> — live in 7 days</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Priority chat &amp; phone support</span></li>
+        </ul>
+      </div>
+
+      <!-- Scale -->
+      <div class="plan-card reveal">
+        <div>
+          <div class="plan-name">Scale</div>
+          <div class="price-row" style="margin-top: 14px;">
+            <span class="price-amount custom">Talk to us</span>
+          </div>
+          <div class="price-billing">CUSTOM · 30+ USERS · MULTI-LOCATION</div>
+        </div>
+        <div class="desc">For multi-location teams, franchises, and high-volume operations.</div>
+        <a class="btn btn-ghost" href="demo.html">Contact sales</a>
+        <div class="feat-head">Everything in Growth, plus</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Multi-workspace HQ</strong> across locations</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Custom <strong>AI fine-tuning</strong> on your data</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>SSO + audit logs</strong> + SOC 2 reports</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Dedicated CSM</strong> &amp; quarterly reviews</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>99.9% uptime SLA</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILD YOUR OWN -->
+<section class="picker-section" data-screen-label="03 Build">
+  <div class="container">
+    <div class="picker-head reveal">
+      <span class="eyebrow"><span class="dot"></span>BUILD YOUR OWN</span>
+      <h2 style="margin-top: 18px;">Pay only for the apps you use.</h2>
+      <p>Start with one module. Add more as you grow. Switch to "All apps" anytime to save up to 60%.</p>
+    </div>
+
+    <div class="picker-shell">
+      <div class="apps-grid">
+        <!-- Apps · individual pricing -->
+        <div class="app-row selected" data-price="6">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
+          <div><div class="nm">Custom Dashboard</div><div class="nm-sub">REAL-TIME</div></div>
+          <span class="pr">$6/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row selected" data-price="8">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+          <div><div class="nm">Leads Management</div><div class="nm-sub">MULTI-CHANNEL</div></div>
+          <span class="pr">$8/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row selected" data-price="6">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M7 21a5 5 0 0 1 10 0"/></svg></span>
+          <div><div class="nm">Customer Management</div><div class="nm-sub">CRM CORE</div></div>
+          <span class="pr">$6/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row selected" data-price="8">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span>
+          <div><div class="nm">Quote Generation</div><div class="nm-sub">BRANDED PDF</div></div>
+          <span class="pr">$8/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="8">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg></span>
+          <div><div class="nm">Invoice Generation</div><div class="nm-sub">AUTO REMINDERS</div></div>
+          <span class="pr">$8/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="10">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg></span>
+          <div><div class="nm">Sales Agreements</div><div class="nm-sub">E-SIGNATURE</div></div>
+          <span class="pr">$10/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="6">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></span>
+          <div><div class="nm">Website Requests</div><div class="nm-sub">FORM CAPTURE</div></div>
+          <span class="pr">$6/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="8">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6L3 18l3 3 6-6 .1.1a4 4 0 0 0 5.6-5.6L15 12l-3-3z"/></svg></span>
+          <div><div class="nm">Claim Center</div><div class="nm-sub">WARRANTY · SLA</div></div>
+          <span class="pr">$8/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="10">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+          <div><div class="nm">Payment Center</div><div class="nm-sub">STRIPE · ACH · ACH</div></div>
+          <span class="pr">$10/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="9">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
+          <div><div class="nm">Email Marketing</div><div class="nm-sub">CAMPAIGNS · AUTOMATION</div></div>
+          <span class="pr">$9/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="12">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+          <div><div class="nm">Social Media &amp; Ads</div><div class="nm-sub">GOOGLE · META · LSA · ANGI</div></div>
+          <span class="pr">$12/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="10">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.37 2.07.72 3.06a2 2 0 0 1-.45 2.11L8.09 10.18a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.35 2.01.59 3.06.72A2 2 0 0 1 22 16.92z"/></svg></span>
+          <div><div class="nm">Digital Call Center</div><div class="nm-sub">VOIP · TRANSCRIPTION</div></div>
+          <span class="pr">$10/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="7">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s-8-4.5-8-12a8 8 0 0 1 16 0c0 7.5-8 12-8 12z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <div><div class="nm">Tracking Center</div><div class="nm-sub">GPS · NOTIFICATIONS</div></div>
+          <span class="pr">$7/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="5">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="4"/><path d="M3 21a6 6 0 0 1 12 0"/><circle cx="17" cy="7" r="4"/><path d="M15 21a6 6 0 0 1 6 0"/></svg></span>
+          <div><div class="nm">Team Management</div><div class="nm-sub">ROLES · PERMISSIONS</div></div>
+          <span class="pr">$5/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="12">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></span>
+          <div><div class="nm">Accounting Center</div><div class="nm-sub">QB-COMPATIBLE</div></div>
+          <span class="pr">$12/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+
+        <div class="app-row" data-price="8">
+          <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="7" cy="6" r="0.7" fill="currentColor"/></svg></span>
+          <div><div class="nm">Customer Portal</div><div class="nm-sub">WHITE-LABEL</div></div>
+          <span class="pr">$8/u</span>
+          <span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-card">
+        <div class="lbl">YOUR PLAN</div>
+
+        <div class="all-apps" id="allAppsCta">
+          <div>
+            <div class="all-t">Get all 16 apps</div>
+            <div class="all-s">$39/u/mo · save up to 60%</div>
+          </div>
+          <span class="all-cta">Switch →</span>
+        </div>
+
+        <div>
+          <div class="lbl" style="margin-bottom: 8px;">SELECTED · <span id="selCount">4</span></div>
+          <div class="sel-list" id="selList"></div>
+        </div>
+
+        <div class="total-row">
+          <span class="lbl-total">Per user / month</span>
+          <span class="amount">$<span id="totalAmount">28</span><span class="unit">/u/mo</span></span>
+        </div>
+
+        <a class="btn btn-accent" href="demo.html" style="width: 100%; height: 48px; font-size: 14px;">Start free trial</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="compare-section" data-screen-label="04 Compare">
+  <div class="container">
+    <h2 class="reveal">Compare plans side by side.</h2>
+    <p class="sub reveal">Every plan includes core CRM features. Growth and Scale unlock the entire byplan platform.</p>
+
+    <div class="compare-table reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Starter</th>
+            <th class="featured-col">Growth</th>
+            <th>Scale</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="section-row"><td colspan="4">Pricing</td></tr>
+          <tr class="feat-row">
+            <td>Per user / month <span style="color: var(--mute); font-weight: 400;">(yearly)</span></td>
+            <td>$19</td>
+            <td class="featured-col">$39</td>
+            <td>Custom</td>
+          </tr>
+          <tr class="feat-row">
+            <td>User limit</td>
+            <td>Up to 5</td>
+            <td class="featured-col">Unlimited</td>
+            <td>Unlimited</td>
+          </tr>
+
+          <tr class="section-row"><td colspan="4">Core modules</td></tr>
+          <tr><td>Custom Dashboard</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Leads Management</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Customer Management</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Quote &amp; Invoice Generation</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Customer Portal</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Sales Agreements &amp; E-signature</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Payment Center · Stripe</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">Growth modules</td></tr>
+          <tr><td>Email Marketing Center</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Social Media &amp; Ads Center</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Digital Call Center</td><td><span class="check-n">—</span></td><td class="featured-col">2,000 min/mo</td><td>Unlimited</td></tr>
+          <tr><td>Tracking Center</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Claim Center · Warranty SLA</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Accounting Center</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">AI &amp; intelligence</td></tr>
+          <tr><td>byplan AI · monthly actions</td><td>500</td><td class="featured-col">Unlimited</td><td>Unlimited + fine-tune</td></tr>
+          <tr><td>AI budget coach · marketing</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Custom AI workflows</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Workspace fine-tuning</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">Enterprise</td></tr>
+          <tr><td>White-label portal · custom domain</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>SSO &amp; SAML</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Audit logs &amp; compliance reports</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>SOC 2 Type II report access</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Multi-workspace HQ</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>99.9% uptime SLA</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">Support &amp; onboarding</td></tr>
+          <tr><td>Email support</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Priority chat &amp; phone</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Dedicated onboarding</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Dedicated CSM</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Quarterly business reviews</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" data-screen-label="05 FAQ">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="faq-head reveal">
+        <span class="eyebrow"><span class="dot"></span>FAQ</span>
+        <h2 style="margin-top: 18px;">Pricing questions, answered.</h2>
+        <p>Can't find what you need? Email <a href="/cdn-cgi/l/email-protection#b7dfd2dbdbd8f7d5cec7dbd6d999d4d8da" style="color: var(--orange); text-decoration: underline;"><span class="__cf_email__" data-cfemail="9bf3fef7f7f4dbf9e2ebf7faf5b5f8f4f6">[email&#160;protected]</span></a> — we usually reply within an hour.</p>
+      </div>
+
+      <div class="faq-list reveal">
+        <details class="faq-item" open>
+          <summary>Is there a free trial?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Yes — 14 days, full Growth plan, no credit card required. After that you can keep going on any plan or cancel with one click.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What does "per user" mean?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Each user is a named team member with login access. Customers using your portal don't count — only your internal team does. Field crew with mobile-only access counts too.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can I switch from Build-your-own to All Apps later?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Yes, anytime. We'll prorate the difference. Most customers start with 3–5 apps, then move to Growth within 4 months to unlock the full platform.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Are there setup or migration fees?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">No. Onboarding is included on every plan. We migrate contacts, deals, projects, invoices, and file attachments at no charge. Most workspaces are live within 7 days.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What's the difference between yearly and monthly?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Yearly billing saves 20% versus monthly. Both can be canceled anytime — annual cancellations are prorated and refunded for unused months.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do you offer non-profit or contractor association discounts?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Yes — 25% off for verified non-profits, and we partner with trade associations (NAHB, PLANET, NKBA) for member-only pricing. Email us to verify.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What payment methods do you accept?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Visa, Mastercard, Amex, ACH (US), SEPA (EU), and invoice billing for annual Scale plans.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can I cancel anytime?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Yes. One click from your account settings. Monthly plans cancel at the end of the billing period; yearly plans are prorated and refunded. We'll export all your data on request.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="pricing-cta" data-screen-label="06 CTA">
+  <div class="glow glow-orange"></div>
+  <div class="dot-bg" style="opacity: 0.4;"></div>
+  <div class="container">
+    <h2 class="reveal">Ready to give it a real try?</h2>
+    <p class="reveal" style="--reveal-delay: 80ms;">14-day free trial, no credit card. Onboarding in 7 days. Most teams see ROI in their first month.</p>
+    <div class="actions reveal" style="--reveal-delay: 140ms;">
+      <a class="btn btn-accent btn-lg" href="demo.html">Start Free Trial</a>
+      <a class="btn btn-ghost btn-lg" href="demo.html">Contact Sales</a>
+    </div>
+  </div>
+</section>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js"></script>
+<script>
+  (function () {
+    // ===== Billing toggle =====
+    const toggle = document.querySelector(".billing-toggle");
+    toggle.addEventListener("click", (e) => {
+      const opt = e.target.closest(".opt");
+      if (!opt) return;
+      toggle.querySelectorAll(".opt").forEach(b => b.classList.remove("active"));
+      opt.classList.add("active");
+      const billing = opt.dataset.billing;
+      document.querySelectorAll("[data-price-monthly]").forEach(el => {
+        el.textContent = el.dataset[billing === "monthly" ? "priceMonthly" : "priceYearly"];
+      });
+      document.querySelectorAll("[data-billing-text]").forEach(el => {
+        el.textContent = billing === "monthly" ? "BILLED MONTHLY" : "BILLED YEARLY";
+      });
+    });
+
+    // ===== App picker =====
+    const rows = document.querySelectorAll(".app-row");
+    const selList = document.getElementById("selList");
+    const totalAmount = document.getElementById("totalAmount");
+    const selCount = document.getElementById("selCount");
+
+    function update() {
+      const selected = [...rows].filter(r => r.classList.contains("selected"));
+      selCount.textContent = selected.length;
+      let total = 0;
+      selList.innerHTML = "";
+      if (selected.length === 0) {
+        selList.innerHTML = `<div class="sel-empty">No apps selected. Pick from the left →</div>`;
+      } else {
+        selected.forEach(r => {
+          const price = parseInt(r.dataset.price);
+          total += price;
+          const name = r.querySelector(".nm").textContent;
+          const div = document.createElement("div");
+          div.className = "sel-row";
+          div.innerHTML = `
+            <span>${name}</span>
+            <span class="pr">$${price}/u</span>
+            <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+          `;
+          div.querySelector(".x").addEventListener("click", () => {
+            r.classList.remove("selected");
+            update();
+          });
+          selList.appendChild(div);
+        });
+      }
+      totalAmount.textContent = total;
+    }
+
+    rows.forEach(r => {
+      r.addEventListener("click", () => {
+        r.classList.toggle("selected");
+        update();
+      });
+    });
+
+    document.getElementById("allAppsCta").addEventListener("click", () => {
+      rows.forEach(r => r.classList.add("selected"));
+      update();
+      // visually flash the total
+      totalAmount.parentElement.animate(
+        [{ transform: "scale(1)" }, { transform: "scale(1.08)" }, { transform: "scale(1)" }],
+        { duration: 400 }
+      );
+    });
+
+    update();
+  })();
+</script>
+</body>
+</html>

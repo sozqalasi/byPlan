@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sign Up — byplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { background: var(--paper-2); }
+
+  /* HERO band */
+  .signup-band {
+    padding: 80px 0 32px;
+    background: white;
+  }
+  .signup-band h1 {
+    font-size: clamp(36px, 4.6vw, 60px);
+    letter-spacing: -0.035em; line-height: 1;
+    margin-top: 8px;
+    color: var(--ink);
+  }
+  .signup-band h1 .accent { color: var(--orange); }
+  .signup-band .crumbs {
+    font-family: var(--font-mono); font-size: 11.5px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mute); margin-bottom: 14px;
+  }
+  .signup-band .lead {
+    margin-top: 20px;
+    max-width: 56ch;
+    color: var(--mute);
+    font-size: 17px; line-height: 1.5;
+  }
+
+  /* Page grid */
+  .signup-section {
+    padding: 24px 0 96px;
+  }
+  .signup-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 56px;
+    align-items: flex-start;
+  }
+  @media (max-width: 1000px) { .signup-grid { grid-template-columns: 1fr; gap: 36px; } }
+
+  /* LEFT — pitch + trust */
+  .pitch h2 {
+    font-size: 20px; font-weight: 500;
+    letter-spacing: -0.018em;
+  }
+  .pitch p {
+    margin-top: 12px; color: var(--mute);
+    font-size: 14.5px; line-height: 1.55;
+    max-width: 44ch;
+  }
+  .pitch .features {
+    list-style: none; padding: 0;
+    margin: 24px 0 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .pitch .features li {
+    display: flex; gap: 12px;
+    padding: 14px 16px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .pitch .features li .ic {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--orange-soft); color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pitch .features li strong {
+    display: block; font-size: 13.5px; font-weight: 500;
+    color: var(--ink); letter-spacing: -0.012em;
+  }
+  .pitch .features li span.sb {
+    font-size: 12.5px; color: var(--mute);
+    line-height: 1.4; margin-top: 2px; display: block;
+  }
+
+  .pitch .by-the-numbers {
+    margin-top: 28px;
+    padding: 22px 24px;
+    background: var(--ink);
+    color: white;
+    border-radius: 18px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    position: relative; overflow: hidden;
+  }
+  .pitch .by-the-numbers::before {
+    content: ""; position: absolute; width: 200px; height: 200px;
+    top: -100px; right: -80px;
+    background: radial-gradient(circle, rgba(20,160,133,0.32), transparent 60%);
+    filter: blur(40px);
+  }
+  .pitch .by-the-numbers .st { position: relative; z-index: 1; }
+  .pitch .by-the-numbers .v {
+    font-size: 22px; font-weight: 500;
+    letter-spacing: -0.025em;
+  }
+  .pitch .by-the-numbers .v .accent { color: var(--orange-2); }
+  .pitch .by-the-numbers .l {
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(255,255,255,.55);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .pitch .sign-in-row {
+    margin-top: 24px;
+    font-size: 13.5px; color: var(--mute);
+    line-height: 1.5;
+  }
+  .pitch .sign-in-row a {
+    color: var(--orange); font-weight: 500;
+    text-decoration: underline; text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+
+  /* RIGHT — form card */
+  .form-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+      0 1px 2px rgba(15,15,20,0.04),
+      0 16px 40px -16px rgba(15,15,20,0.10);
+  }
+  .form-head {
+    padding: 22px 30px;
+    border-bottom: 1px solid var(--line);
+    background: white;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .form-head .ttl {
+    font-size: 17px; font-weight: 500; letter-spacing: -0.015em;
+  }
+  .form-head .secure {
+    font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--mute);
+    display: inline-flex; align-items: center; gap: 6px;
+    letter-spacing: 0.04em;
+  }
+  .form-head .secure svg { color: var(--green); }
+
+  .form-body {
+    padding: 28px 30px 24px;
+  }
+
+  /* SECTION grouping */
+  .form-section + .form-section {
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px dashed var(--line);
+  }
+  .form-section-h {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--orange-ink);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .form-section-h::before {
+    content: ""; width: 16px; height: 1.5px;
+    background: var(--orange);
+  }
+
+  /* Field grid */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 600px) { .field-grid { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-family: var(--font-mono); font-size: 10.5px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--ink-3); font-weight: 500;
+  }
+  .field label .req { color: var(--orange); margin-left: 2px; }
+  .field label .opt {
+    color: var(--mute-2); font-weight: 400;
+    letter-spacing: 0; text-transform: none;
+    font-family: var(--font-sans); font-size: 11px;
+    margin-left: 4px;
+  }
+
+  .field input, .field select, .field textarea {
+    border: 1px solid var(--line);
+    background: white;
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-family: inherit;
+    font-size: 14.5px;
+    color: var(--ink);
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    outline: none;
+    width: 100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 4px rgba(20, 160, 133, 0.08);
+  }
+  .field input::placeholder, .field textarea::placeholder { color: var(--mute-2); }
+  .field textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+  }
+  .field select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.4' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 11px;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  /* Input with leading icon (e.g. URL) */
+  .input-wrap {
+    position: relative;
+  }
+  .input-wrap input { padding-left: 38px; }
+  .input-wrap .lead-ic {
+    position: absolute;
+    top: 50%; left: 14px; transform: translateY(-50%);
+    color: var(--mute-2);
+    pointer-events: none;
+  }
+
+  /* Pill row (radio) */
+  .pill-row {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .pill-row .pl {
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: white;
+    border: 1px solid var(--line);
+    font-size: 13px; color: var(--ink-3);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .pill-row .pl:hover { border-color: var(--ink); }
+  .pill-row .pl.selected {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  /* Plan tiles */
+  .plan-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 600px) { .plan-tiles { grid-template-columns: 1fr; } }
+  .plan-tile {
+    background: white;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.18s, background 0.18s;
+    position: relative;
+  }
+  .plan-tile:hover { border-color: var(--ink-4); }
+  .plan-tile.selected {
+    border-color: var(--orange);
+    background: var(--orange-soft);
+  }
+  .plan-tile .pt-name {
+    font-size: 13.5px; font-weight: 500;
+    color: var(--ink); letter-spacing: -0.012em;
+  }
+  .plan-tile .pt-price {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--mute); letter-spacing: 0.04em;
+    margin-top: 4px;
+  }
+  .plan-tile .pt-desc {
+    font-size: 11.5px; color: var(--mute);
+    margin-top: 6px; line-height: 1.4;
+  }
+  .plan-tile .pt-check {
+    position: absolute; top: 12px; right: 12px;
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 1.5px solid var(--line-2);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white;
+  }
+  .plan-tile.selected .pt-check {
+    background: var(--orange);
+    border-color: var(--orange);
+  }
+  .plan-tile .pt-check svg { opacity: 0; transition: opacity 0.15s; }
+  .plan-tile.selected .pt-check svg { opacity: 1; }
+
+  /* CRM needs chip grid */
+  .chip-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 600px) { .chip-grid { grid-template-columns: 1fr 1fr; } }
+  .chip-grid .ch {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    font-size: 12.5px; font-weight: 500;
+    color: var(--ink-2);
+    transition: border-color 0.18s, background 0.18s, color 0.18s;
+    text-align: left;
+  }
+  .chip-grid .ch:hover { border-color: var(--ink-4); }
+  .chip-grid .ch.selected {
+    background: var(--orange-soft);
+    color: var(--orange-ink);
+    border-color: var(--orange);
+  }
+  .chip-grid .ch svg { color: var(--mute); }
+  .chip-grid .ch.selected svg { color: var(--orange); }
+
+  /* Terms / submit */
+  .form-foot {
+    padding: 20px 30px 28px;
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .form-foot .terms {
+    display: flex; gap: 10px;
+    font-size: 12.5px; line-height: 1.5;
+    color: var(--mute);
+  }
+  .form-foot .terms input[type=checkbox] {
+    margin-top: 3px;
+    accent-color: var(--orange);
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+  }
+  .form-foot .terms a {
+    color: var(--orange); text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .form-foot .submit-row {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .form-foot .submit-row .btn {
+    height: 48px; padding: 0 22px; font-size: 14px;
+  }
+  .form-foot .reassurance {
+    font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--mute);
+    letter-spacing: 0.04em;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .form-foot .reassurance svg { color: var(--green); }
+
+  /* Success state */
+  .success-state {
+    text-align: center;
+    padding: 48px 28px 64px;
+    display: none;
+  }
+  .success-state.active { display: block; }
+  .form-body.hide, .form-foot.hide { display: none; }
+  .success-state .check-ring {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--orange-soft);
+    color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 22px;
+    animation: pop 0.5s cubic-bezier(.2, 1.2, .3, 1) both;
+  }
+  @keyframes pop {
+    from { transform: scale(0.4); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .success-state h3 {
+    font-size: 24px; font-weight: 500; letter-spacing: -0.025em;
+  }
+  .success-state p {
+    font-size: 14.5px; color: var(--mute);
+    margin: 12px auto 0; max-width: 40ch; line-height: 1.5;
+  }
+  .success-state .actions {
+    margin-top: 28px;
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- BAND -->
+<section class="signup-band" data-screen-label="00 Intro">
+  <div class="container">
+    <div class="crumbs reveal">SIGN UP</div>
+    <h1 class="reveal" style="--reveal-delay: 60ms;">Create your <span class="accent">company account.</span></h1>
+    <p class="lead reveal" style="--reveal-delay: 120ms;">Tell us about your business — we'll set up your workspace, migrate your existing data, and have you live in 7 days. Free 14-day trial, no credit card.</p>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="signup-section" data-screen-label="01 Form">
+  <div class="container">
+    <div class="signup-grid">
+
+      <!-- LEFT pitch -->
+      <aside class="pitch reveal">
+        <h2>What happens next?</h2>
+        <p>You'll get a personalized onboarding from a real byplan engineer — not a chatbot, not a checklist.</p>
+
+        <ul class="features">
+          <li>
+            <span class="ic">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <div>
+              <strong>Account ready in 5 minutes</strong>
+              <span class="sb">Your workspace is provisioned the moment you submit.</span>
+            </div>
+          </li>
+          <li>
+            <span class="ic">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </span>
+            <div>
+              <strong>Onboarding call within 24h</strong>
+              <span class="sb">We migrate your contacts, deals, projects, files — at no charge.</span>
+            </div>
+          </li>
+          <li>
+            <span class="ic">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            </span>
+            <div>
+              <strong>SOC 2 Type II secure</strong>
+              <span class="sb">Your data is encrypted, audited, and never used to train shared models.</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="by-the-numbers">
+          <div class="st">
+            <div class="v">1,200<span class="accent">+</span></div>
+            <div class="l">teams onboarded</div>
+          </div>
+          <div class="st">
+            <div class="v">7<span class="accent">d</span></div>
+            <div class="l">avg. go-live</div>
+          </div>
+          <div class="st">
+            <div class="v">4.9<span class="accent">★</span></div>
+            <div class="l">G2 + Capterra</div>
+          </div>
+        </div>
+
+        <div class="sign-in-row">
+          Already have an account? <a href="customers.html">Sign in →</a>
+        </div>
+      </aside>
+
+      <!-- FORM CARD -->
+      <div class="form-card reveal">
+        <div class="form-head">
+          <div class="ttl">Company registration</div>
+          <span class="secure">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            SOC 2 · ENCRYPTED
+          </span>
+        </div>
+
+        <form class="form-body" id="signupForm" novalidate>
+          <!-- COMPANY -->
+          <div class="form-section">
+            <div class="form-section-h">Company details</div>
+            <div class="field-grid">
+              <div class="field full">
+                <label for="company">Company Name<span class="req">*</span></label>
+                <input type="text" id="company" placeholder="CedarWorks LLC" autocomplete="organization" required />
+              </div>
+              <div class="field">
+                <label for="industry">Industry<span class="req">*</span></label>
+                <select id="industry" required>
+                  <option value="">Choose your industry…</option>
+                  <option>Pergola Companies</option>
+                  <option>Outdoor Living</option>
+                  <option>Landscaping</option>
+                  <option>Flooring Showrooms</option>
+                  <option>Construction Companies</option>
+                  <option>Kitchen &amp; Cabinet</option>
+                  <option>Service Businesses</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="size">Company Size<span class="req">*</span></label>
+                <select id="size" required>
+                  <option value="">Number of employees…</option>
+                  <option>1–4 employees</option>
+                  <option>5–15 employees</option>
+                  <option>16–50 employees</option>
+                  <option>51–150 employees</option>
+                  <option>150+ employees</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="website">Company Website <span class="opt">(optional)</span></label>
+                <div class="input-wrap">
+                  <span class="lead-ic">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+                  </span>
+                  <input type="url" id="website" placeholder="https://www.yourcompany.com" autocomplete="url" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="phone">Phone Number<span class="req">*</span></label>
+                <input type="tel" id="phone" placeholder="+1 (415) 555 · 0142" autocomplete="tel" required />
+              </div>
+              <div class="field full">
+                <label for="address">Company Address<span class="req">*</span></label>
+                <input type="text" id="address" placeholder="428 Skyline Dr, Mill Valley, CA 94941" autocomplete="street-address" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTACT -->
+          <div class="form-section">
+            <div class="form-section-h">Primary contact</div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="contactName">Contact Person Name<span class="req">*</span></label>
+                <input type="text" id="contactName" placeholder="Rosa Vega" autocomplete="name" required />
+              </div>
+              <div class="field">
+                <label for="email">Business Email<span class="req">*</span></label>
+                <input type="email" id="email" placeholder="rosa@cedarworks.com" autocomplete="email" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- PLAN -->
+          <div class="form-section">
+            <div class="form-section-h">Plan &amp; seats</div>
+
+            <div class="field full" style="margin-bottom: 14px;">
+              <label>Preferred Plan<span class="req">*</span></label>
+              <div class="plan-tiles" data-name="plan">
+                <button type="button" class="plan-tile" data-value="starter">
+                  <span class="pt-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                  <div class="pt-name">Starter</div>
+                  <div class="pt-price">$19/user/mo</div>
+                  <div class="pt-desc">Up to 5 users · 6 core modules</div>
+                </button>
+                <button type="button" class="plan-tile selected" data-value="growth">
+                  <span class="pt-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                  <div class="pt-name">Growth <span style="font-family: var(--font-mono); font-size: 9px; background: var(--orange); color: white; padding: 1px 5px; border-radius: 3px; margin-left: 4px; letter-spacing: 0.04em; vertical-align: middle;">POPULAR</span></div>
+                  <div class="pt-price">$39/user/mo</div>
+                  <div class="pt-desc">Unlimited users · all 16 modules</div>
+                </button>
+                <button type="button" class="plan-tile" data-value="scale">
+                  <span class="pt-check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                  <div class="pt-name">Scale</div>
+                  <div class="pt-price">Custom pricing</div>
+                  <div class="pt-desc">30+ users · multi-location</div>
+                </button>
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="seats">Number of Seats / Users Needed<span class="req">*</span></label>
+                <select id="seats" required>
+                  <option value="">Estimated seats…</option>
+                  <option>1–5 seats</option>
+                  <option>6–10 seats</option>
+                  <option>11–25 seats</option>
+                  <option>26–50 seats</option>
+                  <option>51–100 seats</option>
+                  <option>100+ seats</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="billing">Billing Preference</label>
+                <div class="pill-row" data-name="billing">
+                  <button type="button" class="pl selected" data-value="yearly">Yearly · save 20%</button>
+                  <button type="button" class="pl" data-value="monthly">Monthly</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CRM NEEDS -->
+          <div class="form-section">
+            <div class="form-section-h">Main CRM needs</div>
+            <p style="font-size: 12.5px; color: var(--mute); margin: -8px 0 14px;">Select all that apply — we'll pre-configure your workspace around these.</p>
+
+            <div class="chip-grid" data-name="needs" data-multi="true">
+              <button type="button" class="ch selected" data-value="leads">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                Lead capture
+              </button>
+              <button type="button" class="ch selected" data-value="sales">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+                Sales pipeline
+              </button>
+              <button type="button" class="ch" data-value="quotes">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                Quotes &amp; invoices
+              </button>
+              <button type="button" class="ch" data-value="agreements">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+                E-signatures
+              </button>
+              <button type="button" class="ch" data-value="projects">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg>
+                Project tracking
+              </button>
+              <button type="button" class="ch" data-value="marketing">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Marketing &amp; Ads
+              </button>
+              <button type="button" class="ch" data-value="ai">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                AI workflows
+              </button>
+              <button type="button" class="ch" data-value="portal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+                Customer portal
+              </button>
+              <button type="button" class="ch" data-value="call">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13 1.05.37 2.07.72 3.06a2 2 0 0 1-.45 2.11L8.09 10.18a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.99.35 2.01.59 3.06.72A2 2 0 0 1 22 16.92z"/></svg>
+                Call center
+              </button>
+              <button type="button" class="ch" data-value="accounting">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/></svg>
+                Accounting
+              </button>
+              <button type="button" class="ch" data-value="team">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 21a6 6 0 0 1 12 0"/></svg>
+                Team management
+              </button>
+              <button type="button" class="ch" data-value="claims">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6L3 18l3 3 6-6 .1.1a4 4 0 0 0 5.6-5.6L15 12l-3-3z"/></svg>
+                Claims &amp; warranty
+              </button>
+            </div>
+          </div>
+
+          <!-- NOTES -->
+          <div class="form-section">
+            <div class="form-section-h">Additional details</div>
+            <div class="field full">
+              <label for="notes">Anything else we should know? <span class="opt">(optional)</span></label>
+              <textarea id="notes" placeholder="Current tools you're using, integrations needed, urgent timeline, biggest pain point — anything that helps us tailor your onboarding."></textarea>
+            </div>
+          </div>
+        </form>
+
+        <div class="form-foot">
+          <label class="terms">
+            <input type="checkbox" id="terms" checked />
+            <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. byplan may contact me about my account.</span>
+          </label>
+          <div class="submit-row">
+            <span class="reassurance">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>
+              14-DAY FREE TRIAL · NO CREDIT CARD
+            </span>
+            <button type="button" class="btn btn-accent" id="submitBtn">
+              Create Company Account
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="success-state" id="successState">
+          <div class="check-ring">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>Welcome to byplan, <span id="successName">Rosa</span>.</h3>
+          <p>Your <strong id="successCompany">company</strong> workspace is being provisioned. We just sent a confirmation to <strong id="successEmail">your email</strong> with your login link. A byplan engineer will reach out within 24 hours to schedule onboarding.</p>
+          <div class="actions">
+            <a class="btn btn-accent" href="dashboard.html">Open dashboard</a>
+            <a class="btn btn-ghost" href="index.html">Back to home</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script src="shared.js"></script>
+<script>
+  (function () {
+    // Plan tile picker (single-select)
+    document.querySelectorAll(".plan-tiles").forEach(group => {
+      group.addEventListener("click", e => {
+        const tile = e.target.closest(".plan-tile");
+        if (!tile) return;
+        group.querySelectorAll(".plan-tile").forEach(t => t.classList.remove("selected"));
+        tile.classList.add("selected");
+      });
+    });
+
+    // Pill row (single-select)
+    document.querySelectorAll(".pill-row").forEach(row => {
+      row.addEventListener("click", e => {
+        const p = e.target.closest(".pl");
+        if (!p) return;
+        row.querySelectorAll(".pl").forEach(c => c.classList.remove("selected"));
+        p.classList.add("selected");
+      });
+    });
+
+    // Chip grid (multi-select)
+    document.querySelectorAll(".chip-grid").forEach(grid => {
+      const multi = grid.dataset.multi === "true";
+      grid.addEventListener("click", e => {
+        const ch = e.target.closest(".ch");
+        if (!ch) return;
+        if (!multi) {
+          grid.querySelectorAll(".ch").forEach(c => c.classList.remove("selected"));
+        }
+        ch.classList.toggle("selected");
+      });
+    });
+
+    // Submit handler — validates required fields and reveals success state.
+    const submit = document.getElementById("submitBtn");
+    submit.addEventListener("click", () => {
+      const form = document.getElementById("signupForm");
+      const required = form.querySelectorAll("[required]");
+      let firstInvalid = null;
+      required.forEach(el => {
+        if (!el.value.trim()) {
+          el.style.borderColor = "var(--red)";
+          el.style.boxShadow = "0 0 0 4px rgba(213, 72, 72, 0.08)";
+          if (!firstInvalid) firstInvalid = el;
+        } else {
+          el.style.borderColor = "";
+          el.style.boxShadow = "";
+        }
+      });
+      const terms = document.getElementById("terms");
+      if (!terms.checked) {
+        if (!firstInvalid) firstInvalid = terms;
+      }
+      if (firstInvalid) {
+        firstInvalid.focus();
+        firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      // Success
+      const name = (document.getElementById("contactName").value || "there").split(" ")[0];
+      const company = document.getElementById("company").value || "your company";
+      const email = document.getElementById("email").value || "your inbox";
+      document.getElementById("successName").textContent = name;
+      document.getElementById("successCompany").textContent = company;
+      document.getElementById("successEmail").textContent = email;
+
+      form.classList.add("hide");
+      document.querySelector(".form-foot").classList.add("hide");
+      document.getElementById("successState").classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  })();
+</script>
+</body>
+</html>

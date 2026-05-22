@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI — ByPlan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* HERO */
+  .ai-hero {
+    position: relative;
+    padding: 96px 0 80px;
+    overflow: hidden;
+    background: var(--ink);
+    color: white;
+  }
+  .ai-hero .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 80%);
+  }
+  .ai-hero .glow-orange { width: 600px; height: 600px; left: 50%; top: -200px; transform: translateX(-50%); opacity: 0.7; }
+
+  .ai-hero-inner {
+    position: relative; z-index: 2;
+    max-width: 880px; margin: 0 auto;
+    text-align: center;
+  }
+  .ai-hero .crumbs {
+    font-family: var(--font-mono); font-size: 11.5px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--orange-2);
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 22px;
+  }
+  .ai-hero .crumbs::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--orange);
+    box-shadow: 0 0 0 4px rgba(255,106,0,0.2);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1);} 50% { opacity: 0.6; transform: scale(0.85);} }
+  .ai-hero h1 {
+    color: white;
+    font-size: clamp(44px, 6vw, 84px);
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+    font-weight: 500;
+  }
+  .ai-hero h1 .accent { color: var(--orange); }
+  .ai-hero .lead {
+    color: rgba(255,255,255,.7);
+    max-width: 60ch;
+    margin: 26px auto 0;
+    font-size: clamp(17px, 1.4vw, 20px);
+  }
+
+  /* Big orb */
+  .orb-stage {
+    position: relative;
+    width: 220px; height: 220px;
+    margin: 64px auto 0;
+  }
+  .orb-stage .orb-core {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: conic-gradient(from 0deg, #ff6a00, #ff3d00, #ffb47a, #ff6a00);
+    animation: spin 8s linear infinite;
+    position: relative;
+  }
+  .orb-stage .orb-core::after {
+    content: ""; position: absolute; inset: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.5), transparent 55%), #0a0a0c;
+  }
+  .orb-stage::before, .orb-stage::after {
+    content: ""; position: absolute; inset: -40px; border-radius: 50%;
+    border: 1px solid rgba(255,106,0,0.3);
+    animation: orb-ring 4s ease-out infinite;
+  }
+  .orb-stage::after { animation-delay: 2s; }
+  @keyframes orb-ring {
+    0% { transform: scale(0.85); opacity: 1; border-color: rgba(255,106,0,0.4); }
+    100% { transform: scale(1.6); opacity: 0; border-color: rgba(255,106,0,0); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Caption tags around orb */
+  .orb-tags {
+    position: relative;
+    max-width: 720px;
+    margin: 48px auto 0;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+  }
+  .orb-tags .t {
+    padding: 8px 14px; border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    display: inline-flex; align-items: center; gap: 8px;
+    backdrop-filter: blur(10px);
+  }
+  .orb-tags .t .dt {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
+  }
+
+  /* WORKFLOWS section */
+  .workflows {
+    padding: clamp(80px, 9vw, 128px) 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wf-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 64px;
+  }
+  @media (max-width: 880px) { .wf-grid { grid-template-columns: 1fr; } }
+
+  .wf-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  }
+  .wf-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-3);
+    border-color: var(--ink-4);
+  }
+
+  .wf-card .head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .wf-card .badge-num {
+    font-family: var(--font-mono); font-size: 10px;
+    background: var(--orange-soft); color: var(--orange-ink);
+    padding: 3px 8px; border-radius: 6px; letter-spacing: 0.06em;
+  }
+  .wf-card .head h3 {
+    font-size: 22px; font-weight: 500; letter-spacing: -0.02em;
+  }
+  .wf-card .copy {
+    font-size: 15px; color: var(--mute);
+    margin-bottom: 26px; max-width: 50ch; line-height: 1.55;
+  }
+
+  /* Workflow visualization */
+  .wf-visual {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-3);
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wf-visual .v-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono); font-size: 9.5px;
+    color: var(--mute-2); letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  /* Conversation widget */
+  .wf-conv .bubble {
+    border-radius: 12px; padding: 10px 14px;
+    font-size: 13px; line-height: 1.45;
+    margin-bottom: 8px; max-width: 86%;
+  }
+  .wf-conv .bubble.c {
+    background: var(--paper); border: 1px solid var(--line);
+    color: var(--ink-2);
+    margin-right: auto;
+  }
+  .wf-conv .bubble.ai {
+    background: var(--ink); color: white;
+    margin-left: auto;
+  }
+  .wf-conv .ai-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--orange-2); letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .wf-conv .ai-tag .orb {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: conic-gradient(from 0deg, #ff6a00, #ff3d00, #ffb47a, #ff6a00);
+  }
+  .wf-conv .meta {
+    text-align: right; font-family: var(--font-mono); font-size: 9.5px;
+    color: var(--mute); margin-top: 8px;
+  }
+
+  /* Quote draft widget */
+  .wf-quote {
+    background: white;
+    border-radius: 10px; padding: 16px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-2);
+  }
+  .wf-quote .q-h {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .wf-quote .q-h .ttl { font-size: 14px; font-weight: 500; letter-spacing: -0.015em; }
+  .wf-quote .q-h .sb { font-family: var(--font-mono); font-size: 9px; color: var(--mute); margin-top: 2px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .wf-quote .q-h .stamp {
+    font-family: var(--font-mono); font-size: 9px;
+    background: var(--orange-soft); color: var(--orange-ink);
+    padding: 3px 7px; border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .wf-quote .li {
+    display: flex; justify-content: space-between;
+    padding: 6px 0; font-size: 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .wf-quote .li .n { color: var(--mute); }
+  .wf-quote .li .v { font-family: var(--font-mono); }
+  .wf-quote .total {
+    display: flex; justify-content: space-between;
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px solid var(--ink);
+    font-size: 14px; font-weight: 500;
+  }
+  .wf-quote .total .v { font-family: var(--font-mono); letter-spacing: -0.01em; }
+
+  /* Call summary widget */
+  .wf-call {
+    display: grid; grid-template-columns: 1fr; gap: 8px;
+  }
+  .wf-call .head-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; background: var(--paper); border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .wf-call .head-row .av {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--orange);
+    color: white; font-weight: 600; font-size: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .wf-call .head-row .nm { font-size: 13px; font-weight: 500; }
+  .wf-call .head-row .meta { font-family: var(--font-mono); font-size: 10px; color: var(--mute); margin-top: 1px; }
+  .wf-call .head-row .dur { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--ink); }
+  .wf-call .summary {
+    padding: 12px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px;
+    font-size: 12.5px; line-height: 1.5; color: var(--ink-2);
+  }
+  .wf-call .summary .hl { color: var(--orange-ink); background: var(--orange-soft); padding: 0 4px; border-radius: 3px; }
+  .wf-call .nxt {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .wf-call .nxt .chip {
+    background: var(--paper); border: 1px solid var(--line);
+    padding: 4px 10px; border-radius: 6px;
+    font-size: 11px; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .wf-call .nxt .chip svg { color: var(--orange); }
+  .wf-call .nxt .chip.done {
+    background: var(--ink); color: white; border-color: var(--ink);
+  }
+  .wf-call .nxt .chip.done svg { color: var(--orange-2); }
+
+  /* Tasks widget */
+  .wf-tasks { display: flex; flex-direction: column; gap: 6px; }
+  .wf-tasks .task {
+    display: grid; grid-template-columns: 18px 1fr auto;
+    gap: 10px; align-items: flex-start;
+    padding: 9px 12px;
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .wf-tasks .task .chk {
+    width: 16px; height: 16px; border: 1.5px solid var(--line-2);
+    border-radius: 4px; margin-top: 1px;
+  }
+  .wf-tasks .task.done .chk {
+    background: var(--orange); border-color: var(--orange);
+  }
+  .wf-tasks .task.done .chk::after { content: "✓"; color: white; font-size: 10px; display: block; line-height: 14px; text-align: center; }
+  .wf-tasks .task strong { font-weight: 500; }
+  .wf-tasks .task .src {
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--orange-ink); background: var(--orange-soft);
+    padding: 2px 6px; border-radius: 4px; letter-spacing: 0.04em;
+    align-self: flex-start;
+  }
+  .wf-tasks .task.done strong { color: var(--mute); text-decoration: line-through; }
+
+  /* Analytics widget */
+  .wf-insights {
+    background: var(--ink); color: white;
+    border-radius: 10px; padding: 16px;
+    border: 1px solid var(--ink);
+    position: relative; overflow: hidden;
+  }
+  .wf-insights::before {
+    content: ""; position: absolute; width: 200px; height: 200px;
+    top: -100px; right: -80px;
+    background: radial-gradient(circle, rgba(255,106,0,0.4), transparent 60%);
+    filter: blur(40px);
+  }
+  .wf-insights .it {
+    position: relative; z-index: 1;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: grid; grid-template-columns: 22px 1fr; gap: 10px;
+    align-items: flex-start;
+  }
+  .wf-insights .it:last-child { border-bottom: none; }
+  .wf-insights .it .ic {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(255,106,0,0.2); color: var(--orange-2);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .wf-insights .it .tx { font-size: 12.5px; color: rgba(255,255,255,0.85); line-height: 1.45; }
+  .wf-insights .it strong { color: white; font-weight: 500; }
+
+  /* HOW IT WORKS section */
+  .how {
+    padding: clamp(80px, 9vw, 128px) 0;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .how-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-top: 56px;
+    position: relative;
+  }
+  @media (max-width: 880px) { .how-grid { grid-template-columns: 1fr; } }
+  .how-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-3);
+    padding: 28px;
+    position: relative;
+  }
+  .how-card .num {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--orange); letter-spacing: 0.08em;
+    margin-bottom: 18px;
+  }
+  .how-card h4 {
+    font-size: 20px; font-weight: 500; letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .how-card p {
+    font-size: 14px; color: var(--mute);
+    line-height: 1.55;
+  }
+
+  /* Security / privacy band */
+  .sec-band {
+    padding: clamp(64px, 8vw, 96px) 0;
+  }
+  .sec-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+  }
+  @media (max-width: 880px) { .sec-grid { grid-template-columns: 1fr; } }
+  .sec-grid h2 { font-size: clamp(28px, 3.4vw, 44px); letter-spacing: -0.025em; line-height: 1.05; }
+  .sec-grid p { font-size: 15px; line-height: 1.55; color: var(--mute); margin-top: 16px; max-width: 50ch; }
+  .sec-grid ul {
+    list-style: none; padding: 0; margin: 28px 0 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .sec-grid ul li {
+    background: var(--paper); border: 1px solid var(--line);
+    padding: 14px; border-radius: 10px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 500;
+  }
+  .sec-grid ul li svg { color: var(--orange); flex-shrink: 0; }
+  .sec-grid .badges {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    padding: 36px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    text-align: center;
+  }
+  .sec-grid .badges .b .lo {
+    font-size: 22px; font-weight: 500; letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .sec-grid .badges .b .lo.mono { font-family: var(--font-mono); }
+  .sec-grid .badges .b .desc {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--mute); margin-top: 6px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+
+  /* CTA */
+  .ai-cta {
+    background: var(--ink); color: white;
+    padding: 96px 0; position: relative; overflow: hidden;
+    text-align: center;
+  }
+  .ai-cta .glow-orange { width: 700px; height: 700px; left: 50%; top: -300px; transform: translateX(-50%); opacity: 0.6; }
+  .ai-cta h2 { color: white; font-size: clamp(36px, 4.8vw, 60px); letter-spacing: -0.03em; }
+  .ai-cta p { color: rgba(255,255,255,.7); margin: 18px auto 0; max-width: 52ch; }
+  .ai-cta .actions { margin-top: 32px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .ai-cta .actions .btn-ghost { color: white; border-color: rgba(255,255,255,.2); }
+</style>
+</head>
+<body>
+
+<!-- AI HERO -->
+<section class="ai-hero" data-screen-label="00 Hero">
+  <div class="grid-bg"></div>
+  <div class="glow glow-orange"></div>
+  <div class="container">
+    <div class="ai-hero-inner">
+      <div class="crumbs reveal">BYPLAN AI · GA · LIVE</div>
+      <h1 class="reveal" style="--reveal-delay: 80ms;">
+        AI-powered workflows<br>built for <span class="accent">real businesses</span>.
+      </h1>
+      <p class="lead reveal" style="--reveal-delay: 160ms;">
+        Not a chatbot. Not a wrapper. ByPlan AI is trained on every quote, project, and conversation in your workspace — it talks like your best rep, writes like your best PM, and never sleeps.
+      </p>
+
+      <div class="orb-stage reveal" style="--reveal-delay: 220ms;">
+        <div class="orb-core"></div>
+      </div>
+
+      <div class="orb-tags reveal" style="--reveal-delay: 320ms;">
+        <span class="t"><span class="dt"></span>Reply to leads in 11s</span>
+        <span class="t"><span class="dt"></span>Draft quotes from a photo</span>
+        <span class="t"><span class="dt"></span>Summarize every call</span>
+        <span class="t"><span class="dt"></span>Generate next tasks</span>
+        <span class="t"><span class="dt"></span>Spot risks before they cost you</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOWS -->
+<section class="workflows" data-screen-label="01 Workflows">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>FIVE WORKFLOWS</span>
+      <h2 class="h-1">AI that earns its keep,<br>every single day.</h2>
+      <p class="lead">Each workflow runs across your real data, with full audit logs, human-in-the-loop approval, and your branding intact.</p>
+    </div>
+
+    <div class="wf-grid">
+      <!-- 01 · AI replies -->
+      <div class="wf-card reveal">
+        <div class="head">
+          <span class="badge-num">01</span>
+          <h3>AI replies to customers</h3>
+        </div>
+        <p class="copy">Answer leads in 11 seconds, in your voice, with the right context from your project history. Hand off cleanly to a human when needed.</p>
+
+        <div class="wf-visual wf-conv">
+          <div class="v-meta">
+            <span>WEB CHAT · CEDARWORKS.COM</span>
+            <span>● LIVE</span>
+          </div>
+          <div class="bubble c">
+            Hey — do you guys do heated pergolas? Looking at 14×16, budget around $50k.
+          </div>
+          <div>
+            <div class="ai-tag" style="margin-left: auto; justify-content: flex-end;">
+              <span class="orb"></span>BYPLAN AI
+            </div>
+            <div class="bubble ai">
+              Yes! Heated cedar pergolas at 14×16 run $42–48k including infrared heaters &amp; dimmable lighting. Want me to draft an estimate?
+            </div>
+          </div>
+          <div class="bubble c">
+            Yeah, send it over.
+          </div>
+          <div>
+            <div class="ai-tag" style="margin-left: auto; justify-content: flex-end;"><span class="orb"></span>AI · DRAFTING</div>
+            <div class="bubble ai" style="background: rgba(255,255,255,.06); color: var(--ink-2); border: 1px solid var(--line);">
+              <span style="color: var(--orange-ink);">Quote #QT-1148 drafted &amp; queued for your approval →</span>
+            </div>
+          </div>
+          <div class="meta">RESPONDED · 11 SECONDS</div>
+        </div>
+      </div>
+
+      <!-- 02 · AI quotes -->
+      <div class="wf-card reveal">
+        <div class="head">
+          <span class="badge-num">02</span>
+          <h3>AI generates quotes</h3>
+        </div>
+        <p class="copy">A photo, a one-liner, a transcribed call — ByPlan turns context into a fully-priced, branded quote in seconds. You review &amp; send.</p>
+
+        <div class="wf-visual">
+          <div class="v-meta">
+            <span>FROM: PHONE CALL · 2:14 PM</span>
+            <span>AUTO-DRAFTED</span>
+          </div>
+          <div class="wf-quote">
+            <div class="q-h">
+              <div>
+                <div class="ttl">Pergola Estimate</div>
+                <div class="sb">FOR · HENDERSON FAMILY · 14×16 CEDAR</div>
+              </div>
+              <span class="stamp">AI DRAFT</span>
+            </div>
+            <div class="li"><span class="n">Structural framing</span><span class="v">$18,400</span></div>
+            <div class="li"><span class="n">Cedar planking</span><span class="v">$12,200</span></div>
+            <div class="li"><span class="n">Infrared heaters (2)</span><span class="v">$6,800</span></div>
+            <div class="li"><span class="n">Dimmable lighting</span><span class="v">$4,200</span></div>
+            <div class="li"><span class="n">Install + finish</span><span class="v">$6,600</span></div>
+            <div class="total"><span>Total</span><span class="v">$48,200</span></div>
+            <div style="display:flex; gap: 6px; margin-top: 14px;">
+              <div class="btn btn-primary btn-sm" style="flex:1;">Approve &amp; send</div>
+              <div class="btn btn-ghost btn-sm">Edit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 · AI summarizes calls -->
+      <div class="wf-card reveal">
+        <div class="head">
+          <span class="badge-num">03</span>
+          <h3>AI summarizes calls</h3>
+        </div>
+        <p class="copy">Every call captured, transcribed, summarized, and tagged to the right lead — with action items written in plain English.</p>
+
+        <div class="wf-visual">
+          <div class="v-meta">
+            <span>INBOUND · JONAH MERCER</span>
+            <span>SUMMARIZED</span>
+          </div>
+          <div class="wf-call">
+            <div class="head-row">
+              <span class="av">JM</span>
+              <div>
+                <div class="nm">Jonah Mercer</div>
+                <div class="meta">+1 (415) 555 · 0142 · OUTDOOR KITCHEN</div>
+              </div>
+              <span class="dur">04:18</span>
+            </div>
+            <div class="summary">
+              <strong>Summary:</strong> Referred by <span class="hl">Sara Reyes</span>. Wants an <span class="hl">outdoor kitchen</span> roughly <span class="hl">12×8</span>, gas grill + side burner, granite counters. Budget <span class="hl">$45–55k</span>. Timeline: install before <span class="hl">August 4</span> family reunion.
+            </div>
+            <div class="nxt">
+              <span class="chip done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Lead added</span>
+              <span class="chip done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Referral logged</span>
+              <span class="chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/></svg>Site visit · Wed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 · AI creates tasks -->
+      <div class="wf-card reveal">
+        <div class="head">
+          <span class="badge-num">04</span>
+          <h3>AI creates tasks</h3>
+        </div>
+        <p class="copy">Every morning, ByPlan reads your pipeline, projects, and emails — and writes a prioritized list of what to actually do today.</p>
+
+        <div class="wf-visual">
+          <div class="v-meta">
+            <span>TODAY · 8:00 AM</span>
+            <span>5 GENERATED</span>
+          </div>
+          <div class="wf-tasks">
+            <div class="task">
+              <span class="chk"></span>
+              <span><strong>Follow up</strong> with Jonah Mercer — outdoor kitchen estimate, referred by Sara.</span>
+              <span class="src">SALES</span>
+            </div>
+            <div class="task">
+              <span class="chk"></span>
+              <span><strong>Send change order #4</strong> to Brennan family · matte black hood swap · +$4,200.</span>
+              <span class="src">PROJECTS</span>
+            </div>
+            <div class="task done">
+              <span class="chk"></span>
+              <span><strong>Draft warranty reply</strong> for Henderson lighting flicker.</span>
+              <span class="src">SERVICE</span>
+            </div>
+            <div class="task">
+              <span class="chk"></span>
+              <span><strong>Schedule site visit</strong> for Devin Choi · Tue or Thu both work for his crew.</span>
+              <span class="src">CALENDAR</span>
+            </div>
+            <div class="task">
+              <span class="chk"></span>
+              <span><strong>Confirm</strong> EastMark Electric insurance — expires 6/14.</span>
+              <span class="src">RISK</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 · AI analytics insights -->
+      <div class="wf-card reveal" style="grid-column: 1 / -1;">
+        <div class="head">
+          <span class="badge-num">05</span>
+          <h3>AI surfaces insights you'd miss</h3>
+        </div>
+        <p class="copy">Forget reading dashboards. Every week, ByPlan tells you in plain English where money is leaking and where to lean in.</p>
+
+        <div class="wf-visual">
+          <div class="v-meta">
+            <span>WEEKLY DIGEST · MAY 19 · CEDARWORKS</span>
+            <span>READ TIME · 90 SEC</span>
+          </div>
+          <div class="wf-insights">
+            <div class="it">
+              <span class="ic">↑</span>
+              <span class="tx"><strong>Pergola referrals are up 38% MoM.</strong> Sara Reyes alone has sent 4 leads worth $156k in pipeline. Suggest a referral bonus — you'll get more.</span>
+            </div>
+            <div class="it">
+              <span class="ic">⚠</span>
+              <span class="tx"><strong>Win rate on outdoor kitchens dropped to 22%.</strong> 6 quotes lost in the last 21 days — all over $80k. Customers cited timeline. Capacity might be the real bottleneck.</span>
+            </div>
+            <div class="it">
+              <span class="ic">●</span>
+              <span class="tx"><strong>Diego Silva's crew is 18% faster than average</strong> on pergola framing. Pair him with newer crews on the next 3 builds.</span>
+            </div>
+            <div class="it">
+              <span class="ic">$</span>
+              <span class="tx"><strong>Three invoices are 30+ days late.</strong> Total: $48,200. The Brennan deposit also clears tomorrow — your cash position is fine, but let's chase.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="how" data-screen-label="02 How">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>HOW IT WORKS</span>
+      <h2 class="h-1">Not magic. Not generic.</h2>
+      <p class="lead">ByPlan AI is fine-tuned on every quote, project, customer interaction, and material your workspace has ever produced. The longer you use it, the more it sounds like you.</p>
+    </div>
+
+    <div class="how-grid">
+      <div class="how-card reveal">
+        <div class="num">STEP 01</div>
+        <h4>Learns your workspace</h4>
+        <p>Indexes every quote, contract, invoice, project, and conversation in your ByPlan account. Nothing leaves your workspace.</p>
+      </div>
+      <div class="how-card reveal">
+        <div class="num">STEP 02</div>
+        <h4>Adopts your voice</h4>
+        <p>Trained on how <em>you</em> write. Copy your tone, your terms, your standard answers — not a generic SaaS chatbot persona.</p>
+      </div>
+      <div class="how-card reveal">
+        <div class="num">STEP 03</div>
+        <h4>Stays in your control</h4>
+        <p>Every action is logged. You set what AI can do automatically, what needs human approval, and what's off-limits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section class="sec-band">
+  <div class="container">
+    <div class="sec-grid">
+      <div class="reveal">
+        <span class="eyebrow"><span class="dot"></span>PRIVACY &amp; SECURITY</span>
+        <h2 style="margin-top: 16px;">Your data trains your AI.<br>No one else's.</h2>
+        <p>Your workspace is yours. We never train shared models on your data. Every AI action is auditable, every output is logged, and you can revoke access in one click.</p>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>SOC 2 Type II</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Workspace-only training</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>SSO + role permissions</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Full audit logs</li>
+        </ul>
+      </div>
+      <div class="badges reveal">
+        <div class="b">
+          <div class="lo">SOC 2</div>
+          <div class="desc">Type II audited</div>
+        </div>
+        <div class="b">
+          <div class="lo">GDPR</div>
+          <div class="desc">EU-ready</div>
+        </div>
+        <div class="b">
+          <div class="lo mono">CCPA</div>
+          <div class="desc">Cal. compliant</div>
+        </div>
+        <div class="b">
+          <div class="lo">AES-256</div>
+          <div class="desc">at rest + transit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="ai-cta" data-screen-label="99 CTA">
+  <div class="glow glow-orange"></div>
+  <div class="dot-bg" style="opacity: 0.4;"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="reveal" style="max-width: 720px; margin: 0 auto;">
+      <h2>See ByPlan AI run<br>on <span class="accent">your business</span>.</h2>
+      <p>30-minute live walkthrough. Bring a real lead, a real call recording, a real project — we'll show you what AI does with it, in your workspace.</p>
+      <div class="actions">
+        <a class="btn btn-accent btn-lg" href="demo.html">Book a Demo</a>
+        <a class="btn btn-ghost btn-lg" href="product.html">Explore the platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="shared.js"></script>
+</body>
+</html>

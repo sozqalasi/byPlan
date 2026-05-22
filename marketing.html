@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marketing — ByPlan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#e3f3ec"/>
+    <rect x="22" y="34" width="44" height="44" fill="#dce8e3"/>
+    <rect x="34" y="22" width="44" height="44" fill="#14a085"/>
+    <circle cx="64" cy="48" r="9" fill="#4f9491"/>
+  </svg>
+</template>
+<style>
+  .page-band h1 { font-size: clamp(40px, 5vw, 72px); letter-spacing: -0.035em; line-height: 1; margin-top: 6px; }
+  .page-band .lead { margin-top: 24px; max-width: 60ch; }
+
+  /* SHOWCASE — re-use dashboard look, adapt for marketing */
+  .show-section {
+    padding: 24px 0 96px;
+    position: relative;
+    overflow: hidden;
+  }
+  .show-section .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(15,15,20,0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15,15,20,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, black 30%, transparent 75%);
+  }
+
+  .dash {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow:
+      0 60px 120px -40px rgba(15,15,20,0.18),
+      0 24px 48px -24px rgba(15,15,20,0.12);
+    overflow: hidden;
+    z-index: 2;
+  }
+  .dash-chrome {
+    height: 44px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center;
+    padding: 0 16px;
+    gap: 14px;
+  }
+  .dash-chrome .dots { display: flex; gap: 6px; }
+  .dash-chrome .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--paper-4); }
+  .dash-chrome .url { flex: 1; display: flex; justify-content: center; }
+  .dash-chrome .url-pill {
+    background: var(--paper); border: 1px solid var(--line);
+    padding: 5px 14px; border-radius: 8px;
+    font-family: var(--font-mono); font-size: 11px; color: var(--mute);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .dash-chrome .url-pill .lock { width: 10px; height: 10px; color: var(--green); }
+  .dash-chrome .right { display: flex; gap: 6px; align-items: center; }
+  .dash-chrome .right .b {
+    height: 26px; padding: 0 10px; border-radius: 6px;
+    font-size: 11.5px; background: transparent; color: var(--ink-3);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  .dash-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 820px;
+  }
+  @media (max-width: 880px) {
+    .dash-body { grid-template-columns: 1fr; min-height: 0; }
+    .dash-side { display: none; }
+  }
+
+  .dash-side {
+    background: var(--paper-2);
+    border-right: 1px solid var(--line);
+    padding: 22px 14px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .dash-side .ws {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px; border-radius: 8px;
+    background: var(--paper); border: 1px solid var(--line);
+    margin-bottom: 14px;
+  }
+  .dash-side .ws .lo {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: linear-gradient(135deg, #14a085, #0c6a58);
+    color: white; font-weight: 600; font-size: 11px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .dash-side .ws .nm { font-size: 13px; font-weight: 500; letter-spacing: -0.012em; }
+  .dash-side .ws .pl { font-family: var(--font-mono); font-size: 9.5px; color: var(--mute-2); margin-top: 1px; }
+  .dash-side .ws .ch { margin-left: auto; color: var(--mute-2); }
+  .dash-side .grp {
+    font-family: var(--font-mono); font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--mute-2); padding: 10px 8px 4px;
+  }
+  .dash-side .lk {
+    display: flex; align-items: center; gap: 9px;
+    padding: 7px 9px; border-radius: 7px;
+    font-size: 13px; color: var(--ink-3);
+  }
+  .dash-side .lk:hover { background: var(--paper); }
+  .dash-side .lk .ic { width: 15px; height: 15px; color: var(--mute); }
+  .dash-side .lk.act { background: var(--paper); color: var(--ink); border: 1px solid var(--line); box-shadow: var(--shadow-1); }
+  .dash-side .lk.act .ic { color: var(--orange); }
+  .dash-side .lk .ct {
+    margin-left: auto; font-family: var(--font-mono); font-size: 10px;
+    background: var(--paper-4); color: var(--mute);
+    padding: 0 6px; border-radius: 4px;
+  }
+  .dash-side .lk.act .ct { background: var(--orange); color: white; }
+  .dash-side .upgrade {
+    margin-top: auto; padding: 14px;
+    background: linear-gradient(135deg, var(--ink), #2a2a30);
+    color: white; border-radius: 12px; font-size: 12px;
+  }
+  .dash-side .upgrade .lbl { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em; color: var(--orange-2); text-transform: uppercase; }
+  .dash-side .upgrade .tx { font-weight: 500; margin-top: 6px; line-height: 1.4; }
+  .dash-side .upgrade .btn {
+    margin-top: 12px; background: var(--orange); color: white;
+    height: 30px; padding: 0 14px; font-size: 11.5px;
+    border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  .dash-main {
+    padding: 28px 30px;
+    display: flex; flex-direction: column; gap: 16px;
+    background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+  }
+  .dash-top {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 14px;
+  }
+  .dash-top h2 { font-size: 22px; letter-spacing: -0.025em; font-weight: 500; }
+  .dash-top .crumbs { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mute); }
+  .dash-top .actions { display: flex; gap: 8px; }
+  .dash-top .actions .b {
+    height: 32px; padding: 0 14px; border-radius: 8px;
+    font-size: 12.5px; background: var(--paper); color: var(--ink-3);
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--line);
+  }
+  .dash-top .actions .b.primary { background: var(--ink); color: white; border-color: var(--ink); }
+  .dash-top .actions .b.primary svg { color: var(--orange-2); }
+
+  /* KPI strip */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 900px) { .kpis { grid-template-columns: 1fr 1fr; } }
+  .kpi {
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px;
+    position: relative; overflow: hidden;
+  }
+  .kpi.ink { background: var(--ink); color: white; border-color: var(--ink); }
+  .kpi .lbl {
+    font-family: var(--font-mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--mute);
+  }
+  .kpi.ink .lbl { color: rgba(255,255,255,.55); }
+  .kpi .val { font-size: 28px; font-weight: 500; letter-spacing: -0.025em; margin-top: 8px; }
+  .kpi .dlt {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--green); margin-top: 4px;
+  }
+  .kpi .dlt.neg { color: var(--red); }
+  .kpi .micro {
+    margin-top: 12px; display: flex; gap: 2px; height: 24px; align-items: flex-end;
+  }
+  .kpi .micro .b {
+    flex: 1; background: var(--paper-3); border-radius: 2px;
+  }
+  .kpi.ink .micro .b { background: rgba(255,255,255,.08); }
+  .kpi .micro .b.hot { background: var(--orange); }
+
+  /* Main grid */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .panel-h {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .panel-h h3 { font-size: 14px; font-weight: 500; letter-spacing: -0.015em; }
+  .panel-h .tabs { display: flex; gap: 4px; }
+  .panel-h .tabs .t {
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 11.5px; color: var(--ink-3);
+  }
+  .panel-h .tabs .t.act { background: var(--paper-3); color: var(--ink); }
+  .panel-h .more {
+    color: var(--mute); font-size: 11px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+
+  /* Ads Center — campaign rows */
+  .ads-center {
+    display: flex; flex-direction: column;
+    gap: 8px;
+  }
+  .camp {
+    display: grid;
+    grid-template-columns: 24px 1fr 100px 90px 90px 70px;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .camp .ch {
+    width: 28px; height: 28px; border-radius: 7px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white;
+  }
+  .camp .ch.google { background: #4285f4; }
+  .camp .ch.meta { background: #1877f2; }
+  .camp .ch.tiktok { background: #0a0a0c; }
+  .camp .ch.local { background: #14a085; }
+  .camp .ch.angi { background: #1f8a5b; }
+  .camp .ch svg { width: 14px; height: 14px; }
+
+  .camp .nm-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .camp .nm { font-size: 13px; font-weight: 500; letter-spacing: -0.012em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .camp .nm .stt {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-mono); font-size: 9px;
+    padding: 1px 6px; border-radius: 4px;
+    background: var(--green-soft); color: var(--green);
+    margin-left: 8px; letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .camp .nm .stt.paused { background: var(--paper-3); color: var(--mute); }
+  .camp .nm .stt.review { background: var(--orange-soft); color: var(--orange-ink); }
+  .camp .meta-line {
+    display: flex; gap: 8px;
+    font-family: var(--font-mono); font-size: 10px; color: var(--mute);
+    letter-spacing: 0.04em;
+  }
+
+  .camp .val { font-family: var(--font-mono); font-size: 12px; }
+  .camp .val .sub { font-size: 9.5px; color: var(--mute); margin-top: 2px; font-family: var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; }
+
+  .camp .perf-bar {
+    height: 28px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .camp .perf-bar .fl {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--orange);
+    opacity: 0.85;
+  }
+  .camp .perf-bar.warm .fl { background: linear-gradient(90deg, var(--orange), #0c6a58); }
+  .camp .perf-bar.cool .fl { background: var(--ink); opacity: 1; }
+  .camp .perf-bar .ct {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--ink); z-index: 1;
+  }
+
+  .camp .actions-mini {
+    display: flex; gap: 4px; justify-content: flex-end;
+  }
+  .camp .actions-mini .btn-i {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--mute);
+  }
+  .camp .actions-mini .btn-i:hover { color: var(--ink); border-color: var(--ink-4); }
+
+  /* Channel allocation donut */
+  .channel-mix {
+    display: grid; grid-template-columns: auto 1fr; gap: 18px;
+    align-items: center;
+  }
+  .channel-mix .donut {
+    width: 124px; height: 124px;
+    position: relative;
+  }
+  .channel-mix .donut svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .channel-mix .donut .ctr {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .channel-mix .donut .ctr .v {
+    font-size: 22px; font-weight: 500; letter-spacing: -0.025em;
+  }
+  .channel-mix .donut .ctr .l {
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--mute); letter-spacing: 0.06em; text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .channel-mix .legend { display: flex; flex-direction: column; gap: 8px; }
+  .channel-mix .lg {
+    display: grid; grid-template-columns: 12px 1fr auto auto;
+    gap: 10px; align-items: center;
+    font-size: 12px;
+  }
+  .channel-mix .lg .sw { width: 10px; height: 10px; border-radius: 3px; }
+  .channel-mix .lg .nm { font-weight: 500; }
+  .channel-mix .lg .vl { font-family: var(--font-mono); font-size: 11px; color: var(--mute); }
+  .channel-mix .lg .pc {
+    font-family: var(--font-mono); font-size: 10.5px;
+    background: var(--paper-3); padding: 1px 6px; border-radius: 4px;
+    color: var(--ink-3);
+  }
+
+  /* Funnel */
+  .funnel {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .funnel .stage {
+    display: grid; grid-template-columns: 110px 1fr 90px 60px;
+    gap: 12px; align-items: center;
+    font-size: 12px;
+  }
+  .funnel .stage .lbl {
+    font-family: var(--font-mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--mute);
+  }
+  .funnel .stage .track {
+    height: 22px; background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 6px; position: relative; overflow: hidden;
+  }
+  .funnel .stage .track .fl {
+    height: 100%; background: var(--orange); border-radius: 5px;
+  }
+  .funnel .stage .track .fl.dark { background: var(--ink); }
+  .funnel .stage .track .ct {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    font-family: var(--font-mono); font-size: 10px;
+    color: white; font-weight: 500;
+    z-index: 1;
+  }
+  .funnel .stage .val { font-family: var(--font-mono); font-size: 13px; text-align: right; }
+  .funnel .stage .conv {
+    font-family: var(--font-mono); font-size: 10.5px;
+    text-align: right; color: var(--green);
+  }
+  .funnel .stage .conv.warn { color: var(--orange-ink); }
+  .funnel .stage .conv.cool { color: var(--mute); }
+
+  /* Ad creative cards */
+  .creatives-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  @media (max-width: 700px) { .creatives-grid { grid-template-columns: 1fr 1fr; } }
+  .creative {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .creative:hover { transform: translateY(-2px); border-color: var(--ink-4); }
+  .creative .ad-img {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #ece5da, #d6cdbf);
+    position: relative;
+    overflow: hidden;
+  }
+  .creative .ad-img.dark { background: linear-gradient(135deg, #2a2a30, #0a0a0c); }
+  .creative .ad-img.warm { background: linear-gradient(135deg, #e3f3ec, #c6e6dc); }
+  .creative .ad-img .ovr {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 10px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    color: white;
+  }
+  .creative .ad-img .ovr .t { font-size: 11px; font-weight: 500; letter-spacing: -0.012em; }
+  .creative .ad-img .ovr .b { font-family: var(--font-mono); font-size: 8.5px; color: rgba(255,255,255,.7); margin-top: 2px; }
+  .creative .ad-img .pill-channel {
+    position: absolute; top: 8px; left: 8px;
+    font-family: var(--font-mono); font-size: 8.5px;
+    background: rgba(0,0,0,0.6); color: white;
+    padding: 3px 7px; border-radius: 4px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* Diagrammed kitchen ad */
+  .ad-shape {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ad-shape svg { width: 70%; height: 70%; }
+
+  .creative .ad-meta {
+    padding: 10px 12px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    font-family: var(--font-mono); font-size: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .creative .ad-meta .k { color: var(--mute); }
+  .creative .ad-meta .v { color: var(--ink); text-align: right; }
+
+  /* AI suggestion panel */
+  .ai-suggest-panel {
+    background: var(--ink); color: white; border-color: var(--ink);
+    position: relative; overflow: hidden;
+  }
+  .ai-suggest-panel::before {
+    content: ""; position: absolute; width: 200px; height: 200px;
+    top: -100px; right: -80px;
+    background: radial-gradient(circle, rgba(20,160,133,0.4), transparent 60%);
+    filter: blur(40px); pointer-events: none;
+  }
+  .ai-suggest-panel .panel-h h3 { color: white; display: flex; align-items: center; gap: 8px; }
+  .ai-suggest-panel .orb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: conic-gradient(from 0deg, #14a085, #0c6a58, #7fd0bd, #14a085);
+    box-shadow: 0 0 0 3px rgba(20,160,133,.2);
+  }
+  .ai-suggest-panel .badge { background: rgba(255,255,255,.08); color: white; font-family: var(--font-mono); font-size: 9.5px; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.04em; }
+  .ai-suggest-panel .sug {
+    position: relative; z-index: 1;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: grid; grid-template-columns: 22px 1fr auto; gap: 10px;
+    align-items: flex-start;
+  }
+  .ai-suggest-panel .sug:last-child { border-bottom: none; }
+  .ai-suggest-panel .sug .ic {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(20,160,133,0.2); color: var(--orange-2);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .ai-suggest-panel .sug .tx { font-size: 12.5px; color: rgba(255,255,255,0.85); line-height: 1.45; }
+  .ai-suggest-panel .sug strong { color: white; font-weight: 500; }
+  .ai-suggest-panel .sug .apply {
+    background: var(--orange); color: white;
+    font-family: var(--font-mono); font-size: 9.5px;
+    padding: 4px 8px; border-radius: 4px;
+    letter-spacing: 0.04em;
+    align-self: flex-start;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  /* Audience builder mini */
+  .aud {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .aud-row {
+    display: grid; grid-template-columns: 80px 1fr 80px;
+    align-items: center; gap: 10px;
+    padding: 5px 0;
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+  .aud-row .key { color: var(--mute); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .aud-row .val {
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 6px; padding: 5px 8px; font-size: 11px;
+    color: var(--ink); display: flex; align-items: center; gap: 6px;
+  }
+  .aud-row .val .chip-d {
+    background: var(--orange-soft); color: var(--orange-ink);
+    padding: 0 5px; border-radius: 3px; font-size: 9.5px;
+  }
+  .aud-row .size {
+    background: var(--ink); color: white;
+    padding: 3px 8px; border-radius: 4px;
+    font-size: 10.5px; text-align: center;
+  }
+
+  /* Lead source chart */
+  .src-chart {
+    height: 220px;
+  }
+  .src-chart svg { width: 100%; height: 100%; }
+
+  /* Below band */
+  .below-band {
+    padding: clamp(72px, 8vw, 120px) 0;
+    border-top: 1px solid var(--line);
+  }
+  .below-band .grid-3 {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    margin-top: 48px;
+  }
+  @media (max-width: 880px) { .below-band .grid-3 { grid-template-columns: 1fr; } }
+  .below-band .feat {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    padding: 28px;
+  }
+  .below-band .feat .ic {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: var(--orange-soft); color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+  }
+  .below-band .feat h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.015em; }
+  .below-band .feat p { font-size: 14px; color: var(--mute); margin-top: 8px; line-height: 1.55; }
+</style>
+</head>
+<body>
+
+<!-- PAGE BAND -->
+<div class="page-band" data-screen-label="00 Intro">
+  <div class="grid-bg"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="crumbs">Product / Marketing</div>
+    <h1 class="reveal">Every dollar.<br><span class="accent">Every lead.</span> Every channel.</h1>
+    <p class="lead reveal" style="--reveal-delay: 80ms;">A marketing dashboard built for builders. Run ads across Google, Meta, TikTok, Angi and your own site — see what's working, kill what isn't, in one place.</p>
+  </div>
+</div>
+
+<!-- SHOWCASE -->
+<section class="show-section" data-screen-label="01 Marketing">
+  <div class="grid-bg"></div>
+  <div class="container-wide" style="position: relative; z-index: 2;">
+
+    <div class="dash reveal">
+      <div class="dash-chrome">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="url">
+          <div class="url-pill">
+            <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            app.byplan.com / cedarworks / marketing
+          </div>
+        </div>
+        <div class="right">
+          <div class="b">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          </div>
+          <div class="b" style="padding: 0;">
+            <span class="avatar" style="width:22px;height:22px;font-size:10px;border-width:0;">RV</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-body">
+        <!-- SIDEBAR -->
+        <aside class="dash-side">
+          <div class="ws">
+            <span class="lo">CW</span>
+            <div>
+              <div class="nm">CedarWorks</div>
+              <div class="pl">MARKETING</div>
+            </div>
+            <svg class="ch" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div class="grp">Marketing</div>
+          <div class="lk act">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Overview
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Ads Center <span class="ct">14</span>
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+            Funnel
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            Audiences
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+            Creatives
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+            Landing pages
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Email / SMS
+          </div>
+
+          <div class="grp">Insights</div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3v18h18"/><polyline points="7 14 12 9 16 13 21 8"/></svg>
+            Attribution
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Cohorts
+          </div>
+
+          <div class="upgrade">
+            <div class="lbl">AI · BUDGET COACH</div>
+            <div class="tx">Reallocate $2,400 from low-ROI Meta to high-intent Google.</div>
+            <a class="btn" href="ai.html">Review →</a>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="dash-main">
+          <div class="dash-top">
+            <div>
+              <div class="crumbs">Marketing · May 2026</div>
+              <h2>Marketing overview</h2>
+            </div>
+            <div class="actions">
+              <div class="b">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Last 30 days
+              </div>
+              <div class="b">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                All channels
+              </div>
+              <div class="b primary">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                New campaign
+              </div>
+            </div>
+          </div>
+
+          <!-- KPI strip -->
+          <div class="kpis">
+            <div class="kpi ink">
+              <div class="lbl">AD SPEND · MTD</div>
+              <div class="val">$24,180</div>
+              <div class="dlt"><span style="color:var(--orange-2);">↓</span> 8% vs plan</div>
+              <div class="micro">
+                <span class="b" style="height: 50%"></span>
+                <span class="b" style="height: 70%"></span>
+                <span class="b" style="height: 60%"></span>
+                <span class="b" style="height: 75%"></span>
+                <span class="b" style="height: 55%"></span>
+                <span class="b" style="height: 90%"></span>
+                <span class="b hot" style="height: 100%"></span>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">LEADS · MTD</div>
+              <div class="val">428</div>
+              <div class="dlt">↑ 22%</div>
+              <div class="micro">
+                <span class="b" style="height: 40%"></span>
+                <span class="b" style="height: 55%"></span>
+                <span class="b" style="height: 70%"></span>
+                <span class="b" style="height: 60%"></span>
+                <span class="b" style="height: 78%"></span>
+                <span class="b" style="height: 85%"></span>
+                <span class="b" style="height: 100%"></span>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">COST / LEAD</div>
+              <div class="val">$56.50</div>
+              <div class="dlt">↓ 24% (better)</div>
+              <div class="micro">
+                <span class="b" style="height: 90%"></span>
+                <span class="b" style="height: 75%"></span>
+                <span class="b" style="height: 82%"></span>
+                <span class="b" style="height: 60%"></span>
+                <span class="b" style="height: 55%"></span>
+                <span class="b" style="height: 45%"></span>
+                <span class="b" style="height: 38%"></span>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">ROAS</div>
+              <div class="val">11.7×</div>
+              <div class="dlt">↑ vs target 8×</div>
+              <div class="micro">
+                <span class="b" style="height: 35%"></span>
+                <span class="b" style="height: 50%"></span>
+                <span class="b" style="height: 65%"></span>
+                <span class="b" style="height: 70%"></span>
+                <span class="b" style="height: 80%"></span>
+                <span class="b" style="height: 95%"></span>
+                <span class="b hot" style="height: 100%"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADS CENTER + CHANNEL MIX -->
+          <div class="main-grid">
+            <div class="panel">
+              <div class="panel-h">
+                <h3>Ads Center · active campaigns</h3>
+                <div class="tabs">
+                  <span class="t act">All</span>
+                  <span class="t">Search</span>
+                  <span class="t">Social</span>
+                  <span class="t">Local</span>
+                </div>
+              </div>
+
+              <div class="ads-center">
+                <div class="camp">
+                  <span></span>
+                  <div class="nm-block">
+                    <div class="nm">Pergola installs · Marin County <span class="stt">LIVE</span></div>
+                    <div class="meta-line">
+                      <span>GOOGLE SEARCH</span>
+                      <span>·</span>
+                      <span>$1,200 / DAY</span>
+                    </div>
+                  </div>
+                  <div class="val">$4,820<div class="sub">SPEND · 14D</div></div>
+                  <div class="val">147<div class="sub">LEADS</div></div>
+                  <div class="perf-bar warm"><div class="fl" style="width: 88%;"></div><span class="ct">$32 CPL</span></div>
+                  <div class="actions-mini">
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></span>
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>
+                  </div>
+                </div>
+
+                <div class="camp">
+                  <span class="ch google"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12s4.5 10 10 10c5 0 9.2-3.7 9.9-8.5h-9.9V12z"/></svg></span>
+                  <div class="nm-block">
+                    <div class="nm">Outdoor kitchen · summer push <span class="stt">LIVE</span></div>
+                    <div class="meta-line"><span>GOOGLE · PERFORMANCE MAX</span><span>·</span><span>$900 / DAY</span></div>
+                  </div>
+                  <div class="val">$3,640<div class="sub">SPEND · 14D</div></div>
+                  <div class="val">68<div class="sub">LEADS</div></div>
+                  <div class="perf-bar"><div class="fl" style="width: 72%;"></div><span class="ct">$53 CPL</span></div>
+                  <div class="actions-mini">
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></span>
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>
+                  </div>
+                </div>
+
+                <div class="camp">
+                  <span class="ch meta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.04 21.5v-7.13H6.1V11h2.94V8.59c0-2.94 1.75-4.59 4.42-4.59 1.28 0 2.62.23 2.62.23v2.88h-1.48c-1.45 0-1.9.9-1.9 1.83V11h3.23l-.52 3.37H12.7V21.5"/></svg></span>
+                  <div class="nm-block">
+                    <div class="nm">Before / after carousel · pergola gallery <span class="stt review">REVIEW</span></div>
+                    <div class="meta-line"><span>META · INSTAGRAM</span><span>·</span><span>$650 / DAY</span></div>
+                  </div>
+                  <div class="val">$2,180<div class="sub">SPEND · 14D</div></div>
+                  <div class="val">52<div class="sub">LEADS</div></div>
+                  <div class="perf-bar"><div class="fl" style="width: 58%;"></div><span class="ct">$42 CPL</span></div>
+                  <div class="actions-mini">
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></span>
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>
+                  </div>
+                </div>
+
+                <div class="camp">
+                  <span class="ch local"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-12a8 8 0 0 1 16 0c0 7.5-8 12-8 12z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                  <div class="nm-block">
+                    <div class="nm">Google Local Services · pergola contractor <span class="stt">LIVE</span></div>
+                    <div class="meta-line"><span>LSA · MARIN + SONOMA</span><span>·</span><span>$50 / LEAD CAP</span></div>
+                  </div>
+                  <div class="val">$2,420<div class="sub">SPEND · 14D</div></div>
+                  <div class="val">62<div class="sub">CALLS</div></div>
+                  <div class="perf-bar warm"><div class="fl" style="width: 92%;"></div><span class="ct">$39 CPL</span></div>
+                  <div class="actions-mini">
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></span>
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>
+                  </div>
+                </div>
+
+                <div class="camp">
+                  <span class="ch tiktok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 6.7v3.5c-2 0-3.8-.6-5.4-1.7v7c0 3.6-3 6.5-6.5 6.5S1 19.1 1 15.5s2.9-6.5 6.5-6.5c.4 0 .8 0 1.2.1v3.6c-.4-.1-.8-.2-1.2-.2-1.6 0-2.9 1.3-2.9 2.9s1.3 2.9 2.9 2.9 2.9-1.3 2.9-2.9V2.5h3.5c0 2.4 1.9 4.2 4.6 4.2"/></svg></span>
+                  <div class="nm-block">
+                    <div class="nm">Time-lapse build · cedar pergola <span class="stt paused">PAUSED</span></div>
+                    <div class="meta-line"><span>TIKTOK · ORGANIC + BOOST</span><span>·</span><span>$200 / DAY</span></div>
+                  </div>
+                  <div class="val">$640<div class="sub">SPEND · 14D</div></div>
+                  <div class="val">8<div class="sub">LEADS</div></div>
+                  <div class="perf-bar cool"><div class="fl" style="width: 22%;"></div><span class="ct" style="color: var(--mute);">$80 CPL</span></div>
+                  <div class="actions-mini">
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></span>
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>
+                  </div>
+                </div>
+
+                <div class="camp">
+                  <span class="ch angi"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span>
+                  <div class="nm-block">
+                    <div class="nm">Angi exclusive leads · outdoor living <span class="stt">LIVE</span></div>
+                    <div class="meta-line"><span>ANGI · TARGETED</span><span>·</span><span>$80 / LEAD</span></div>
+                  </div>
+                  <div class="val">$1,840<div class="sub">SPEND · 14D</div></div>
+                  <div class="val">23<div class="sub">LEADS</div></div>
+                  <div class="perf-bar"><div class="fl" style="width: 64%;"></div><span class="ct">$80 CPL</span></div>
+                  <div class="actions-mini">
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></span>
+                    <span class="btn-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-h">
+                <h3>Spend by channel</h3>
+                <span class="more">MTD <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </div>
+              <div class="channel-mix">
+                <div class="donut">
+                  <svg viewBox="0 0 36 36">
+                    <!-- Total circumference = 2*pi*15.9155 = 100 -->
+                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#ecebe5" stroke-width="4.5"/>
+                    <!-- Google · 38% -->
+                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#4285f4" stroke-width="4.5" stroke-dasharray="38 62" stroke-dashoffset="25" stroke-linecap="butt"/>
+                    <!-- Meta · 22% -->
+                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#1877f2" stroke-width="4.5" stroke-dasharray="22 78" stroke-dashoffset="-13" stroke-linecap="butt"/>
+                    <!-- Local · 18% -->
+                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#14a085" stroke-width="4.5" stroke-dasharray="18 82" stroke-dashoffset="-35" stroke-linecap="butt"/>
+                    <!-- Angi · 12% -->
+                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#1f8a5b" stroke-width="4.5" stroke-dasharray="12 88" stroke-dashoffset="-53" stroke-linecap="butt"/>
+                    <!-- TikTok · 6% -->
+                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#0a0a0c" stroke-width="4.5" stroke-dasharray="6 94" stroke-dashoffset="-65" stroke-linecap="butt"/>
+                    <!-- Other · 4% -->
+                    <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#9a9a9f" stroke-width="4.5" stroke-dasharray="4 96" stroke-dashoffset="-71" stroke-linecap="butt"/>
+                  </svg>
+                  <div class="ctr">
+                    <div class="v">$24.1k</div>
+                    <div class="l">SPEND MTD</div>
+                  </div>
+                </div>
+                <div class="legend">
+                  <div class="lg"><span class="sw" style="background:#4285f4;"></span><span class="nm">Google Search/PMax</span><span class="vl">$9,180</span><span class="pc">38%</span></div>
+                  <div class="lg"><span class="sw" style="background:#1877f2;"></span><span class="nm">Meta</span><span class="vl">$5,320</span><span class="pc">22%</span></div>
+                  <div class="lg"><span class="sw" style="background:#14a085;"></span><span class="nm">Google LSA</span><span class="vl">$4,350</span><span class="pc">18%</span></div>
+                  <div class="lg"><span class="sw" style="background:#1f8a5b;"></span><span class="nm">Angi</span><span class="vl">$2,900</span><span class="pc">12%</span></div>
+                  <div class="lg"><span class="sw" style="background:#0a0a0c;"></span><span class="nm">TikTok</span><span class="vl">$1,450</span><span class="pc">6%</span></div>
+                  <div class="lg"><span class="sw" style="background:#9a9a9f;"></span><span class="nm">Other</span><span class="vl">$980</span><span class="pc">4%</span></div>
+                </div>
+              </div>
+
+              <!-- Audience builder mini -->
+              <div style="margin-top: 18px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                  <span style="font-size: 11.5px; font-weight: 500; letter-spacing: -0.012em;">Top audience · saved</span>
+                  <span class="more" style="font-family: var(--font-mono); font-size: 9.5px;">EDIT</span>
+                </div>
+                <div class="aud">
+                  <div class="aud-row">
+                    <span class="key">LOCATION</span>
+                    <span class="val">Marin <span class="chip-d">+24 ZIPS</span></span>
+                    <span class="size">2.1M</span>
+                  </div>
+                  <div class="aud-row">
+                    <span class="key">INCOME</span>
+                    <span class="val">$180k+ household</span>
+                    <span class="size">340k</span>
+                  </div>
+                  <div class="aud-row">
+                    <span class="key">INTENT</span>
+                    <span class="val">"pergola near me" · 30d</span>
+                    <span class="size">8.6k</span>
+                  </div>
+                  <div class="aud-row">
+                    <span class="key">EXCLUDE</span>
+                    <span class="val" style="color: var(--red);">Past leads · renters</span>
+                    <span class="size" style="background: var(--red);">−4.2k</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FUNNEL + AI suggestions + creatives -->
+          <div class="main-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="panel">
+              <div class="panel-h">
+                <h3>Conversion funnel · this month</h3>
+                <span class="more" style="font-family: var(--font-mono); font-size: 10px;">REVENUE $284k</span>
+              </div>
+              <div class="funnel">
+                <div class="stage">
+                  <span class="lbl">Impressions</span>
+                  <div class="track"><div class="fl" style="width: 100%; background: var(--paper-3);"></div><span class="ct" style="color: var(--ink);">412,000</span></div>
+                  <span class="val">412k</span>
+                  <span class="conv cool">—</span>
+                </div>
+                <div class="stage">
+                  <span class="lbl">Clicks</span>
+                  <div class="track"><div class="fl" style="width: 32%; background: var(--ink);"></div><span class="ct">18,400</span></div>
+                  <span class="val">18.4k</span>
+                  <span class="conv">4.5%</span>
+                </div>
+                <div class="stage">
+                  <span class="lbl">Form starts</span>
+                  <div class="track"><div class="fl" style="width: 18%; background: var(--ink-3);"></div><span class="ct">2,140</span></div>
+                  <span class="val">2.1k</span>
+                  <span class="conv">11.6%</span>
+                </div>
+                <div class="stage">
+                  <span class="lbl">Leads</span>
+                  <div class="track"><div class="fl" style="width: 11%; background: var(--orange);"></div><span class="ct">428</span></div>
+                  <span class="val">428</span>
+                  <span class="conv">20.0%</span>
+                </div>
+                <div class="stage">
+                  <span class="lbl">Quotes sent</span>
+                  <div class="track"><div class="fl" style="width: 6%; background: var(--orange);"></div><span class="ct">147</span></div>
+                  <span class="val">147</span>
+                  <span class="conv">34.3%</span>
+                </div>
+                <div class="stage">
+                  <span class="lbl">Won deals</span>
+                  <div class="track"><div class="fl" style="width: 2.5%; background: var(--orange); min-width: 30px;"></div><span class="ct">38</span></div>
+                  <span class="val">38</span>
+                  <span class="conv">25.8%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel ai-suggest-panel">
+              <div class="panel-h">
+                <h3><span class="orb"></span>Budget coach · AI</h3>
+                <span class="badge">4 SUGGESTIONS</span>
+              </div>
+              <div class="sug">
+                <span class="ic">↑</span>
+                <span class="tx"><strong>Increase Marin pergola Google by $400/day.</strong> CPL is 41% under target, queue depth is healthy, capacity available.</span>
+                <button class="apply">Apply</button>
+              </div>
+              <div class="sug">
+                <span class="ic">↓</span>
+                <span class="tx"><strong>Cut TikTok by 60%.</strong> CPL is 2.3× the channel average, lead quality score is 31/100.</span>
+                <button class="apply">Apply</button>
+              </div>
+              <div class="sug">
+                <span class="ic">↻</span>
+                <span class="tx"><strong>Refresh Meta carousel creative.</strong> Engagement decayed 38% week-over-week. AI has 3 drafts ready.</span>
+                <button class="apply">Review</button>
+              </div>
+              <div class="sug">
+                <span class="ic">⚠</span>
+                <span class="tx"><strong>Outdoor kitchen win-rate dropped to 22%.</strong> Worth pausing the summer push until capacity opens up Aug 4.</span>
+                <button class="apply">Apply</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CREATIVES -->
+          <div class="panel">
+            <div class="panel-h">
+              <h3>Top performing creatives · last 14 days</h3>
+              <span class="more" style="font-family: var(--font-mono); font-size: 10px;">VIEW ALL · 42 CREATIVES</span>
+            </div>
+            <div class="creatives-grid">
+              <div class="creative">
+                <div class="ad-img">
+                  <span class="pill-channel">GOOGLE PMAX</span>
+                  <div class="ad-shape">
+                    <!-- pergola silhouette -->
+                    <svg viewBox="0 0 100 100" fill="#5a3a22">
+                      <rect x="10" y="40" width="80" height="6"/>
+                      <rect x="10" y="40" width="6" height="50"/>
+                      <rect x="84" y="40" width="6" height="50"/>
+                      <rect x="46" y="40" width="6" height="50"/>
+                      <rect x="20" y="46" width="60" height="2"/>
+                      <rect x="20" y="52" width="60" height="2"/>
+                      <rect x="20" y="58" width="60" height="2"/>
+                      <rect x="20" y="64" width="60" height="2"/>
+                    </svg>
+                  </div>
+                  <div class="ovr">
+                    <div class="t">Cedar pergolas, installed in 2 weeks</div>
+                    <div class="b">CEDARWORKS · MARIN COUNTY</div>
+                  </div>
+                </div>
+                <div class="ad-meta">
+                  <span class="k">CTR</span><span class="v" style="color: var(--green);">6.8%</span>
+                  <span class="k">CPL</span><span class="v">$32</span>
+                </div>
+              </div>
+
+              <div class="creative">
+                <div class="ad-img dark">
+                  <span class="pill-channel">META · IG</span>
+                  <div class="ad-shape">
+                    <!-- outdoor kitchen icon -->
+                    <svg viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="3" stroke-linecap="round">
+                      <rect x="14" y="38" width="72" height="42" rx="3"/>
+                      <rect x="14" y="38" width="72" height="10" rx="3" fill="white"/>
+                      <line x1="32" y1="56" x2="32" y2="80"/>
+                      <line x1="50" y1="56" x2="50" y2="80"/>
+                      <line x1="68" y1="56" x2="68" y2="80"/>
+                      <circle cx="44" cy="30" r="6" stroke="#14a085" fill="#14a085"/>
+                    </svg>
+                  </div>
+                  <div class="ovr">
+                    <div class="t">Outdoor kitchens · before/after</div>
+                    <div class="b">CAROUSEL · 6 FRAMES</div>
+                  </div>
+                </div>
+                <div class="ad-meta">
+                  <span class="k">CTR</span><span class="v" style="color: var(--green);">4.2%</span>
+                  <span class="k">CPL</span><span class="v">$42</span>
+                </div>
+              </div>
+
+              <div class="creative">
+                <div class="ad-img warm">
+                  <span class="pill-channel">LSA · LOCAL</span>
+                  <div class="ad-shape">
+                    <!-- 5 stars -->
+                    <svg viewBox="0 0 100 100" fill="#14a085">
+                      <g transform="translate(50,42)">
+                        <path d="M0,-22 L7,-7 L23,-4 L11,7 L14,22 L0,14 L-14,22 L-11,7 L-23,-4 L-7,-7 Z"/>
+                      </g>
+                    </svg>
+                    <svg viewBox="0 0 100 100" fill="#14a085" style="position: absolute; bottom: 26%; width: 60%; height: 20%;">
+                      <text x="50" y="50" text-anchor="middle" font-family="Geist" font-weight="600" font-size="14" fill="#3e2818">4.9 · 124 reviews</text>
+                    </svg>
+                  </div>
+                  <div class="ovr">
+                    <div class="t">Highest-rated pergola pros nearby</div>
+                    <div class="b">GOOGLE GUARANTEED</div>
+                  </div>
+                </div>
+                <div class="ad-meta">
+                  <span class="k">CALL RATE</span><span class="v" style="color: var(--green);">9.4%</span>
+                  <span class="k">CPL</span><span class="v">$39</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LEAD SOURCE TREND -->
+          <div class="panel">
+            <div class="panel-h">
+              <h3>Leads by source · last 90 days</h3>
+              <div class="tabs">
+                <span class="t">7D</span>
+                <span class="t">30D</span>
+                <span class="t act">90D</span>
+              </div>
+            </div>
+            <div class="src-chart">
+              <svg viewBox="0 0 800 220" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="ldGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#14a085" stop-opacity="0.32"/>
+                    <stop offset="1" stop-color="#14a085" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <g stroke="#ecebe5" stroke-width="1">
+                  <line x1="0" y1="40" x2="800" y2="40"/>
+                  <line x1="0" y1="100" x2="800" y2="100"/>
+                  <line x1="0" y1="160" x2="800" y2="160"/>
+                </g>
+                <!-- Google -->
+                <path d="M0,150 C100,140 200,120 300,100 S500,80 600,70 700,60 800,55" fill="none" stroke="#4285f4" stroke-width="2"/>
+                <!-- Meta -->
+                <path d="M0,170 C100,165 200,155 300,150 S500,140 600,130 700,140 800,125" fill="none" stroke="#1877f2" stroke-width="2"/>
+                <!-- LSA -->
+                <path d="M0,180 C100,170 200,150 300,140 S500,130 600,118 700,110 800,98" fill="none" stroke="#14a085" stroke-width="2.5"/>
+                <!-- Filled area below LSA -->
+                <path d="M0,180 C100,170 200,150 300,140 S500,130 600,118 700,110 800,98 L800,200 L0,200 Z" fill="url(#ldGrad)"/>
+                <!-- Angi -->
+                <path d="M0,190 C100,188 200,180 300,178 S500,165 600,158 700,150 800,140" fill="none" stroke="#1f8a5b" stroke-width="2"/>
+                <!-- TikTok -->
+                <path d="M0,195 C100,194 200,190 300,182 S500,178 600,176 700,182 800,188" fill="none" stroke="#0a0a0c" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <!-- X labels -->
+                <g font-family="Geist Mono" font-size="9" fill="#9a9a9f">
+                  <text x="0" y="215">FEB 19</text>
+                  <text x="200" y="215">MAR 12</text>
+                  <text x="400" y="215">APR 02</text>
+                  <text x="600" y="215">APR 23</text>
+                  <text x="760" y="215">MAY 19</text>
+                </g>
+                <!-- Legend -->
+                <g font-family="Geist Mono" font-size="10" fill="#3b3b43">
+                  <rect x="0" y="0" width="14" height="3" fill="#14a085"/><text x="20" y="9">LSA</text>
+                  <rect x="60" y="0" width="14" height="3" fill="#4285f4"/><text x="80" y="9">GOOGLE</text>
+                  <rect x="138" y="0" width="14" height="3" fill="#1877f2"/><text x="158" y="9">META</text>
+                  <rect x="200" y="0" width="14" height="3" fill="#1f8a5b"/><text x="220" y="9">ANGI</text>
+                  <rect x="260" y="0" width="14" height="3" fill="#0a0a0c"/><text x="280" y="9">TIKTOK</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BELOW -->
+<section class="below-band" data-screen-label="02 Why">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>WHAT MAKES IT DIFFERENT</span>
+      <h2 class="h-1">Marketing tied to the<br>jobs you actually win.</h2>
+      <p class="lead">Most ad dashboards stop at "lead". ByPlan keeps counting — to quote, to signed contract, to deposit. So you finally know which ads make money, not just which ones make leads.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="feat reveal">
+        <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3v18h18"/><polyline points="7 14 12 9 16 13 21 8"/></svg></span>
+        <h4>Closed-loop attribution</h4>
+        <p>Every signed contract traces back to the exact ad, keyword, audience, and creative that started it.</p>
+      </div>
+      <div class="feat reveal">
+        <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1"/></svg></span>
+        <h4>AI budget coach</h4>
+        <p>Reallocates daily across Google, Meta, LSA, and Angi — based on revenue, not vanity metrics like clicks.</p>
+      </div>
+      <div class="feat reveal">
+        <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></span>
+        <h4>Creative library + AI drafts</h4>
+        <p>Generate new ad copy and creative from your best-performing projects. Stay always-on without always being on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" data-screen-label="99 CTA" style="background: var(--ink); color: white; padding: 96px 0; position: relative; overflow: hidden; text-align: center;">
+  <div class="glow glow-orange" style="width: 600px; height: 600px; right: -180px; top: -260px; opacity: 0.7;"></div>
+  <div class="dot-bg" style="opacity: 0.5;"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="reveal" style="max-width: 720px; margin: 0 auto;">
+      <h2 class="h-display" style="color: white; font-size: clamp(36px, 5vw, 60px);">Spend less.<br><span class="accent" style="color: var(--orange-2);">Close more.</span></h2>
+      <p class="lead" style="color: rgba(255,255,255,.7); margin: 18px auto 0; max-width: 52ch;">Bring your last 90 days of ad data to the demo. We'll show you exactly where you're leaking money and how ByPlan would plug it.</p>
+      <div style="margin-top: 32px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a class="btn btn-accent btn-lg" href="demo.html">Book a Demo</a>
+        <a class="btn btn-ghost btn-lg" href="dashboard.html" style="color: white; border-color: rgba(255,255,255,.2);">See the sales dashboard</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="shared.js"></script>
+</body>
+</html>

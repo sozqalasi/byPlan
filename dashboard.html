@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard — ByPlan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .page-band h1 { font-size: clamp(40px, 5vw, 72px); letter-spacing: -0.035em; line-height: 1; margin-top: 6px; }
+  .page-band .lead { margin-top: 24px; max-width: 56ch; }
+
+  /* Premium dashboard showcase */
+  .show-section {
+    padding: 24px 0 120px;
+    position: relative;
+    overflow: hidden;
+  }
+  .show-section .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(15,15,20,0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15,15,20,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, black 30%, transparent 75%);
+  }
+
+  /* Main hero dashboard */
+  .dash {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow:
+      0 60px 120px -40px rgba(15,15,20,0.18),
+      0 24px 48px -24px rgba(15,15,20,0.12);
+    overflow: hidden;
+    z-index: 2;
+  }
+  .dash-chrome {
+    height: 44px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center;
+    padding: 0 16px;
+    gap: 14px;
+  }
+  .dash-chrome .dots { display: flex; gap: 6px; }
+  .dash-chrome .dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--paper-4); }
+  .dash-chrome .url {
+    flex: 1; display: flex; justify-content: center;
+  }
+  .dash-chrome .url-pill {
+    background: var(--paper); border: 1px solid var(--line);
+    padding: 5px 14px; border-radius: 8px;
+    font-family: var(--font-mono); font-size: 11px; color: var(--mute);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .dash-chrome .url-pill .lock {
+    width: 10px; height: 10px; color: var(--green);
+  }
+  .dash-chrome .right { display: flex; gap: 6px; }
+  .dash-chrome .right .b {
+    height: 26px; padding: 0 10px; border-radius: 6px;
+    font-size: 11.5px; background: transparent; color: var(--ink-3);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  .dash-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 760px;
+  }
+  @media (max-width: 880px) {
+    .dash-body { grid-template-columns: 1fr; min-height: 0; }
+    .dash-side { display: none; }
+  }
+  .dash-side {
+    background: var(--paper-2);
+    border-right: 1px solid var(--line);
+    padding: 22px 14px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .dash-side .ws {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 8px; border-radius: 8px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    margin-bottom: 14px;
+  }
+  .dash-side .ws .lo {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: linear-gradient(135deg, #14a085, #0c6a58);
+    color: white; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .dash-side .ws .nm { font-size: 13px; font-weight: 500; letter-spacing: -0.012em; }
+  .dash-side .ws .pl { font-family: var(--font-mono); font-size: 9.5px; color: var(--mute-2); margin-top: 1px; }
+  .dash-side .ws .ch { margin-left: auto; color: var(--mute-2); }
+
+  .dash-side .grp {
+    font-family: var(--font-mono); font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--mute-2); padding: 10px 8px 4px;
+  }
+  .dash-side .lk {
+    display: flex; align-items: center; gap: 9px;
+    padding: 7px 9px; border-radius: 7px;
+    font-size: 13px; color: var(--ink-3);
+  }
+  .dash-side .lk:hover { background: var(--paper); }
+  .dash-side .lk .ic { width: 15px; height: 15px; color: var(--mute); }
+  .dash-side .lk.act { background: var(--paper); color: var(--ink); border: 1px solid var(--line); box-shadow: var(--shadow-1); }
+  .dash-side .lk.act .ic { color: var(--orange); }
+  .dash-side .lk .ct {
+    margin-left: auto;
+    font-family: var(--font-mono); font-size: 10px;
+    background: var(--paper-4); color: var(--mute);
+    padding: 0 6px; border-radius: 4px;
+  }
+  .dash-side .lk.act .ct { background: var(--orange); color: white; }
+
+  .dash-side .upgrade {
+    margin-top: auto;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--ink), #2a2a30);
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+  .dash-side .upgrade .lbl { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.08em; color: var(--orange-2); text-transform: uppercase; }
+  .dash-side .upgrade .tx { font-weight: 500; margin-top: 6px; line-height: 1.4; }
+  .dash-side .upgrade .btn {
+    margin-top: 12px; background: var(--orange); color: white;
+    height: 30px; padding: 0 14px; font-size: 11.5px;
+    border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  .dash-main {
+    padding: 28px 30px;
+    display: flex; flex-direction: column; gap: 16px;
+    background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+  }
+
+  .dash-top {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 14px;
+  }
+  .dash-top h2 { font-size: 22px; letter-spacing: -0.025em; font-weight: 500; }
+  .dash-top .crumbs {
+    font-family: var(--font-mono); font-size: 10.5px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--mute);
+  }
+  .dash-top .actions { display: flex; gap: 8px; }
+  .dash-top .actions .b {
+    height: 32px; padding: 0 14px; border-radius: 8px;
+    font-size: 12.5px; background: var(--paper); color: var(--ink-3);
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--line);
+  }
+  .dash-top .actions .b.primary { background: var(--ink); color: white; border-color: var(--ink); }
+  .dash-top .actions .b.primary svg { color: var(--orange-2); }
+
+  /* KPI strip */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 900px) { .kpis { grid-template-columns: 1fr 1fr; } }
+  .kpi {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi.ink { background: var(--ink); color: white; border-color: var(--ink); }
+  .kpi .lbl {
+    font-family: var(--font-mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--mute);
+  }
+  .kpi.ink .lbl { color: rgba(255,255,255,.55); }
+  .kpi .val {
+    font-size: 28px; font-weight: 500; letter-spacing: -0.025em;
+    margin-top: 8px;
+  }
+  .kpi .dlt {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--green);
+    margin-top: 4px;
+  }
+  .kpi .dlt.neg { color: var(--red); }
+  .kpi .micro {
+    margin-top: 12px; display: flex; gap: 2px; height: 24px; align-items: flex-end;
+  }
+  .kpi .micro .b {
+    flex: 1; background: var(--paper-3); border-radius: 2px;
+  }
+  .kpi.ink .micro .b { background: rgba(255,255,255,.08); }
+  .kpi .micro .b.hot { background: var(--orange); }
+
+  /* Main grid */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .panel-h {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .panel-h h3 { font-size: 14px; font-weight: 500; letter-spacing: -0.015em; }
+  .panel-h .tabs { display: flex; gap: 4px; }
+  .panel-h .tabs .t {
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 11.5px; color: var(--ink-3);
+  }
+  .panel-h .tabs .t.act { background: var(--paper-3); color: var(--ink); }
+  .panel-h .more {
+    color: var(--mute); font-size: 11px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+
+  /* Revenue chart */
+  .rev-chart { height: 220px; }
+  .rev-chart svg { width: 100%; height: 100%; }
+
+  /* Pipeline column */
+  .pipe {
+    display: flex; gap: 8px; height: 220px;
+  }
+  .pipe .col {
+    flex: 1;
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px;
+    display: flex; flex-direction: column; gap: 6px;
+    overflow: hidden;
+  }
+  .pipe .col h6 {
+    font-family: var(--font-mono); font-size: 9.5px;
+    color: var(--mute); margin-bottom: 4px;
+    display: flex; justify-content: space-between;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .pipe .col h6 .n { color: var(--ink); }
+  .pipe .col h6 .dt { width: 6px; height: 6px; border-radius: 50%; background: var(--mute-3); display: inline-block; margin-right: 4px; }
+  .pipe .col.warm h6 .dt { background: #7fd0bd; }
+  .pipe .col.hot h6 .dt { background: var(--orange); }
+  .pipe .col.won h6 .dt { background: var(--green); }
+  .pipe .card-pp {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 10.5px;
+  }
+  .pipe .card-pp .t { font-weight: 500; }
+  .pipe .card-pp .v { font-family: var(--font-mono); color: var(--mute); margin-top: 2px; font-size: 9.5px; }
+  .pipe .card-pp.hot { border-color: var(--orange); box-shadow: 0 0 0 2px var(--orange-soft); }
+
+  /* Schedule + activity */
+  .lower-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 1100px) { .lower-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 760px) { .lower-grid { grid-template-columns: 1fr; } }
+
+  /* Calendar */
+  .cal { font-size: 11px; }
+  .cal .month { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .cal .month .m { font-weight: 500; }
+  .cal .grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
+    font-family: var(--font-mono); text-align: center;
+    font-size: 10px;
+  }
+  .cal .grid .h { color: var(--mute-2); font-size: 9px; padding: 2px 0; }
+  .cal .grid .d {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px;
+  }
+  .cal .grid .d.muted { color: var(--mute-3); }
+  .cal .grid .d.today { background: var(--ink); color: white; }
+  .cal .grid .d.evt { position: relative; }
+  .cal .grid .d.evt::after {
+    content: ""; position: absolute; left: 50%; bottom: 2px;
+    width: 4px; height: 4px; border-radius: 50%; background: var(--orange);
+    transform: translateX(-50%);
+  }
+  .cal .upc {
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .cal .upc .ev {
+    display: grid; grid-template-columns: 38px 1fr;
+    gap: 10px; padding: 6px 0; align-items: center;
+  }
+  .cal .upc .ev .tm {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--orange);
+  }
+  .cal .upc .ev .ti { font-size: 11.5px; font-weight: 500; }
+  .cal .upc .ev .sb { font-size: 10px; color: var(--mute); margin-top: 1px; }
+
+  /* AI tasks panel */
+  .ai-tasks {
+    background: var(--ink); color: white; border-color: var(--ink);
+    position: relative; overflow: hidden;
+  }
+  .ai-tasks::before {
+    content: ""; position: absolute; width: 200px; height: 200px;
+    top: -100px; right: -80px;
+    background: radial-gradient(circle, rgba(20,160,133,0.4), transparent 60%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+  .ai-tasks .panel-h h3 { color: white; display: flex; align-items: center; gap: 8px; }
+  .ai-tasks .orb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: conic-gradient(from 0deg, #14a085, #0c6a58, #7fd0bd, #14a085);
+    box-shadow: 0 0 0 3px rgba(20,160,133,.2);
+  }
+  .ai-tasks .badge { background: rgba(255,255,255,.08); color: white; font-family: var(--font-mono); font-size: 9.5px; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.04em; }
+  .ai-tasks .task {
+    display: flex; gap: 10px; padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    font-size: 12.5px;
+    align-items: flex-start;
+    color: rgba(255,255,255,.85);
+    position: relative; z-index: 1;
+  }
+  .ai-tasks .task:last-child { border-bottom: none; }
+  .ai-tasks .task .chk {
+    width: 16px; height: 16px; border-radius: 4px;
+    border: 1.5px solid rgba(255,255,255,.2);
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .ai-tasks .task .chk.done {
+    background: var(--orange); border-color: var(--orange);
+  }
+  .ai-tasks .task .chk.done::after {
+    content: "✓"; color: white; font-size: 10px; display: block; line-height: 14px; text-align: center;
+  }
+  .ai-tasks .task strong { font-weight: 500; color: white; }
+  .ai-tasks .task .tag-mini {
+    margin-left: auto;
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--orange-2); letter-spacing: 0.04em;
+    text-transform: uppercase;
+    align-self: flex-start;
+  }
+
+  /* Activity timeline */
+  .activity { font-size: 12px; }
+  .activity .row {
+    display: grid; grid-template-columns: 22px 1fr;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+    align-items: flex-start;
+  }
+  .activity .row:last-child { border-bottom: none; }
+  .activity .row .ic {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--paper-2); border: 1px solid var(--line);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--mute); flex-shrink: 0;
+  }
+  .activity .row .ic.orange { background: var(--orange-soft); color: var(--orange); border-color: transparent; }
+  .activity .row .ic.green { background: var(--green-soft); color: var(--green); border-color: transparent; }
+  .activity .row .ic.blue { background: var(--blue-soft); color: var(--blue); border-color: transparent; }
+  .activity .row .nm { font-weight: 500; }
+  .activity .row .sub { color: var(--mute); margin-top: 1px; font-size: 11px; }
+  .activity .row .tm {
+    font-family: var(--font-mono); font-size: 9.5px;
+    color: var(--mute-2); margin-top: 2px;
+  }
+
+  /* Team performance */
+  .team-perf { display: flex; flex-direction: column; gap: 10px; }
+  .team-perf .row {
+    display: grid; grid-template-columns: 30px 1fr 50px 1fr 50px;
+    align-items: center; gap: 10px;
+    font-size: 12px;
+  }
+  .team-perf .row .nm { font-weight: 500; }
+  .team-perf .row .sb { font-size: 10px; color: var(--mute); margin-top: 1px; font-family: var(--font-mono); }
+  .team-perf .row .pct { font-family: var(--font-mono); font-size: 11px; text-align: right; }
+  .team-perf .row .bar {
+    height: 6px; background: var(--paper-3); border-radius: 3px; overflow: hidden;
+  }
+  .team-perf .row .bar .fl { height: 100%; background: var(--orange); border-radius: 3px; }
+  .team-perf .row .qt {
+    font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--ink); text-align: right;
+  }
+
+  /* Notification badge in chrome top right */
+  .dash-chrome .right .b .badge-n {
+    background: var(--orange); color: white;
+    font-family: var(--font-mono); font-size: 9px;
+    padding: 0 5px; border-radius: 999px;
+    height: 14px; line-height: 14px;
+    margin-left: 4px;
+  }
+
+  /* Bottom showcase */
+  .below-band {
+    padding: clamp(72px, 8vw, 112px) 0;
+    border-top: 1px solid var(--line);
+  }
+  .below-band .grid-3 {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    margin-top: 48px;
+  }
+  @media (max-width: 880px) { .below-band .grid-3 { grid-template-columns: 1fr; } }
+  .below-band .feat {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    padding: 28px;
+  }
+  .below-band .feat .ic {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: var(--orange-soft); color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+  }
+  .below-band .feat h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.015em; }
+  .below-band .feat p { font-size: 14px; color: var(--mute); margin-top: 8px; line-height: 1.55; }
+</style>
+</head>
+<body>
+
+<!-- PAGE BAND -->
+<div class="page-band" data-screen-label="00 Intro">
+  <div class="grid-bg"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="crumbs">Product / Dashboard</div>
+    <h1 class="reveal">One screen.<br><span class="accent">The whole business.</span></h1>
+    <p class="lead reveal" style="--reveal-delay: 80ms;">Pipeline value, project health, AI-generated tasks, calendar, activity, and team performance — refreshed in real time. The dashboard is the home page of your day.</p>
+  </div>
+</div>
+
+<!-- SHOWCASE -->
+<section class="show-section" data-screen-label="01 Dashboard">
+  <div class="grid-bg"></div>
+  <div class="container-wide" style="position: relative; z-index: 2;">
+
+    <div class="dash reveal">
+      <div class="dash-chrome">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="url">
+          <div class="url-pill">
+            <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            app.byplan.com / cedarworks / overview
+          </div>
+        </div>
+        <div class="right">
+          <div class="b">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.36.31.6.78.6 1.29z"/></svg>
+          </div>
+          <div class="b">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            <span class="badge-n">4</span>
+          </div>
+          <div class="b" style="padding: 0;">
+            <span class="avatar" style="width:22px;height:22px;font-size:10px;border-width:0;">RV</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-body">
+        <!-- SIDEBAR -->
+        <aside class="dash-side">
+          <div class="ws">
+            <span class="lo">CW</span>
+            <div>
+              <div class="nm">CedarWorks</div>
+              <div class="pl">GROWTH PLAN</div>
+            </div>
+            <svg class="ch" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div class="grp">Workspace</div>
+          <div class="lk act">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Overview
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            Leads <span class="ct">12</span>
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+            Pipeline <span class="ct">24</span>
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg>
+            Projects <span class="ct">8</span>
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Inbox <span class="ct">12</span>
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            Quotes &amp; invoices
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6L3 18l3 3 6-6 .1.1a4 4 0 0 0 5.6-5.6L15 12l-3-3z"/></svg>
+            Service <span class="ct">4</span>
+          </div>
+
+          <div class="grp">Insights</div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="7 14 12 9 16 13 21 8"/></svg>
+            Analytics
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><circle cx="18" cy="6" r="3" stroke-dasharray="2 2"/></svg>
+            Team
+          </div>
+          <div class="lk">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 1-12 5l-1 3M5 12a7 7 0 0 1 12-5l1-3"/></svg>
+            Workflows
+          </div>
+
+          <div class="upgrade">
+            <div class="lbl">BYPLAN AI</div>
+            <div class="tx">7 actions waiting for your review.</div>
+            <a class="btn" href="ai.html">
+              Review →
+            </a>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="dash-main">
+          <div class="dash-top">
+            <div>
+              <div class="crumbs">Overview · Q2 2026</div>
+              <h2>Good afternoon, Rosa</h2>
+            </div>
+            <div class="actions">
+              <div class="b">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Last 30 days
+              </div>
+              <div class="b">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Filter
+              </div>
+              <div class="b primary">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
+                Generate report
+              </div>
+            </div>
+          </div>
+
+          <!-- KPI strip -->
+          <div class="kpis">
+            <div class="kpi ink">
+              <div class="lbl">PIPELINE VALUE</div>
+              <div class="val">$1.42M</div>
+              <div class="dlt"><span style="color:var(--orange-2);">↑</span> 18.4% vs last month</div>
+              <div class="micro">
+                <span class="b" style="height: 40%"></span>
+                <span class="b" style="height: 60%"></span>
+                <span class="b" style="height: 50%"></span>
+                <span class="b" style="height: 80%"></span>
+                <span class="b" style="height: 65%"></span>
+                <span class="b" style="height: 95%"></span>
+                <span class="b hot" style="height: 100%"></span>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">REVENUE (MTD)</div>
+              <div class="val">$284K</div>
+              <div class="dlt">↑ 23%</div>
+              <div class="micro">
+                <span class="b" style="height: 30%"></span>
+                <span class="b" style="height: 55%"></span>
+                <span class="b" style="height: 40%"></span>
+                <span class="b" style="height: 70%"></span>
+                <span class="b" style="height: 50%"></span>
+                <span class="b" style="height: 85%"></span>
+                <span class="b" style="height: 100%"></span>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">WIN RATE</div>
+              <div class="val">37%</div>
+              <div class="dlt">↑ 4.1pp</div>
+              <div class="micro">
+                <span class="b" style="height: 40%"></span>
+                <span class="b" style="height: 35%"></span>
+                <span class="b" style="height: 60%"></span>
+                <span class="b" style="height: 55%"></span>
+                <span class="b" style="height: 70%"></span>
+                <span class="b" style="height: 65%"></span>
+                <span class="b" style="height: 80%"></span>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">AVG CLOSE</div>
+              <div class="val">11d</div>
+              <div class="dlt">↑ 35% faster</div>
+              <div class="micro">
+                <span class="b" style="height: 90%"></span>
+                <span class="b" style="height: 75%"></span>
+                <span class="b" style="height: 80%"></span>
+                <span class="b" style="height: 55%"></span>
+                <span class="b" style="height: 50%"></span>
+                <span class="b" style="height: 40%"></span>
+                <span class="b" style="height: 35%"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main: Revenue chart + Pipeline -->
+          <div class="main-grid">
+            <div class="panel">
+              <div class="panel-h">
+                <h3>Revenue &amp; forecast</h3>
+                <div class="tabs">
+                  <span class="t">7D</span>
+                  <span class="t act">30D</span>
+                  <span class="t">90D</span>
+                  <span class="t">YTD</span>
+                </div>
+              </div>
+              <div class="rev-chart">
+                <svg viewBox="0 0 600 220" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="revArea" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="#14a085" stop-opacity="0.32"/>
+                      <stop offset="1" stop-color="#14a085" stop-opacity="0"/>
+                    </linearGradient>
+                    <linearGradient id="forecast" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="#9a9a9f" stop-opacity="0.2"/>
+                      <stop offset="1" stop-color="#9a9a9f" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Grid lines -->
+                  <g stroke="#ecebe5" stroke-width="1">
+                    <line x1="0" y1="44" x2="600" y2="44"/>
+                    <line x1="0" y1="100" x2="600" y2="100"/>
+                    <line x1="0" y1="156" x2="600" y2="156"/>
+                  </g>
+                  <!-- Y axis labels -->
+                  <g font-family="Geist Mono" font-size="10" fill="#9a9a9f">
+                    <text x="5" y="44">$320k</text>
+                    <text x="5" y="100">$160k</text>
+                    <text x="5" y="156">$0</text>
+                  </g>
+                  <!-- X axis labels -->
+                  <g font-family="Geist Mono" font-size="9" fill="#9a9a9f">
+                    <text x="60" y="195">Apr 22</text>
+                    <text x="160" y="195">Apr 29</text>
+                    <text x="260" y="195">May 06</text>
+                    <text x="360" y="195">May 13</text>
+                    <text x="460" y="195">May 19</text>
+                    <text x="540" y="195">May 27</text>
+                  </g>
+                  <!-- Actual area -->
+                  <path d="M50,170 L100,150 L150,160 L200,135 L250,140 L300,115 L350,118 L400,90 L450,95 L490,68 L490,180 L50,180 Z" fill="url(#revArea)"/>
+                  <!-- Forecast area -->
+                  <path d="M490,68 L530,72 L575,55 L575,180 L490,180 Z" fill="url(#forecast)"/>
+                  <!-- Actual line -->
+                  <path d="M50,170 L100,150 L150,160 L200,135 L250,140 L300,115 L350,118 L400,90 L450,95 L490,68" fill="none" stroke="#14a085" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                  <!-- Forecast dashed -->
+                  <path d="M490,68 L530,72 L575,55" fill="none" stroke="#9a9a9f" stroke-width="2" stroke-dasharray="4 4" stroke-linejoin="round" stroke-linecap="round"/>
+                  <!-- Vertical "today" line -->
+                  <line x1="490" y1="20" x2="490" y2="178" stroke="#0a0a0c" stroke-width="1" stroke-dasharray="2 3" opacity="0.4"/>
+                  <text x="495" y="30" font-family="Geist Mono" font-size="9" fill="#0a0a0c">TODAY</text>
+                  <!-- Current dot -->
+                  <circle cx="490" cy="68" r="18" fill="#14a085" opacity="0.12"/>
+                  <circle cx="490" cy="68" r="5" fill="#14a085" stroke="white" stroke-width="2"/>
+                  <!-- Tooltip -->
+                  <g transform="translate(420,30)">
+                    <rect x="0" y="0" width="120" height="32" rx="6" fill="#0a0a0c"/>
+                    <text x="10" y="14" font-family="Geist" font-size="10" fill="rgba(255,255,255,.6)">MAY 19 · ACTUAL</text>
+                    <text x="10" y="26" font-family="Geist Mono" font-size="11" fill="white" font-weight="500">$284,210</text>
+                  </g>
+                </svg>
+              </div>
+              <div style="display:flex; gap: 18px; margin-top: 8px; font-family: var(--font-mono); font-size: 11px;">
+                <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:10px;height:2px;background:#14a085;"></span> ACTUAL</span>
+                <span style="display:inline-flex; align-items:center; gap:6px; color:var(--mute);"><span style="width:10px;border-top:2px dashed #9a9a9f;"></span> FORECAST</span>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-h">
+                <h3>Pipeline by stage</h3>
+                <span class="more">More <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></span>
+              </div>
+              <div class="pipe">
+                <div class="col">
+                  <h6><span><span class="dt"></span>NEW</span><span class="n">12</span></h6>
+                  <div class="card-pp"><div class="t">Henderson</div><div class="v">$48k</div></div>
+                  <div class="card-pp"><div class="t">Choi</div><div class="v">$67k</div></div>
+                  <div class="card-pp"><div class="t">Reyes</div><div class="v">$22k</div></div>
+                </div>
+                <div class="col warm">
+                  <h6><span><span class="dt"></span>QUOTED</span><span class="n">8</span></h6>
+                  <div class="card-pp hot"><div class="t">Tan landscape</div><div class="v">$54k</div></div>
+                  <div class="card-pp"><div class="t">Marcus cabinet</div><div class="v">$31k</div></div>
+                  <div class="card-pp"><div class="t">Singh deck</div><div class="v">$72k</div></div>
+                </div>
+                <div class="col hot">
+                  <h6><span><span class="dt"></span>WON</span><span class="n">6</span></h6>
+                  <div class="card-pp"><div class="t">Northfield</div><div class="v">$112k</div></div>
+                  <div class="card-pp"><div class="t">Volpe</div><div class="v">$84k</div></div>
+                  <div class="card-pp"><div class="t">Brennan</div><div class="v">$96k</div></div>
+                </div>
+                <div class="col won">
+                  <h6><span><span class="dt"></span>BUILD</span><span class="n">4</span></h6>
+                  <div class="card-pp"><div class="t">Mercer P3/5</div><div class="v">$48k</div></div>
+                  <div class="card-pp"><div class="t">Lopez P2/5</div><div class="v">$28k</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lower: AI tasks + Calendar + Activity -->
+          <div class="lower-grid">
+            <div class="panel ai-tasks">
+              <div class="panel-h">
+                <h3><span class="orb"></span>AI tasks for today</h3>
+                <span class="badge">7 NEW</span>
+              </div>
+              <div class="task">
+                <span class="chk"></span>
+                <span><strong>Follow up</strong> with Jonah Mercer about heated pergola — referred by Sara R., quote draft attached.</span>
+                <span class="tag-mini">SALES</span>
+              </div>
+              <div class="task">
+                <span class="chk"></span>
+                <span><strong>Send change order</strong> #4 to Brennan family for matte black hood swap.</span>
+                <span class="tag-mini">PROJECTS</span>
+              </div>
+              <div class="task">
+                <span class="chk done"></span>
+                <span style="opacity: 0.55; text-decoration: line-through; text-decoration-color: rgba(255,255,255,.3);">Draft warranty reply for Henderson lighting flicker.</span>
+              </div>
+              <div class="task">
+                <span class="chk"></span>
+                <span><strong>Schedule site visit</strong> for Devin Choi — Tue or Thu afternoon both work for his crew.</span>
+                <span class="tag-mini">CALENDAR</span>
+              </div>
+              <div class="task">
+                <span class="chk"></span>
+                <span><strong>Confirm</strong> EastMark Electric insurance — expires 6/14, renewal pending.</span>
+                <span class="tag-mini">RISK</span>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-h">
+                <h3>Calendar</h3>
+                <span class="more" style="font-family: var(--font-mono); font-size: 10px;">MAY 2026</span>
+              </div>
+              <div class="cal">
+                <div class="grid">
+                  <span class="h">M</span><span class="h">T</span><span class="h">W</span><span class="h">T</span><span class="h">F</span><span class="h">S</span><span class="h">S</span>
+                  <span class="d muted">28</span><span class="d muted">29</span><span class="d muted">30</span><span class="d">1</span><span class="d">2</span><span class="d muted">3</span><span class="d muted">4</span>
+                  <span class="d">5</span><span class="d evt">6</span><span class="d">7</span><span class="d evt">8</span><span class="d">9</span><span class="d muted">10</span><span class="d muted">11</span>
+                  <span class="d">12</span><span class="d evt">13</span><span class="d evt">14</span><span class="d">15</span><span class="d evt">16</span><span class="d muted">17</span><span class="d muted">18</span>
+                  <span class="d today">19</span><span class="d evt">20</span><span class="d">21</span><span class="d evt">22</span><span class="d">23</span><span class="d muted">24</span><span class="d muted">25</span>
+                  <span class="d">26</span><span class="d">27</span><span class="d evt">28</span><span class="d">29</span><span class="d">30</span><span class="d muted">31</span><span class="d muted">1</span>
+                </div>
+                <div class="upc">
+                  <div class="ev">
+                    <span class="tm">2:30P</span>
+                    <div><div class="ti">Site walk · Henderson pergola</div><div class="sb">w/ Rachel Brennan · Diego Silva</div></div>
+                  </div>
+                  <div class="ev">
+                    <span class="tm">4:15P</span>
+                    <div><div class="ti">Quote review · Choi residence</div><div class="sb">Internal · sales sync</div></div>
+                  </div>
+                  <div class="ev">
+                    <span class="tm">TMR</span>
+                    <div><div class="ti">EastMark Electric · rough-in walkthrough</div><div class="sb">9:30A · Riverside addition</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-h">
+                <h3>Activity</h3>
+                <span class="more" style="font-family: var(--font-mono); font-size: 10px;">LIVE</span>
+              </div>
+              <div class="activity">
+                <div class="row">
+                  <span class="ic orange"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg></span>
+                  <div>
+                    <div><span class="nm">Henderson family</span> signed quote #QT-1142</div>
+                    <div class="sub">$48,200 · pergola · cedar 14×16</div>
+                    <div class="tm">12 MIN AGO</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <span class="ic green"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+                  <div>
+                    <div>Permit approved · <span class="nm">Marin County</span></div>
+                    <div class="sub">PRG-2641 · Henderson</div>
+                    <div class="tm">1 HR AGO</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <span class="ic blue"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+                  <div>
+                    <div>New comment from <span class="nm">Rachel Brennan</span></div>
+                    <div class="sub">"Can we try a matte black hood?"</div>
+                    <div class="tm">2 HR AGO</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <span class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+                  <div>
+                    <div><span class="nm">Jamal Greene</span> won deal · Volpe pergola</div>
+                    <div class="sub">$84,000 · added to build queue</div>
+                    <div class="tm">3 HR AGO</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <span class="ic orange"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg></span>
+                  <div>
+                    <div>AI auto-replied to <span class="nm">Jonah Mercer</span></div>
+                    <div class="sub">First response · 11 seconds</div>
+                    <div class="tm">4 HR AGO</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Team performance -->
+          <div class="panel">
+            <div class="panel-h">
+              <h3>Team performance · Q2</h3>
+              <div class="tabs">
+                <span class="t act">Sales</span>
+                <span class="t">PM</span>
+                <span class="t">Crew</span>
+              </div>
+            </div>
+            <div class="team-perf">
+              <div class="row">
+                <span class="avatar" style="margin: 0;">RV</span>
+                <div><div class="nm">Rosa Vega</div><div class="sb">OWNER · CEO</div></div>
+                <span class="pct">142%</span>
+                <div class="bar"><div class="fl" style="width: 100%; background: linear-gradient(90deg, var(--orange), #0c6a58);"></div></div>
+                <span class="qt">$412k</span>
+              </div>
+              <div class="row">
+                <span class="avatar b2" style="margin: 0;">JG</span>
+                <div><div class="nm">Jamal Greene</div><div class="sb">SALES LEAD</div></div>
+                <span class="pct">118%</span>
+                <div class="bar"><div class="fl" style="width: 85%;"></div></div>
+                <span class="qt">$284k</span>
+              </div>
+              <div class="row">
+                <span class="avatar b4" style="margin: 0;">MP</span>
+                <div><div class="nm">Maya Park</div><div class="sb">PROJECT MGR</div></div>
+                <span class="pct">96%</span>
+                <div class="bar"><div class="fl" style="width: 68%;"></div></div>
+                <span class="qt">$198k</span>
+              </div>
+              <div class="row">
+                <span class="avatar b5" style="margin: 0;">AC</span>
+                <div><div class="nm">Amelia Cho</div><div class="sb">DESIGNER · SALES</div></div>
+                <span class="pct">82%</span>
+                <div class="bar"><div class="fl" style="width: 56%;"></div></div>
+                <span class="qt">$148k</span>
+              </div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BELOW -->
+<section class="below-band" data-screen-label="02 Powers">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>WHAT POWERS IT</span>
+      <h2 class="h-1">A dashboard that updates itself.</h2>
+      <p class="lead">Every panel pulls from the same data layer that runs your pipeline, projects, and customer portal — so what you see is what's actually happening.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="feat reveal">
+        <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <h4>Real-time everything</h4>
+        <p>Quotes signed, permits approved, crew check-ins — your dashboard reflects field reality within seconds.</p>
+      </div>
+      <div class="feat reveal">
+        <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="4"/></svg></span>
+        <h4>AI-generated tasks</h4>
+        <p>Every morning, ByPlan reads your data and writes you a prioritized list of what actually moves the business forward.</p>
+      </div>
+      <div class="feat reveal">
+        <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="7 14 12 9 16 13 21 8"/></svg></span>
+        <h4>Custom views</h4>
+        <p>Owners, sales leads, PMs and crew each see the dashboard that matters to them. Build your own widgets in minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="shared.js"></script>
+</body>
+</html>

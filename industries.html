@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Industries — ByPlan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .page-band h1 { font-size: clamp(40px, 5vw, 72px); letter-spacing: -0.035em; line-height: 1; margin-top: 6px; }
+  .page-band .lead { margin-top: 24px; max-width: 56ch; }
+  .page-band .grid-bg { background-size: 56px 56px; }
+
+  /* Industry detail cards */
+  .ind-detail {
+    padding: clamp(60px, 7vw, 92px) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ind-detail.alt { background: var(--paper-2); }
+
+  .ind-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 72px;
+    align-items: center;
+  }
+  .ind-detail.flip .ind-detail-grid { grid-template-columns: 1.2fr 1fr; }
+  .ind-detail.flip .ind-copy { order: 2; }
+  .ind-detail.flip .ind-vis { order: 1; }
+  @media (max-width: 1000px) {
+    .ind-detail-grid { grid-template-columns: 1fr; gap: 40px; }
+    .ind-detail.flip .ind-copy { order: 1; }
+    .ind-detail.flip .ind-vis { order: 2; }
+  }
+
+  .ind-copy {
+    max-width: 480px;
+  }
+  .ind-copy .glyph {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: var(--ink); color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 26px;
+    box-shadow: var(--shadow-3);
+  }
+  .ind-copy .num {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+    color: var(--orange); text-transform: uppercase;
+  }
+  .ind-copy h2 {
+    margin-top: 6px; font-size: clamp(28px, 3.2vw, 44px);
+    letter-spacing: -0.025em; line-height: 1.05;
+  }
+  .ind-copy .tag { background: var(--orange-soft); color: var(--orange-ink); margin-bottom: 16px; }
+  .ind-copy p { margin-top: 18px; font-size: 16px; line-height: 1.55; color: var(--mute); }
+  .ind-copy .features {
+    list-style: none; padding: 0; margin: 28px 0 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  @media (max-width: 480px) { .ind-copy .features { grid-template-columns: 1fr; } }
+  .ind-copy .features li {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13.5px; color: var(--ink-2);
+    display: flex; align-items: flex-start; gap: 10px;
+    line-height: 1.4;
+  }
+  .ind-detail.alt .ind-copy .features li { background: var(--paper); }
+  .ind-copy .features li svg { flex-shrink: 0; margin-top: 2px; color: var(--orange); }
+
+  .ind-copy .stats {
+    display: flex; gap: 28px; margin-top: 28px;
+    padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .ind-copy .stats .stat { display: flex; flex-direction: column; }
+  .ind-copy .stats .stat .v {
+    font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1;
+  }
+  .ind-copy .stats .stat .l {
+    font-size: 11.5px; color: var(--mute); margin-top: 6px;
+    font-family: var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase;
+  }
+
+  /* Pipeline visualisations */
+  .ind-vis {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    padding: 24px;
+    box-shadow: var(--shadow-3);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+  .ind-vis .meta {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono); font-size: 10px; color: var(--mute-2);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .ind-vis h6 {
+    font-size: 13px; font-weight: 500;
+    letter-spacing: -0.012em;
+    margin-bottom: 14px;
+  }
+  .ind-vis .pl-row {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+    margin-bottom: 14px;
+  }
+  .ind-vis .pl-stage {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 8px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .ind-vis .pl-stage .l {
+    font-family: var(--font-mono); font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--mute);
+  }
+  .ind-vis .pl-stage .n { font-size: 14px; font-weight: 500; letter-spacing: -0.015em; }
+  .ind-vis .pl-stage.hot { background: var(--ink); color: white; border-color: var(--ink); }
+  .ind-vis .pl-stage.hot .l { color: rgba(255,255,255,.55); }
+  .ind-vis .pl-stage.hot::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--orange); }
+
+  .ind-vis .panel {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 10px;
+  }
+  .ind-vis .panel-h {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+    font-size: 11.5px; font-weight: 500;
+  }
+  .ind-vis .panel-h .badge {
+    font-family: var(--font-mono); font-size: 9.5px;
+    background: var(--orange-soft); color: var(--orange-ink);
+    padding: 2px 6px; border-radius: 4px;
+  }
+  .ind-vis .row-item {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 10px;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .ind-vis .row-item:last-child { border-bottom: none; }
+  .ind-vis .row-item .nm { font-weight: 500; }
+  .ind-vis .row-item .sub { color: var(--mute); font-size: 10.5px; margin-top: 1px; }
+  .ind-vis .row-item .v { font-family: var(--font-mono); font-size: 11px; }
+
+  .ind-vis .swatches {
+    display: flex; gap: 6px; margin-top: 10px;
+  }
+  .ind-vis .sw {
+    flex: 1; aspect-ratio: 1; border-radius: 6px;
+    border: 1px solid var(--line);
+  }
+
+  /* Big mosaic at top */
+  .mosaic {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 56px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 1000px) { .mosaic { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 580px) { .mosaic { grid-template-columns: repeat(2, 1fr); } }
+  .mosaic .tile {
+    aspect-ratio: 1;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-2);
+    padding: 16px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    color: var(--ink);
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .mosaic .tile:hover { background: var(--ink); color: white; border-color: var(--ink); transform: translateY(-3px); }
+  .mosaic .tile:hover .label { color: rgba(255,255,255,.55); }
+  .mosaic .tile:hover .ic { background: rgba(20,160,133,.18); color: var(--orange-2); }
+  .mosaic .tile .ic {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: var(--orange-soft); color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .mosaic .tile .nm { font-size: 14px; font-weight: 500; letter-spacing: -0.015em; }
+  .mosaic .tile .label {
+    font-family: var(--font-mono); font-size: 9.5px;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--mute);
+    transition: color 0.2s;
+  }
+
+  /* CTA */
+  .ind-cta {
+    background: var(--ink); color: white;
+    padding: 96px 0; position: relative; overflow: hidden;
+    text-align: center;
+  }
+  .ind-cta .glow-orange { width: 600px; height: 600px; right: -180px; top: -260px; opacity: 0.7; }
+  .ind-cta h2 { color: white; font-size: clamp(36px, 4.5vw, 56px); }
+  .ind-cta p { color: rgba(255,255,255,.7); margin: 18px auto 0; max-width: 52ch; }
+  .ind-cta .actions { margin-top: 32px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .ind-cta .actions .btn-ghost { color: white; border-color: rgba(255,255,255,.2); }
+  .ind-cta .actions .btn-ghost:hover { background: rgba(255,255,255,.06); }
+</style>
+</head>
+<body>
+
+<!-- PAGE BAND -->
+<div class="page-band" data-screen-label="00 Intro">
+  <div class="grid-bg"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="crumbs">Industries / All</div>
+    <h1 class="reveal">Built for the trades.<br><span class="accent">Tuned for yours.</span></h1>
+    <p class="lead reveal" style="--reveal-delay: 80ms;">Out-of-the-box pipelines, quote templates, project phases, and AI prompts — already shaped for the way <em>your</em> industry works. No setup wizard. No "configure your workflow" weekend.</p>
+
+    <div class="mosaic">
+      <a href="#pergola" class="tile reveal">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8m18 13V8M3 8h18M5 8v-3h3M19 8v-3h-3M9 8v13M15 8v13M3 12h18M3 16h18"/></svg></div>
+        <div>
+          <div class="label">01</div>
+          <div class="nm">Pergola</div>
+        </div>
+      </a>
+      <a href="#outdoor" class="tile reveal">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M5 20V9l7-5 7 5v11M9 20v-6h6v6"/></svg></div>
+        <div>
+          <div class="label">02</div>
+          <div class="nm">Outdoor living</div>
+        </div>
+      </a>
+      <a href="#landscaping" class="tile reveal">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6M8 16c-2-2-3-5-3-8 4 0 7 3 7 8M16 16c2-2 3-5 3-8-4 0-7 3-7 8"/></svg></div>
+        <div>
+          <div class="label">03</div>
+          <div class="nm">Landscaping</div>
+        </div>
+      </a>
+      <a href="#flooring" class="tile reveal">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z M3 9h18M3 14h18M9 5v14M15 5v14"/></svg></div>
+        <div>
+          <div class="label">04</div>
+          <div class="nm">Flooring</div>
+        </div>
+      </a>
+      <a href="#construction" class="tile reveal">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M4 20V8l8-5 8 5v12M10 20v-6h4v6M8 11h2m4 0h2"/></svg></div>
+        <div>
+          <div class="label">05</div>
+          <div class="nm">Construction</div>
+        </div>
+      </a>
+      <a href="#kitchen" class="tile reveal">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h16v6H4zM4 9v12h16V9M9 13h6M9 17h6"/></svg></div>
+        <div>
+          <div class="label">06</div>
+          <div class="nm">Kitchen &amp; Cabinet</div>
+        </div>
+      </a>
+      <a href="#service" class="tile reveal">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6L3 18l3 3 6-6 .1.1a4 4 0 0 0 5.6-5.6L15 12l-3-3z"/></svg></div>
+        <div>
+          <div class="label">07</div>
+          <div class="nm">Service</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 01 · PERGOLA -->
+<section class="ind-detail" id="pergola" data-screen-label="01 Pergola">
+  <div class="container">
+    <div class="ind-detail-grid">
+      <div class="ind-copy reveal">
+        <span class="glyph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8m18 13V8M3 8h18M5 8v-3h3M19 8v-3h-3M9 8v13M15 8v13M3 12h18M3 16h18"/></svg>
+        </span>
+        <div class="num">Industry 01</div>
+        <h2>Pergola Companies</h2>
+        <p>From a sketch on a napkin to a signed contract — pergola-specific pipelines for cedar, aluminum, motorized, and adjustable louvre systems.</p>
+        <ul class="features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>CAD-ready design hand-off</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Material price-list templates</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Permit tracking by jurisdiction</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Seasonal weather buffer</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><div class="v">42%</div><div class="l">faster quote-to-sign</div></div>
+          <div class="stat"><div class="v">$84k</div><div class="l">avg project value</div></div>
+        </div>
+      </div>
+
+      <div class="ind-vis reveal">
+        <div class="meta"><span>CEDARWORKS · PERGOLA PIPELINE</span><span>Q2 2026</span></div>
+        <div class="pl-row">
+          <div class="pl-stage"><span class="l">Lead</span><span class="n">14</span></div>
+          <div class="pl-stage"><span class="l">Site visit</span><span class="n">9</span></div>
+          <div class="pl-stage"><span class="l">Design</span><span class="n">7</span></div>
+          <div class="pl-stage hot"><span class="l">Quoted</span><span class="n">6</span></div>
+          <div class="pl-stage"><span class="l">Build</span><span class="n">3</span></div>
+          <div class="pl-stage"><span class="l">Done</span><span class="n">11</span></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h">
+            <span>Quote template — Cedar 14×16</span>
+            <span class="badge">PRESET</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar">RV</span>
+            <div><div class="nm">Henderson family</div><div class="sub">$48k · heated · dimmable lighting</div></div>
+            <span class="v">SIGNED</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b2">DC</span>
+            <div><div class="nm">Choi residence</div><div class="sub">$67k · motorized louvres · screens</div></div>
+            <span class="v">SENT</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b3">SR</span>
+            <div><div class="nm">Reyes patio</div><div class="sub">$22k · aluminum kit</div></div>
+            <span class="v">DRAFT</span>
+          </div>
+        </div>
+
+        <div class="panel" style="display:flex; gap: 14px; align-items: center;">
+          <div style="flex:1;">
+            <div style="font-size: 11px; color: var(--mute); font-family: var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase;">PERMIT</div>
+            <div style="font-size: 13px; font-weight: 500; margin-top: 2px;">Marin County · filed 4/11</div>
+          </div>
+          <div style="background: var(--green-soft); color: var(--green); padding: 4px 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 10px;">APPROVED</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 · OUTDOOR LIVING -->
+<section class="ind-detail alt flip" id="outdoor" data-screen-label="02 Outdoor">
+  <div class="container">
+    <div class="ind-detail-grid">
+      <div class="ind-vis reveal">
+        <div class="meta"><span>OUTDOOR LIVING · BUILDS</span><span>SUMMER 2026</span></div>
+        <h6>Active projects · by category</h6>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="panel" style="margin-top: 0;">
+            <div class="panel-h"><span>Outdoor kitchens</span><span class="badge">6</span></div>
+            <svg viewBox="0 0 200 60" width="100%" height="60">
+              <g font-family="Geist Mono" font-size="8" fill="#6c6c72">
+                <rect x="0" y="42" width="24" height="12" rx="2" fill="#14a085"/>
+                <rect x="32" y="32" width="24" height="22" rx="2" fill="#14a085"/>
+                <rect x="64" y="20" width="24" height="34" rx="2" fill="#14a085"/>
+                <rect x="96" y="14" width="24" height="40" rx="2" fill="#0a0a0c"/>
+                <rect x="128" y="22" width="24" height="32" rx="2" fill="#ecebe5"/>
+                <rect x="160" y="30" width="24" height="24" rx="2" fill="#ecebe5"/>
+              </g>
+            </svg>
+          </div>
+          <div class="panel" style="margin-top: 0;">
+            <div class="panel-h"><span>Fire features</span><span class="badge">4</span></div>
+            <svg viewBox="0 0 200 60" width="100%" height="60">
+              <circle cx="100" cy="36" r="20" fill="#e3f3ec"/>
+              <path d="M100 20 q -10 8 -4 18 q -8 -2 -8 -10 q 0 6 12 14 q 14 -8 14 -16 q 0 6 -6 8 q 4 -8 -8 -14z" fill="#14a085"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><span>This week's installs</span><span class="badge">3 SCHEDULED</span></div>
+          <div class="row-item">
+            <span class="avatar">JM</span>
+            <div><div class="nm">Mercer outdoor kitchen</div><div class="sub">Tue · 8:00 AM · 4-day install</div></div>
+            <span class="v">$48k</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b4">PT</span>
+            <div><div class="nm">Tan fire pit + patio</div><div class="sub">Thu · 9:30 AM · 2-day install</div></div>
+            <span class="v">$31k</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b2">AC</span>
+            <div><div class="nm">Cho lounge + lighting</div><div class="sub">Sat · 8:00 AM · 1-day install</div></div>
+            <span class="v">$18k</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ind-copy reveal">
+        <span class="glyph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M5 20V9l7-5 7 5v11M9 20v-6h6v6"/></svg>
+        </span>
+        <div class="num">Industry 02</div>
+        <h2>Outdoor Living</h2>
+        <p>Kitchens, fire features, patios, lighting, audio — one project, many trades. ByPlan keeps every spec, every sub, and every approval in line.</p>
+        <ul class="features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Multi-trade sub coordination</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Appliance &amp; spec libraries</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Change-order workflows</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Seasonal capacity planning</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><div class="v">3.2×</div><div class="l">faster sub scheduling</div></div>
+          <div class="stat"><div class="v">$112k</div><div class="l">avg project value</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 · LANDSCAPING -->
+<section class="ind-detail" id="landscaping" data-screen-label="03 Landscaping">
+  <div class="container">
+    <div class="ind-detail-grid">
+      <div class="ind-copy reveal">
+        <span class="glyph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6M8 16c-2-2-3-5-3-8 4 0 7 3 7 8M16 16c2-2 3-5 3-8-4 0-7 3-7 8"/></svg>
+        </span>
+        <div class="num">Industry 03</div>
+        <h2>Landscaping</h2>
+        <p>Design-build, maintenance contracts, irrigation, snow ops — one platform for the seasonal swings of a real landscape business.</p>
+        <ul class="features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Recurring maintenance billing</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Route + crew dispatch</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Seasonal upsell automations</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Plant + material libraries</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><div class="v">28%</div><div class="l">higher MRR</div></div>
+          <div class="stat"><div class="v">142</div><div class="l">avg active contracts</div></div>
+        </div>
+      </div>
+
+      <div class="ind-vis reveal">
+        <div class="meta"><span>GREENHAVEN CO · MAINTENANCE ROUTE</span><span>TUE · MAY 19</span></div>
+        <div class="panel" style="margin-top: 0;">
+          <div class="panel-h"><span>Today's stops</span><span class="badge">7 STOPS · 6.2 HRS</span></div>
+          <div class="row-item">
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--orange); width: 22px;">8:00</span>
+            <div><div class="nm">2014 Cedar Ln</div><div class="sub">Mow · edge · blow · 45 min</div></div>
+            <span class="v" style="color: var(--green);">●</span>
+          </div>
+          <div class="row-item">
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--orange); width: 22px;">8:55</span>
+            <div><div class="nm">807 Maple Ct</div><div class="sub">Hedges · cleanup · 60 min</div></div>
+            <span class="v" style="color: var(--green);">●</span>
+          </div>
+          <div class="row-item">
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--orange); width: 22px;">10:05</span>
+            <div><div class="nm">412 Riverbend</div><div class="sub">Irrigation check · 50 min</div></div>
+            <span class="v" style="color: var(--orange);">●</span>
+          </div>
+          <div class="row-item">
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--mute); width: 22px;">11:10</span>
+            <div><div class="nm">3201 Oak St</div><div class="sub">Mow · mulch refresh · 75 min</div></div>
+            <span class="v" style="color: var(--mute-3);">○</span>
+          </div>
+        </div>
+        <div class="panel" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--mute); letter-spacing: 0.06em;">MRR</div>
+            <div style="font-size: 18px; font-weight: 500; margin-top: 2px;">$18.4k</div>
+          </div>
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--mute); letter-spacing: 0.06em;">RETENTION</div>
+            <div style="font-size: 18px; font-weight: 500; margin-top: 2px;">94%</div>
+          </div>
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--mute); letter-spacing: 0.06em;">CONTRACTS</div>
+            <div style="font-size: 18px; font-weight: 500; margin-top: 2px;">142</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 · FLOORING -->
+<section class="ind-detail alt flip" id="flooring" data-screen-label="04 Flooring">
+  <div class="container">
+    <div class="ind-detail-grid">
+      <div class="ind-vis reveal">
+        <div class="meta"><span>STONEWORKS SHOWROOM · SAMPLES</span><span>HARDWOOD · LVP · TILE</span></div>
+        <h6>Hardwood — featured collection</h6>
+        <div class="swatches">
+          <div class="sw" style="background: #c89e72;"></div>
+          <div class="sw" style="background: #a37148;"></div>
+          <div class="sw" style="background: #7b4f2c;"></div>
+          <div class="sw" style="background: #5a3a22;"></div>
+          <div class="sw" style="background: #3e2818;"></div>
+          <div class="sw" style="background: #2a1c10;"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><span>Quote · Brennan kitchen</span><span class="badge">SAVED</span></div>
+          <div class="row-item">
+            <span class="avatar" style="background: #c89e72;">●</span>
+            <div><div class="nm">European Oak · natural</div><div class="sub">Engineered · 7" wide plank</div></div>
+            <span class="v">$8.40 / sf</span>
+          </div>
+          <div class="row-item">
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--mute);">AREA</div>
+            <div><div class="nm">Kitchen + dining + hall</div><div class="sub">528 sq ft measured · LiDAR</div></div>
+            <span class="v">528 sf</span>
+          </div>
+          <div class="row-item">
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--mute);">INSTALL</div>
+            <div><div class="nm">Float + underlayment</div><div class="sub">Removal of existing · disposal</div></div>
+            <span class="v">$4.10 / sf</span>
+          </div>
+        </div>
+        <div class="panel" style="display:flex; justify-content: space-between; align-items: center; padding: 14px 16px;">
+          <div>
+            <div style="font-size: 11px; color: var(--mute);">Project total</div>
+            <div style="font-size: 22px; font-weight: 500; letter-spacing: -0.02em; margin-top: 2px;">$28,420</div>
+          </div>
+          <div class="btn btn-primary btn-sm">Send to client</div>
+        </div>
+      </div>
+
+      <div class="ind-copy reveal">
+        <span class="glyph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z M3 9h18M3 14h18M9 5v14M15 5v14"/></svg>
+        </span>
+        <div class="num">Industry 04</div>
+        <h2>Flooring Showrooms</h2>
+        <p>Walk-ins to install, in days not months. Sample tracking, sq-ft pricing, install scheduling — built for showrooms that actually want to grow.</p>
+        <ul class="features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Per-sf pricing matrices</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Sample loan-out tracking</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Install crew scheduling</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Supplier price-list sync</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><div class="v">2.8×</div><div class="l">walk-in conversion</div></div>
+          <div class="stat"><div class="v">$12k</div><div class="l">avg job value</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 · CONSTRUCTION -->
+<section class="ind-detail" id="construction" data-screen-label="05 Construction">
+  <div class="container">
+    <div class="ind-detail-grid">
+      <div class="ind-copy reveal">
+        <span class="glyph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M4 20V8l8-5 8 5v12M10 20v-6h4v6M8 11h2m4 0h2"/></svg>
+        </span>
+        <div class="num">Industry 05</div>
+        <h2>Construction Companies</h2>
+        <p>Subs, permits, change orders, draws, lien releases. ByPlan handles the parts of construction nobody else's CRM gets right.</p>
+        <ul class="features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Sub directory + insurance</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Draw + payment scheduling</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>RFI &amp; change-order log</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Daily field reports + photos</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><div class="v">11d</div><div class="l">faster draws</div></div>
+          <div class="stat"><div class="v">$1.2M</div><div class="l">avg project value</div></div>
+        </div>
+      </div>
+
+      <div class="ind-vis reveal">
+        <div class="meta"><span>NORTHFIELD BUILDERS · #PRJ-2042</span><span>RIVERSIDE ADDITION</span></div>
+        <h6>Subcontractors &amp; draws</h6>
+        <div class="panel" style="margin-top: 0;">
+          <div class="panel-h"><span>Draw 3 of 5</span><span class="badge">$184k REQUESTED</span></div>
+          <div class="row-item">
+            <span class="avatar">EM</span>
+            <div><div class="nm">EastMark Electric</div><div class="sub">Rough-in · 60% complete · insurance OK</div></div>
+            <span class="v" style="color: var(--green);">$28k</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b2">PP</span>
+            <div><div class="nm">Pacific Plumbing</div><div class="sub">Stack &amp; supply · 100% · lien release</div></div>
+            <span class="v" style="color: var(--green);">$22k</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b3">TS</span>
+            <div><div class="nm">TrueSteel Framing</div><div class="sub">Framing · 100% · ⚠ insurance expiring</div></div>
+            <span class="v" style="color: var(--orange);">$64k</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b4">RD</span>
+            <div><div class="nm">Redwood Drywall</div><div class="sub">Hang &amp; finish · 35% · in progress</div></div>
+            <span class="v" style="color: var(--mute);">$18k</span>
+          </div>
+        </div>
+
+        <div class="panel" style="display:flex; align-items:center; gap: 14px;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <div style="flex: 1;">
+            <div style="font-size: 13px; font-weight: 500;">Change order #4 pending</div>
+            <div style="font-size: 11.5px; color: var(--mute);">Added skylight in master · +$4,200 · awaiting client signature</div>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 10px; background: var(--orange-soft); color: var(--orange-ink); padding: 4px 8px; border-radius: 6px;">SENT 2H</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 · KITCHEN -->
+<section class="ind-detail alt flip" id="kitchen" data-screen-label="06 Kitchen">
+  <div class="container">
+    <div class="ind-detail-grid">
+      <div class="ind-vis reveal">
+        <div class="meta"><span>MODERA KITCHEN · #DSN-118</span><span>BRENNAN RESIDENCE</span></div>
+
+        <div class="panel" style="margin-top: 0; padding: 0; overflow: hidden;">
+          <!-- Fake 3D render preview -->
+          <div style="position: relative; aspect-ratio: 16/9; background: linear-gradient(180deg, #ece5da, #d6cdbf); display: flex; align-items: flex-end; justify-content: center; padding: 14px;">
+            <!-- Cabinet boxes -->
+            <svg width="100%" height="100%" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid meet" style="position: absolute; inset: 0;">
+              <!-- Floor -->
+              <polygon points="0,140 320,140 320,180 0,180" fill="#a37148"/>
+              <!-- Back wall -->
+              <rect x="0" y="0" width="320" height="140" fill="#ece5da"/>
+              <!-- Upper cabinets -->
+              <g fill="#5a3a22" stroke="#3e2818" stroke-width="1">
+                <rect x="60" y="32" width="40" height="48"/>
+                <rect x="100" y="32" width="40" height="48"/>
+                <rect x="180" y="32" width="40" height="48"/>
+                <rect x="220" y="32" width="40" height="48"/>
+              </g>
+              <!-- Range hood -->
+              <rect x="140" y="32" width="40" height="20" fill="#1a1a1f"/>
+              <polygon points="140,52 180,52 175,68 145,68" fill="#1a1a1f"/>
+              <!-- Lower cabinets -->
+              <g fill="#3e2818" stroke="#2a1c10" stroke-width="1">
+                <rect x="40" y="100" width="80" height="40"/>
+                <rect x="120" y="100" width="80" height="40"/>
+                <rect x="200" y="100" width="80" height="40"/>
+              </g>
+              <!-- Countertop -->
+              <rect x="36" y="94" width="248" height="8" fill="#f5f0e8"/>
+              <!-- Pendant lights -->
+              <line x1="110" y1="0" x2="110" y2="20" stroke="#1a1a1f" stroke-width="1"/>
+              <circle cx="110" cy="24" r="6" fill="#14a085" opacity="0.85"/>
+              <line x1="210" y1="0" x2="210" y2="20" stroke="#1a1a1f" stroke-width="1"/>
+              <circle cx="210" cy="24" r="6" fill="#14a085" opacity="0.85"/>
+            </svg>
+            <div style="position: absolute; bottom: 10px; right: 10px; padding: 3px 8px; background: rgba(0,0,0,0.6); color: white; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; border-radius: 4px;">3D · REV 3</div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top: 10px;">
+          <div class="panel-h">
+            <span>Comments from client</span>
+            <span class="badge">2 NEW</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b3" style="margin-top: 2px;">RB</span>
+            <div>
+              <div class="nm">Rachel Brennan · pinned on hood</div>
+              <div class="sub">"Can we try a matte black hood instead?"</div>
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 9.5px; color: var(--mute);">2H</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b3" style="margin-top: 2px;">RB</span>
+            <div>
+              <div class="nm">Rachel Brennan · pinned on island</div>
+              <div class="sub">"Love the wood — what species?"</div>
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 9.5px; color: var(--mute);">3H</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ind-copy reveal">
+        <span class="glyph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h16v6H4zM4 9v12h16V9M9 13h6M9 17h6"/></svg>
+        </span>
+        <div class="num">Industry 06</div>
+        <h2>Kitchen &amp; Cabinet</h2>
+        <p>Design revisions are part of the job. ByPlan keeps every render, every comment, and every spec change linked to the same project record.</p>
+        <ul class="features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>3D render comment threads</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Cabinet-line price sync</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Revision history + approvals</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Install + template scheduling</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><div class="v">5.1</div><div class="l">avg revisions handled</div></div>
+          <div class="stat"><div class="v">$64k</div><div class="l">avg project value</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 · SERVICE -->
+<section class="ind-detail" id="service" data-screen-label="07 Service">
+  <div class="container">
+    <div class="ind-detail-grid">
+      <div class="ind-copy reveal">
+        <span class="glyph">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6L3 18l3 3 6-6 .1.1a4 4 0 0 0 5.6-5.6L15 12l-3-3z"/></svg>
+        </span>
+        <div class="num">Industry 07</div>
+        <h2>Service Businesses</h2>
+        <p>HVAC, pool care, repairs, refinishing — dispatch-first workflows for the businesses that live in the field, not the office.</p>
+        <ul class="features">
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Dispatch board + GPS</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Parts &amp; truck-stock tracking</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Service agreements + SLAs</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>Pay-on-arrival invoicing</li>
+        </ul>
+        <div class="stats">
+          <div class="stat"><div class="v">62%</div><div class="l">faster dispatch</div></div>
+          <div class="stat"><div class="v">9.4★</div><div class="l">avg CSAT</div></div>
+        </div>
+      </div>
+
+      <div class="ind-vis reveal">
+        <div class="meta"><span>DISPATCH BOARD · TUE 5/19</span><span>4 TECHS · 11 JOBS</span></div>
+        <div class="panel" style="margin-top: 0;">
+          <div class="panel-h"><span>Live techs</span><span class="badge">3 ON-ROUTE</span></div>
+          <div class="row-item">
+            <span class="avatar" style="margin-top: 2px;">DS</span>
+            <div>
+              <div class="nm">Diego Silva · van #3</div>
+              <div class="sub">→ 412 Riverbend · ETA 7 min</div>
+            </div>
+            <span class="v" style="color: var(--green);">●</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b2" style="margin-top: 2px;">JG</span>
+            <div>
+              <div class="nm">Jamal Greene · van #1</div>
+              <div class="sub">On site · 807 Maple Ct · 18 min</div>
+            </div>
+            <span class="v" style="color: var(--orange);">●</span>
+          </div>
+          <div class="row-item">
+            <span class="avatar b4" style="margin-top: 2px;">MP</span>
+            <div>
+              <div class="nm">Maya Park · van #2</div>
+              <div class="sub">→ 2014 Cedar Ln · ETA 22 min</div>
+            </div>
+            <span class="v" style="color: var(--green);">●</span>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><span>Today's calls vs avg</span><span class="badge" style="background: var(--green-soft); color: var(--green);">↑ 14%</span></div>
+          <svg viewBox="0 0 320 60" width="100%" height="60">
+            <g font-family="Geist Mono" font-size="8" fill="#6c6c72">
+              <text x="0" y="56">6A</text><text x="48" y="56">9A</text><text x="96" y="56">12P</text><text x="144" y="56">3P</text><text x="192" y="56">6P</text>
+              <line x1="0" y1="42" x2="320" y2="42" stroke="#ecebe5"/>
+            </g>
+            <path d="M0,38 L40,30 L80,20 L120,16 L160,22 L200,12 L240,16 L280,22 L320,28" fill="none" stroke="#14a085" stroke-width="2"/>
+            <path d="M0,42 L40,38 L80,30 L120,28 L160,32 L200,26 L240,24 L280,30 L320,34" fill="none" stroke="#9a9a9f" stroke-width="1.5" stroke-dasharray="3 3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="ind-cta" data-screen-label="99 CTA">
+  <div class="glow glow-orange"></div>
+  <div class="dot-bg" style="opacity: 0.4;"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="reveal">
+      <h2 class="h-display" style="font-size: clamp(36px, 5vw, 64px);">Don't see your trade?<br><span class="accent">Bring it on.</span></h2>
+      <p>Our team configures ByPlan around how <em>your</em> business actually runs. Roofers, fencing, pool builders, deck companies, masonry — if it builds things, it fits.</p>
+      <div class="actions">
+        <a class="btn btn-accent btn-lg" href="demo.html">Book a Demo</a>
+        <a class="btn btn-ghost btn-lg" href="product.html">See the platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="shared.js"></script>
+</body>
+</html>

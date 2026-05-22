@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Book a Demo — ByPlan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { background: var(--paper-2); }
+
+  /* Page band override */
+  .page-band {
+    padding: 80px 0 32px;
+    border-bottom: none;
+    background: var(--paper);
+  }
+  .page-band h1 { font-size: clamp(36px, 4.6vw, 60px); letter-spacing: -0.035em; line-height: 1; margin-top: 4px; }
+  .page-band .lead { margin-top: 22px; max-width: 56ch; }
+
+  /* MAIN BOOKING LAYOUT */
+  .book-section {
+    padding: 24px 0 96px;
+  }
+  .book-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 56px;
+    align-items: flex-start;
+  }
+  @media (max-width: 1000px) {
+    .book-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  /* LEFT — pitch */
+  .pitch h2 {
+    font-size: clamp(24px, 2.6vw, 34px);
+    letter-spacing: -0.025em; line-height: 1.1;
+  }
+  .pitch p { margin-top: 14px; font-size: 15px; line-height: 1.55; color: var(--mute); max-width: 50ch; }
+  .pitch .features {
+    list-style: none; padding: 0; margin: 28px 0 0;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .pitch .features li {
+    display: flex; gap: 14px;
+    padding: 16px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .pitch .features li .ic {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--orange-soft); color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pitch .features li strong {
+    display: block;
+    font-size: 14px; font-weight: 500; color: var(--ink);
+    letter-spacing: -0.012em;
+  }
+  .pitch .features li span.sb {
+    font-size: 12.5px; color: var(--mute);
+    line-height: 1.45; margin-top: 2px; display: block;
+  }
+
+  /* Mini logos */
+  .pitch .by-the-numbers {
+    margin-top: 32px;
+    padding: 22px 24px;
+    background: var(--ink);
+    color: white;
+    border-radius: var(--r-4);
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    position: relative; overflow: hidden;
+  }
+  .pitch .by-the-numbers::before {
+    content: ""; position: absolute; width: 200px; height: 200px;
+    top: -100px; right: -80px;
+    background: radial-gradient(circle, rgba(255,106,0,0.32), transparent 60%);
+    filter: blur(40px);
+  }
+  .pitch .by-the-numbers .st { position: relative; z-index: 1; }
+  .pitch .by-the-numbers .v { font-size: 22px; font-weight: 500; letter-spacing: -0.025em; }
+  .pitch .by-the-numbers .v .accent { color: var(--orange-2); }
+  .pitch .by-the-numbers .l { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,.55); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 4px; }
+
+  /* RIGHT — form card */
+  .form-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-4);
+    overflow: hidden;
+    box-shadow: var(--shadow-3);
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+  }
+  @media (max-width: 1000px) {
+    .form-card { position: static; }
+  }
+  .form-head {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-2);
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 16px;
+  }
+  .form-head .ttl { font-size: 18px; font-weight: 500; letter-spacing: -0.015em; }
+  .form-head .sb { font-size: 13px; color: var(--mute); margin-top: 4px; }
+  .form-head .stepper {
+    display: flex; gap: 5px; align-items: center;
+    font-family: var(--font-mono); font-size: 11px; color: var(--mute);
+  }
+  .form-head .stepper .s {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--paper-3); color: var(--mute);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .form-head .stepper .s.active { background: var(--orange); color: white; }
+  .form-head .stepper .s.done { background: var(--ink); color: white; }
+
+  .form-body { padding: 28px; }
+
+  /* Form inputs */
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .field label {
+    font-family: var(--font-mono); font-size: 10.5px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--ink-3); font-weight: 500;
+  }
+  .field input, .field select, .field textarea {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 14.5px;
+    color: var(--ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+    width: 100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 3px rgba(15,15,20,0.06);
+  }
+  .field input::placeholder, .field textarea::placeholder { color: var(--mute-2); }
+  .field textarea { min-height: 90px; resize: vertical; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 480px) { .row-2 { grid-template-columns: 1fr; } }
+
+  /* Industry chip grid */
+  .chip-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  @media (max-width: 480px) { .chip-grid { grid-template-columns: 1fr 1fr; } }
+  .chip-grid .ch {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-2);
+    transition: border-color 0.18s, background 0.18s, color 0.18s;
+    text-align: left;
+  }
+  .chip-grid .ch:hover { border-color: var(--ink-4); }
+  .chip-grid .ch.selected {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .chip-grid .ch.selected .sb { color: rgba(255,255,255,.6); }
+  .chip-grid .ch .sb {
+    font-family: var(--font-mono); font-size: 9.5px;
+    letter-spacing: 0.06em; color: var(--mute-2); text-transform: uppercase;
+    font-weight: 400;
+  }
+  .chip-grid .ch svg { color: var(--orange); }
+  .chip-grid .ch.selected svg { color: var(--orange-2); }
+
+  /* Size pill row */
+  .pill-row {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .pill-row .pl {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    font-size: 13px; color: var(--ink-3);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .pill-row .pl:hover { border-color: var(--ink); }
+  .pill-row .pl.selected {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  /* Time slot picker */
+  .slot-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  @media (max-width: 480px) { .slot-grid { grid-template-columns: 1fr 1fr; } }
+  .slot-grid .sl {
+    background: var(--paper); border: 1px solid var(--line);
+    padding: 10px 12px; border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+  .slot-grid .sl:hover { border-color: var(--ink); }
+  .slot-grid .sl.selected { background: var(--ink); color: white; border-color: var(--ink); }
+  .slot-grid .sl.selected .dt-sub { color: rgba(255,255,255,.6); }
+  .slot-grid .sl .dt-main {
+    font-family: var(--font-mono); font-weight: 500; font-size: 13px;
+  }
+  .slot-grid .sl .dt-sub { font-size: 10px; color: var(--mute); margin-top: 2px; }
+  .slot-grid .sl.full { opacity: 0.4; pointer-events: none; }
+
+  .form-foot {
+    padding: 20px 28px;
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px;
+  }
+  .form-foot .secure {
+    font-family: var(--font-mono); font-size: 10.5px;
+    color: var(--mute);
+    display: inline-flex; align-items: center; gap: 6px;
+    letter-spacing: 0.04em;
+  }
+  .form-foot .secure svg { color: var(--green); }
+
+  /* Step nav */
+  .step-nav {
+    display: flex; gap: 8px;
+  }
+  .step-nav .btn { height: 40px; padding: 0 16px; font-size: 13.5px; }
+
+  /* Step panels */
+  .step-panel { display: none; }
+  .step-panel.active { display: block; }
+
+  /* Success state */
+  .success-state {
+    text-align: center;
+    padding: 40px 28px 48px;
+    display: none;
+  }
+  .success-state.active { display: block; }
+  .success-state .check-ring {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--orange-soft);
+    color: var(--orange);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 22px;
+    animation: pop 0.5s cubic-bezier(.2, 1.2, .3, 1) both;
+  }
+  @keyframes pop {
+    from { transform: scale(0.4); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .success-state h3 {
+    font-size: 24px; font-weight: 500; letter-spacing: -0.025em;
+  }
+  .success-state p {
+    font-size: 14.5px; color: var(--mute);
+    margin: 12px auto 0; max-width: 38ch; line-height: 1.5;
+  }
+  .success-state .booking-detail {
+    margin-top: 28px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 10px;
+    text-align: left;
+  }
+  .success-state .booking-detail .r {
+    display: flex; justify-content: space-between;
+    font-size: 13px;
+  }
+  .success-state .booking-detail .r .k { color: var(--mute); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .success-state .booking-detail .r .v { font-weight: 500; letter-spacing: -0.012em; }
+  .success-state .return-link {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--orange);
+    text-decoration: underline;
+  }
+
+  /* FAQ */
+  .faq {
+    padding: clamp(64px, 8vw, 96px) 0;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .faq-grid {
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 56px;
+    align-items: flex-start;
+  }
+  @media (max-width: 880px) { .faq-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .faq-head h2 { font-size: clamp(24px, 2.6vw, 34px); letter-spacing: -0.025em; }
+  .faq-head p { font-size: 14px; color: var(--mute); margin-top: 14px; }
+  .faq-list { display: flex; flex-direction: column; gap: 0; }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-item summary {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 22px 0;
+    font-size: 16px; font-weight: 500; letter-spacing: -0.012em;
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary .plus {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--paper-3);
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .faq-item[open] summary .plus { transform: rotate(45deg); background: var(--orange); color: white; }
+  .faq-item .ans {
+    font-size: 14.5px; color: var(--mute);
+    line-height: 1.55;
+    padding: 0 0 22px 0;
+    max-width: 60ch;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE BAND -->
+<div class="page-band" data-screen-label="00 Intro">
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="crumbs">Demo / Book</div>
+    <h1 class="reveal">A 30-minute live tour.<br><span class="accent">Built around your business.</span></h1>
+    <p class="lead reveal" style="--reveal-delay: 80ms;">No generic demo. We'll set up a real workspace with your industry pre-configured, walk through the modules that matter to you, and answer every "but does it…?" question.</p>
+  </div>
+</div>
+
+<!-- BOOKING -->
+<section class="book-section" data-screen-label="01 Booking">
+  <div class="container">
+    <div class="book-grid">
+
+      <!-- LEFT — pitch -->
+      <div class="pitch reveal">
+        <h2>What to expect.</h2>
+        <p>30 minutes, on Zoom or in your office. You'll meet a real ByPlan engineer, not a sales script.</p>
+
+        <ul class="features">
+          <li>
+            <span class="ic">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <div>
+              <strong>Walk through your industry's setup</strong>
+              <span class="sb">Pipelines, quote templates, and project phases — pre-configured for your trade.</span>
+            </div>
+          </li>
+          <li>
+            <span class="ic">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3"/><circle cx="12" cy="12" r="4"/></svg>
+            </span>
+            <div>
+              <strong>See AI run on your data</strong>
+              <span class="sb">Bring a real lead, a call recording, a quote — we'll show you what AI does with it.</span>
+            </div>
+          </li>
+          <li>
+            <span class="ic">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3v18h18"/><polyline points="7 14 12 9 16 13 21 8"/></svg>
+            </span>
+            <div>
+              <strong>Get a custom ROI estimate</strong>
+              <span class="sb">Based on your team size, deal volume, and what tools you'd replace.</span>
+            </div>
+          </li>
+          <li>
+            <span class="ic">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <div>
+              <strong>Honest answers, including "no"</strong>
+              <span class="sb">If ByPlan isn't a fit, we'll say so and point you somewhere better.</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="by-the-numbers">
+          <div class="st">
+            <div class="v">1,200<span class="accent">+</span></div>
+            <div class="l">teams onboarded</div>
+          </div>
+          <div class="st">
+            <div class="v">7<span class="accent">d</span></div>
+            <div class="l">avg. go-live</div>
+          </div>
+          <div class="st">
+            <div class="v">4.9<span class="accent">★</span></div>
+            <div class="l">G2 + Capterra</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — form -->
+      <div class="form-card reveal" id="formCard">
+        <div class="form-head">
+          <div>
+            <div class="ttl">Book your demo</div>
+            <div class="sb">Takes about 90 seconds.</div>
+          </div>
+          <div class="stepper" id="stepper">
+            <span class="s active">1</span>
+            <span style="opacity: 0.4;">—</span>
+            <span class="s">2</span>
+            <span style="opacity: 0.4;">—</span>
+            <span class="s">3</span>
+          </div>
+        </div>
+
+        <div class="form-body">
+          <!-- STEP 1 — about you -->
+          <div class="step-panel active" data-step="1">
+            <div class="row-2">
+              <div class="field">
+                <label for="firstName">First name</label>
+                <input type="text" id="firstName" placeholder="Rosa" autocomplete="given-name" />
+              </div>
+              <div class="field">
+                <label for="lastName">Last name</label>
+                <input type="text" id="lastName" placeholder="Vega" autocomplete="family-name" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input type="email" id="email" placeholder="rosa@cedarworks.com" autocomplete="email" />
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="company">Company</label>
+                <input type="text" id="company" placeholder="CedarWorks LLC" autocomplete="organization" />
+              </div>
+              <div class="field">
+                <label for="role">Your role</label>
+                <select id="role">
+                  <option>Owner / CEO</option>
+                  <option>Sales lead</option>
+                  <option>Operations / PM</option>
+                  <option>Crew lead</option>
+                  <option>Marketing</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2 — about business -->
+          <div class="step-panel" data-step="2">
+            <div class="field">
+              <label>Your industry</label>
+              <div class="chip-grid" data-name="industry">
+                <button type="button" class="ch" data-value="pergola">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21V8m18 13V8M3 8h18M9 8v13M15 8v13M3 12h18M3 16h18"/></svg>
+                  Pergola
+                  <span class="sb">Outdoor structures</span>
+                </button>
+                <button type="button" class="ch" data-value="outdoor">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 20h20M5 20V9l7-5 7 5v11"/></svg>
+                  Outdoor Living
+                  <span class="sb">Kitchens · fire · patio</span>
+                </button>
+                <button type="button" class="ch" data-value="landscape">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22v-6M8 16c-2-2-3-5-3-8 4 0 7 3 7 8M16 16c2-2 3-5 3-8-4 0-7 3-7 8"/></svg>
+                  Landscaping
+                  <span class="sb">Design + maintenance</span>
+                </button>
+                <button type="button" class="ch" data-value="flooring">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5h18v14H3z M3 9h18M3 14h18M9 5v14M15 5v14"/></svg>
+                  Flooring
+                  <span class="sb">Showroom + install</span>
+                </button>
+                <button type="button" class="ch" data-value="construction">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 20h20M4 20V8l8-5 8 5v12"/></svg>
+                  Construction
+                  <span class="sb">GC + subs</span>
+                </button>
+                <button type="button" class="ch" data-value="kitchen">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 3h16v6H4zM4 9v12h16V9"/></svg>
+                  Kitchen / Cabinet
+                  <span class="sb">Design + install</span>
+                </button>
+                <button type="button" class="ch" data-value="service">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6L3 18l3 3 6-6 .1.1a4 4 0 0 0 5.6-5.6L15 12l-3-3z"/></svg>
+                  Service
+                  <span class="sb">Dispatch + repair</span>
+                </button>
+                <button type="button" class="ch" data-value="other">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+                  Other
+                  <span class="sb">Tell us</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Team size</label>
+              <div class="pill-row" data-name="size">
+                <button type="button" class="pl" data-value="1-4">1–4</button>
+                <button type="button" class="pl" data-value="5-15">5–15</button>
+                <button type="button" class="pl" data-value="16-50">16–50</button>
+                <button type="button" class="pl" data-value="51-150">51–150</button>
+                <button type="button" class="pl" data-value="150+">150+</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="notes">What's the #1 thing you're hoping to fix? <span style="font-weight: normal; text-transform: none; letter-spacing: 0; color: var(--mute-2);">(optional)</span></label>
+              <textarea id="notes" placeholder="Honest answers welcome — lost leads, late projects, can't get a clean number on margin, whatever it is…"></textarea>
+            </div>
+          </div>
+
+          <!-- STEP 3 — schedule -->
+          <div class="step-panel" data-step="3">
+            <div class="field">
+              <label>Pick a time · <span style="color: var(--mute-2); font-weight: 400; letter-spacing: 0; text-transform: none;">all times PT</span></label>
+              <div class="slot-grid" data-name="slot">
+                <button type="button" class="sl"><div class="dt-main">Tue 5/19</div><div class="dt-sub">9:00 AM</div></button>
+                <button type="button" class="sl"><div class="dt-main">Tue 5/19</div><div class="dt-sub">2:00 PM</div></button>
+                <button type="button" class="sl full"><div class="dt-main">Wed 5/20</div><div class="dt-sub">FULL</div></button>
+                <button type="button" class="sl"><div class="dt-main">Wed 5/20</div><div class="dt-sub">3:30 PM</div></button>
+                <button type="button" class="sl"><div class="dt-main">Thu 5/21</div><div class="dt-sub">10:00 AM</div></button>
+                <button type="button" class="sl"><div class="dt-main">Thu 5/21</div><div class="dt-sub">1:00 PM</div></button>
+                <button type="button" class="sl"><div class="dt-main">Fri 5/22</div><div class="dt-sub">11:00 AM</div></button>
+                <button type="button" class="sl"><div class="dt-main">Fri 5/22</div><div class="dt-sub">4:00 PM</div></button>
+                <button type="button" class="sl"><div class="dt-main">Mon 5/26</div><div class="dt-sub">9:00 AM</div></button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Anything specific to show you? <span style="font-weight: normal; text-transform: none; letter-spacing: 0; color: var(--mute-2);">(optional)</span></label>
+              <textarea id="agenda" placeholder="e.g. show me how AI replies work, what does the customer portal look like, integration with Stripe…"></textarea>
+            </div>
+          </div>
+
+          <!-- SUCCESS -->
+          <div class="success-state" id="successState">
+            <div class="check-ring">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h3>You're booked.</h3>
+            <p>A calendar invite is on its way to <span id="successEmail" style="color: var(--ink); font-weight: 500;">your inbox</span>. Reply to it with any context you want us to prep — links to your current tools, a sample lead, anything.</p>
+
+            <div class="booking-detail">
+              <div class="r"><span class="k">When</span><span class="v" id="successWhen">Thu 5/21 · 10:00 AM PT</span></div>
+              <div class="r"><span class="k">Who</span><span class="v">Rosa V. · ByPlan engineer</span></div>
+              <div class="r"><span class="k">Where</span><span class="v">Zoom link in your invite</span></div>
+              <div class="r"><span class="k">Length</span><span class="v">30 min</span></div>
+            </div>
+
+            <a class="return-link" href="index.html">← Back to home</a>
+          </div>
+        </div>
+
+        <div class="form-foot" id="formFoot">
+          <span class="secure">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            SECURED · SOC 2 TYPE II
+          </span>
+          <div class="step-nav">
+            <button type="button" class="btn btn-ghost" id="backBtn" style="display: none;">Back</button>
+            <button type="button" class="btn btn-primary" id="nextBtn">Continue</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" data-screen-label="02 FAQ">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="faq-head reveal">
+        <span class="eyebrow"><span class="dot"></span>FAQ</span>
+        <h2 style="margin-top: 18px;">A few things we get asked.</h2>
+        <p>Can't find what you need? Email <a href="/cdn-cgi/l/email-protection#432b262f2f2c03213a332f222d6d202c2e" style="color: var(--orange); text-decoration: underline;"><span class="__cf_email__" data-cfemail="89e1ece5e5e6c9ebf0f9e5e8e7a7eae6e4">[email&#160;protected]</span></a> — we usually reply within an hour.</p>
+      </div>
+
+      <div class="faq-list reveal">
+        <details class="faq-item" open>
+          <summary>What if I'm not ready to switch CRMs yet?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Totally fine. A demo is the easiest way to figure that out. You'll see what's possible, get an honest take from us, and either move forward or know exactly what you'd want before you do. Zero pressure.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Can you migrate from QuickBooks, HubSpot, Monday, etc.?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Yes — contacts, deals, projects, invoices, file attachments. Our onboarding team handles the heavy lifting; most workspaces are migrated in 3–5 days.</div>
+        </details>
+        <details class="faq-item">
+          <summary>How long does onboarding take?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Average is 7 days from kickoff to live workspace. Single-owner shops can be live in a single afternoon; multi-location franchises typically take 3–4 weeks.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Is my data private? Do you train shared AI models on it?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">No, and never. Your workspace data trains your AI only. We are SOC 2 Type II audited, encrypt everything at rest and in transit, and you can export or delete your data at any time.</div>
+        </details>
+        <details class="faq-item">
+          <summary>What does it cost?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Flat per-seat pricing. Starter is $59/seat/mo (up to 5 seats), Growth is $99/seat/mo (unlimited, with AI &amp; portal), Scale is custom. All 10 modules included on every plan. Annual billing saves 20%. See <a href="product.html#pricing" style="color: var(--orange);">pricing</a> for full details.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Can my field crew use it on their phone?<span class="plus"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></summary>
+          <div class="ans">Yes. ByPlan has native iOS and Android apps with offline support — crews can update job status, upload photos, and clock in/out from the jobsite even without signal.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js"></script>
+<script>
+  (function () {
+    let currentStep = 1;
+    const TOTAL_STEPS = 3;
+    const card = document.getElementById('formCard');
+    const stepper = document.getElementById('stepper');
+    const nextBtn = document.getElementById('nextBtn');
+    const backBtn = document.getElementById('backBtn');
+    const formFoot = document.getElementById('formFoot');
+    const successState = document.getElementById('successState');
+    const formBody = card.querySelector('.form-body');
+
+    function updateStepper() {
+      const dots = stepper.querySelectorAll('.s');
+      dots.forEach((d, i) => {
+        d.classList.remove('active', 'done');
+        if (i + 1 < currentStep) d.classList.add('done');
+        else if (i + 1 === currentStep) d.classList.add('active');
+      });
+    }
+
+    function showStep(n) {
+      currentStep = n;
+      document.querySelectorAll('.step-panel').forEach(p => {
+        p.classList.toggle('active', p.dataset.step == n);
+      });
+      backBtn.style.display = n === 1 ? 'none' : 'inline-flex';
+      nextBtn.textContent = n === TOTAL_STEPS ? 'Book my demo' : 'Continue';
+      updateStepper();
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (currentStep < TOTAL_STEPS) {
+        showStep(currentStep + 1);
+      } else {
+        // Submit
+        const email = document.getElementById('email').value.trim() || 'your email';
+        const slot = document.querySelector('[data-name="slot"] .selected');
+        const slotText = slot ? `${slot.querySelector('.dt-main').textContent} · ${slot.querySelector('.dt-sub').textContent} PT` : 'Thu 5/21 · 10:00 AM PT';
+        document.getElementById('successEmail').textContent = email;
+        document.getElementById('successWhen').textContent = slotText;
+
+        // Hide form parts, show success
+        document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+        successState.classList.add('active');
+        formFoot.style.display = 'none';
+        document.querySelector('.form-head .stepper').style.opacity = '0.4';
+      }
+    });
+
+    backBtn.addEventListener('click', () => {
+      if (currentStep > 1) showStep(currentStep - 1);
+    });
+
+    // Chip selectors
+    document.querySelectorAll('.chip-grid').forEach(grid => {
+      grid.addEventListener('click', e => {
+        const ch = e.target.closest('.ch');
+        if (!ch) return;
+        grid.querySelectorAll('.ch').forEach(c => c.classList.remove('selected'));
+        ch.classList.add('selected');
+      });
+    });
+
+    // Pill selectors
+    document.querySelectorAll('.pill-row').forEach(row => {
+      row.addEventListener('click', e => {
+        const p = e.target.closest('.pl');
+        if (!p) return;
+        row.querySelectorAll('.pl').forEach(c => c.classList.remove('selected'));
+        p.classList.add('selected');
+      });
+    });
+
+    // Slot picker
+    document.querySelectorAll('.slot-grid').forEach(grid => {
+      grid.addEventListener('click', e => {
+        const sl = e.target.closest('.sl');
+        if (!sl || sl.classList.contains('full')) return;
+        grid.querySelectorAll('.sl').forEach(c => c.classList.remove('selected'));
+        sl.classList.add('selected');
+      });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -41,7 +41,7 @@
 
   function brandImg() {
     // Uploaded byplan logo, rendered as <img> for the top nav.
-    return `<img class="brand-img" src="assets/byplan-logo.png" alt="byplan" decoding="async" />`;
+    return `<img class="brand-img" src="assets/byplan-logo.jpeg" alt="byplan" decoding="async" />`;
   }
 
   function brandSvg() {
